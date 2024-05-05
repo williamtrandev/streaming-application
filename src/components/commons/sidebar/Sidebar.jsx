@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
+import { Podcast, Tv } from 'lucide-react';
 
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
@@ -112,12 +113,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 							<li>
 								<NavLink
 									to="/"
-									className={`group relative flex items-center gap-2.5 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-primary-active dark:hover:bg-meta-4 hover:text-primary ${(pathname === '/' ||
+									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-primary-active dark:hover:bg-meta-4 hover:text-primary ${(pathname === '/' ||
 										pathname.includes('home')) &&
 										'bg-primary-active dark:bg-meta-4 text-primary'
 										}`}
 								>
-									Home
+									<Tv className='w-5'/>
+									<p className='text-base'>Home</p>
 								</NavLink>
 							</li>
 
@@ -131,7 +133,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 										<>
 											<NavLink
 												to="#"
-												className={`group relative flex items-center gap-2.5 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-primary-active dark:hover:bg-meta-4 hover:text-primary ${(pathname === '/followers' ||
+												className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-primary-active dark:hover:bg-meta-4 hover:text-primary ${(pathname === '/followers' ||
 													pathname.includes('followers')) &&
 													'bg-primary-active dark:bg-meta-4 text-primary'
 													}`}
@@ -142,8 +144,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 														: setSidebarExpanded(true);
 												}}
 											>
-
-												Followers
+												<Podcast className='w-5'/>
+												<p className='text-base'>Followers</p>
 												<svg
 													className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && 'rotate-180'
 														}`}

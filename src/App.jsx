@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import DetailStreamPage from './pages/DetailStreamPage';
 import StreamsPage from './pages/StreamsPage';
 import LoginPage from './pages/LoginPage';
+import ProfilePage from './pages/ProfilePage';
 
 
 function App() {
@@ -16,8 +17,10 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path='/lives' element={<StreamsPage />} />
           <Route path='/live/:id' element={<DetailStreamPage />} />
+          <Route path='/profile' element={<ProfilePage />} />
+
         </Route>
-        <Route path='login' element={<LoginPage />}/>
+        <Route path='/login' element={<LoginPage />} />
       </Routes>
     </BrowserRouter>
   )
