@@ -5,6 +5,7 @@ import { MainLayout } from './layouts';
 import HomePage from './pages/HomePage';
 import DetailStreamPage from './pages/DetailStreamPage';
 import StreamsPage from './pages/StreamsPage';
+import LoginPage from './pages/LoginPage';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path='/lives' element={<StreamsPage />} />
           <Route path='/live/:id' element={<DetailStreamPage />} />
         </Route>
+        <Route path='login' element={<LoginPage />}/>
       </Routes>
     </BrowserRouter>
   )
