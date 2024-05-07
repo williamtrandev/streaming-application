@@ -15,7 +15,7 @@ function App() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route index element={<HomePage />} />
-          <Route path='/lives' element={<StreamsPage />} />
+          <Route path='/discover' element={<StreamsPage />} />
           <Route path='/live/:id' element={<DetailStreamPage />} />
           <Route path='/profile' element={<ProfilePage />} />
 

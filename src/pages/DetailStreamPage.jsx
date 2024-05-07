@@ -14,16 +14,16 @@ const DetailStreamPage = () => {
 		num_viewers: 70000,
 	}
 	return (
-		<SectionWrapper>
-			<div className="flex w-full space-x-5">
-				<div className="w-[70%]">
+		<div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)]">
+			<div className="flex items-center w-full space-x-5 h-full">
+				<div className="md:w-[70%] sm:w-full h-full">
 					<StreamVideo stream={fakeStream}/>
 				</div>
-				<div className="w-[30%] flex">
+				<div className="md:w-[30%] md:flex hidden h-full">
 					<ChatBox />
 				</div>
 			</div>
-		</SectionWrapper>
+		</div>
 	)
 }
 

@@ -6,10 +6,9 @@ import DarkModeSwitcher from '../header/DarkModeSwitcher';
 
 const Header = (props) => {
 	return (
-		<header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
+		<header className="sticky top-0 z-999 flex w-full h-20 bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
 			<div className="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
 				<div className="flex items-center gap-2 sm:gap-4 lg:hidden">
-					{/* <!-- Hamburger Toggle BTN --> */}
 					<button
 						aria-controls="sidebar"
 						onClick={(e) => {
@@ -45,7 +44,6 @@ const Header = (props) => {
 							</span>
 						</span>
 					</button>
-					{/* <!-- Hamburger Toggle BTN --> */}
 
 					<Link className="block flex-shrink-0 lg:hidden" to="/">
 						<img src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="Logo" className='w-10 h-10 rounded-full'/>
@@ -54,8 +52,8 @@ const Header = (props) => {
 
 				<div className="hidden sm:block">
 					<form>
-						<div className="relative">
-							<button className="absolute left-0 top-1/2 -translate-y-1/2">
+						<div className="relative bg-gray dark:bg-meta-4 p-2 rounded-lg">
+							<button className="absolute left-3 top-1/2 -translate-y-1/2">
 								<svg
 									className="fill-body hover:fill-primary dark:fill-bodydark dark:hover:fill-primary"
 									width="20"

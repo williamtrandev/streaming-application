@@ -28,13 +28,17 @@ const HeaderStreamVideo = ({stream}) => {
 
 const Video = () => {
 	return (
-		<></>
+		<div className="aspect-video w-full rounded-lg overflow-hidden">
+			<video controls >
+				<source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+			</video>
+		</div>
 	)
 }
 
 const StreamVideo = ({stream}) => {
 	return (
-		<div className="w-full flex justify-between bg-black p-3 rounded-md">
+		<div className="w-full h-full flex flex-col items-center justify-center bg-white shadow-md dark:bg-boxdark px-4 py-6 rounded-md space-y-3">
 			<HeaderStreamVideo stream={stream} />
 			<Video />
 		</div>			
