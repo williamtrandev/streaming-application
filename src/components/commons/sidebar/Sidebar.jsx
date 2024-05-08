@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
-import { Podcast, Tv } from 'lucide-react';
+import { Podcast, Telescope, Tv } from 'lucide-react';
 
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
@@ -73,7 +73,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 	return (
 		<aside
 			ref={sidebar}
-			className={`absolute left-0 top-0 z-9999 flex h-screen w-70 flex-col overflow-y-hidden duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+			className={`absolute left-0 top-0 z-9999 flex h-screen w-70 flex-col overflow-y-hidden duration-300 ease-linear bg-white dark:bg-boxdark lg:static lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
 				}`}
 		>
 			<div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
@@ -109,17 +109,30 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 				<nav className="pb-4 px-4 lg:px-6">
 					<div>
 
-						<ul className="mb-6 flex flex-col gap-1.5">
+						<ul className="mb-6 flex flex-col gap-6">
 							<li>
 								<NavLink
 									to="/"
-									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-primary-active dark:hover:bg-meta-4 hover:text-primary ${(pathname === '/' ||
+									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/' ||
 										pathname.includes('home')) &&
-										'bg-primary-active dark:bg-meta-4 text-primary'
+										'bg-purple-600 dark:bg-meta-4 text-white'
 										}`}
 								>
 									<Tv className='w-5'/>
 									<p className='text-base'>Home</p>
+								</NavLink>
+							</li>
+
+							<li>
+								<NavLink
+									to="/discover"
+									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/discover' ||
+										pathname.includes('discover')) &&
+										'bg-purple-600 dark:bg-meta-4 text-white'
+										}`}
+								>
+									<Telescope className='w-5' />
+									<p className='text-base'>Discover</p>
 								</NavLink>
 							</li>
 
@@ -133,9 +146,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 										<>
 											<NavLink
 												to="#"
-												className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-primary-active dark:hover:bg-meta-4 hover:text-primary ${(pathname === '/followers' ||
+												className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/followers' ||
 													pathname.includes('followers')) &&
-													'bg-primary-active dark:bg-meta-4 text-primary'
+													'bg-purple-600 dark:bg-meta-4 text-white'
 													}`}
 												onClick={(e) => {
 													e.preventDefault();
@@ -173,8 +186,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 															<NavLink
 																to={`/followers/${follower.id}`}
 																className={({ isActive }) =>
-																	'group relative flex items-center gap-2.5 rounded-md px-4 font-medium dark:text-bodydark2 duration-300 ease-in-out hover:text-primary ' +
-																	(isActive && '!text-primary')
+																	'group relative flex items-center gap-2.5 rounded-md px-4 font-medium dark:text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+																	(isActive && '!text-white')
 																}
 															>
 																<div className="relative flex">
