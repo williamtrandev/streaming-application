@@ -13,7 +13,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
         bg-black bg-opacity-75 backdrop-blur-sm">
             <div className="w-[500px] relative bg-white dark:bg-boxdark p-5 rounded">
                 <div className="flex justify-center mb-6">
-                    <div className="text-xl font-bold">Log in to Will Stream</div>
+                    <div className="text-xl font-bold">Log in to Will Streaming</div>
                     <button
                         className="text-xl place-self-end absolute top-2 right-2
                             hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded"
@@ -88,7 +88,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                         <span className="mr-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="lucide lucide-circle-alert"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
                         </span>
-                        Error goes here
+                        Username or password was incorrect.
                     </div>
                     <div className="mb-3">
                         <button disabled={loginDisabled}

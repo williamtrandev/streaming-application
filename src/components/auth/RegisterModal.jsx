@@ -8,6 +8,8 @@ const RegisterModal = ({ isVisible, onClose }) => {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
 
+    const isValidUsername = username.length >= 4 && username.length <= 40;
+
     const password8Char = password.length >= 8;
     const passwordIncludeUsername = password.includes(username);
     const isValidPassword = password8Char && !passwordIncludeUsername;
@@ -15,16 +17,16 @@ const RegisterModal = ({ isVisible, onClose }) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isValidEmail = emailRegex.test(email);
 
-    const signupDisabled = username == "" || 
+    const signupDisabled = username == "" || !isValidUsername ||
         password == "" || !isValidPassword ||
         email == "" || !isValidEmail;
 
     return (
-        <div className="fixed z-9999 inset-0 flex justify-center items-center
-        bg-black bg-opacity-75 backdrop-blur-sm">
-            <div className="w-[500px] h-full relative bg-white dark:bg-boxdark p-5 rounded overflow-auto">
+        <div className="fixed z-9999 inset-0 flex justify-center
+        bg-black bg-opacity-75 backdrop-blur-sm overflow-auto">
+            <div className="w-[500px] h-fit relative bg-white dark:bg-boxdark p-5 rounded">
                 <div className="flex justify-center mb-6">
-                    <div className="text-xl font-bold">Join Will Stream today</div>
+                    <div className="text-xl font-bold">Join Will Streaming today</div>
                     <button
                         className="text-xl place-self-end absolute top-2 right-2
                             hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded"
@@ -62,7 +64,12 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                 />
                             </div>
                         </div>
-                        <div className="text-red-500 mt-1 text-sm">*This username is unavailable.</div>
+                        <div className="text-red-500 mt-1 text-sm">
+                            {!isValidUsername && username != "" ? "*Usernames must be between 4 and 40 characters." : ""}
+                        </div>
+                        <div className="mt-1 text-sm">
+                            {username == "" ? "This is the name people will know you by on Will Streaming. You can always change it later." : ""}
+                        </div>
                     </div>
                     <div className="mb-4">
                         <div className="mb-1">Password</div>
