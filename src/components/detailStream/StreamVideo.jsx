@@ -1,5 +1,6 @@
 import { Users } from "lucide-react";
-
+import axios from 'axios';
+import { useEffect } from "react";
 const HeaderStreamVideo = ({stream}) => {
 	return (
 		<div className="w-full flex space-x-3 items-center">
@@ -25,12 +26,55 @@ const HeaderStreamVideo = ({stream}) => {
 		</div>
 	)
 }
+const axiosInstance = axios.create({
+	baseURL: 'http://localhost:5000'
+});
 
 const Video = () => {
+	async function init() {
+		const peer = createPeer();
+		peer.addTransceiver("video", { direction: "recvonly" })
+	}
+
+	function createPeer() {
+		const peer = new RTCPeerConnection({
+			iceServers: [
+				{
+					urls: "stun:stun.stunprotocol.org"
+				}
+			]
+		});
+		peer.ontrack = handleTrackEvent;
+		peer.onnegotiationneeded = () => handleNegotiationNeededEvent(peer);
+
+		return peer;
+	}
+
+	async function handleNegotiationNeededEvent(peer) {
+		try {
+			const offer = await peer.createOffer();
+			await peer.setLocalDescription(offer);
+			const payload = {
+				sdp: peer.localDescription
+			};
+			const { data } = await axiosInstance.post('/consumer', payload);
+			const desc = new RTCSessionDescription(data.sdp);
+			peer.setRemoteDescription(desc);
+		} catch (error) {
+			console.error('Error handling negotiation:', error);
+		}
+	}
+
+	function handleTrackEvent(e) {
+		document.getElementById("video").srcObject = e.streams[0];
+	}
+	useEffect(() => {
+		init();
+	}, []);
 	return (
-		<div className="aspect-video w-full rounded-lg overflow-hidden">
-			<video controls >
-				<source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+		<div className="aspect-video w-full rounded-lg overflow-hidden flex justify-center">
+			<video autoPlay controls id="video" className="h-full rounded-lg">
+				{/* <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" /> */}
 			</video>
 		</div>
 	)
