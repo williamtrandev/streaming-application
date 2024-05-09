@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { X, User, LockKeyhole, Eye, EyeOff, Check, CircleAlert, Mail } from "lucide-react";
 
 const RegisterModal = ({ isVisible, onClose }) => {
     if (!isVisible) return null;
@@ -23,7 +24,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
 
     return (
         <div className="fixed z-9999 inset-0 flex justify-center
-        bg-black bg-opacity-75 backdrop-blur-sm overflow-auto">
+        bg-black bg-opacity-75 backdrop-blur-sm overflow-auto py-2">
             <div className="w-[500px] h-fit relative bg-white dark:bg-boxdark p-5 rounded">
                 <div className="flex justify-center mb-6">
                     <div className="text-xl font-bold">Join Will Streaming today</div>
@@ -31,20 +32,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                         className="text-xl place-self-end absolute top-2 right-2
                             hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded"
                         onClick={() => onClose(false)}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            class="lucide lucide-x"
-                        ><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
-                    </button>
+                    ><X /></button>
                 </div>
                 <div>
                     <div className="mb-4">
@@ -52,12 +40,13 @@ const RegisterModal = ({ isVisible, onClose }) => {
                         <div id="usernameInput" className="text-black w-full">
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                                    <User />
                                 </span>
                                 <input 
                                     type="text" 
                                     className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300 
-                                        focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 
+                                        focus:outline-none focus:border-indigo-500 
+                                        focus:ring focus:ring-indigo-200 
                                         transition duration-150 ease-in-out"
                                     value={username}
                                     onChange={e => setUsername(e.target.value)}
@@ -76,7 +65,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                         <div id="passwordInput" className="text-black w-full">
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-lock-keyhole"><circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg>
+                                    <LockKeyhole />
                                 </span>
                                 <input 
                                     type={showPassword} 
@@ -92,8 +81,8 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                         setShowPassword(showPassword === "password" ? "text" : "password");
                                     }}
                                 >
-                                    {((showPassword == "password") && (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-eye"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>))}
-                                    {((showPassword == "text") && (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-eye-off"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>))}
+                                    {showPassword == "password" && (<Eye />)}
+                                    {showPassword == "text" && (<EyeOff />)}
                                 </button>
                             </div>
                         </div>
@@ -103,8 +92,8 @@ const RegisterModal = ({ isVisible, onClose }) => {
                         <div className="text-sm">
                             <div className="flex items-center">
                                 <span className="mr-1">
-                                    {!password8Char && (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x text-red-500"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>)}
-                                    {password8Char && (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check text-green-500"><path d="M20 6 9 17l-5-5"/></svg>)}
+                                    {!password8Char && (<X size={16} className="text-red-500" />)}
+                                    {password8Char && (<Check size={16} className="text-green-500" />)}
                                 </span>
                                 At least 8 characters.
                             </div>
@@ -112,8 +101,8 @@ const RegisterModal = ({ isVisible, onClose }) => {
                         <div className="text-sm">
                             <div className="flex items-center">
                                 <span className="mr-1">
-                                    {passwordIncludeUsername && (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x text-red-500"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>)}
-                                    {!passwordIncludeUsername && (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check text-green-500"><path d="M20 6 9 17l-5-5"/></svg>)}
+                                    {passwordIncludeUsername && (<X size={16} className="text-red-500" />)}
+                                    {!passwordIncludeUsername && (<Check size={16} className="text-green-500" />)}
                                 </span>
                                 Cannot contain your username.
                             </div>
@@ -124,7 +113,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                         <div id="usernameInput" className="text-black w-full">
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                                    <Mail />
                                 </span>
                                 <input 
                                     type="text"
@@ -143,7 +132,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                     </div>
                     <div className="mb-5 text-red-500 p-1 border-red-500 border-2 rounded-lg flex">
                         <span className="mr-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-circle-alert"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                            <CircleAlert />
                         </span>
                         Error goes here
                     </div>
