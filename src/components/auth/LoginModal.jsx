@@ -28,7 +28,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                         <div className="mb-1">Username</div>
                         <div id="usernameInput" className="text-black w-full">
                             <div className="relative">
-                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
+                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center fill-current">
                                     <User />
                                 </span>
                                 <input 

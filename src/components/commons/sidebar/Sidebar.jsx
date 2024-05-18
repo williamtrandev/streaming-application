@@ -79,7 +79,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 			<div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
 				<NavLink to="/" className="flex items-center space-x-4">
 					<img src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="Logo" className='w-15 h-15 rounded-full' />
-					<p>Will Streaming</p>
+					<p className="font-bold">Will Streaming</p>
 				</NavLink>
 
 				<button

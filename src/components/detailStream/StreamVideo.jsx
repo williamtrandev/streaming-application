@@ -9,7 +9,7 @@ const HeaderStreamVideo = ({stream}) => {
 			<div className="w-full">
 				<div className="w-full flex justify-between">
 					<h3 className="font-bold text-2xl">{stream.title}</h3>
-					<button type="button" class="flex space-x-2 items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+					<button type="button" className="flex space-x-2 items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
 						<span className="font-bold text-lg">+</span>
 						<span>Follow</span>
 					</button>
