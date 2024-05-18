@@ -97,9 +97,8 @@ const Header = (props) => {
 
 					{/* <DropdownUser /> */}
 					<button
-						className="text-white bg-blue-700 dark:bg-blue-500 
-							hover:bg-blue-800 hover:dark:bg-blue-600
-							px-2 py-1 rounded flex"
+						className="text-white bg-purple-600
+							px-4 py-2 rounded-lg"
 						onClick={() => props.setShowLoginModal(true)}
 					>
 						<span className="mr-1">

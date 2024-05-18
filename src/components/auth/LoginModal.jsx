@@ -12,7 +12,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
     return (
         <div className="fixed z-9999 inset-0 flex justify-center items-center
         bg-black bg-opacity-75 backdrop-blur-sm">
-            <div className="w-[500px] relative bg-white dark:bg-boxdark p-5 rounded">
+            <div className="w-[500px] relative bg-white dark:bg-boxdark p-5 rounded-lg">
                 <div className="flex justify-center mb-6">
                     <div className="text-xl font-bold">Log in to Will Streaming</div>
                     <button
@@ -74,7 +74,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                             className="text-sm text-blue-700 dark:text-blue-500 hover:underline"
                         >Forgot your password?</button>
                     </div>
-                    <div className="mb-5 text-red-500 p-1 border-red-500 border-2 rounded-lg flex">
+                    <div className="mb-5 text-red-500 px-4 py-2 border-red-500 border-2 rounded-lg flex">
                         <span className="mr-1">
                             <CircleAlert />
                         </span>

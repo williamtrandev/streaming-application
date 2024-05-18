@@ -130,7 +130,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                             {(!isValidEmail && email != "") ? "*Please enter a valid email." : ""}
                         </div>
                     </div>
-                    <div className="mb-5 text-red-500 p-1 border-red-500 border-2 rounded-lg flex">
+                    <div className="mb-5 text-red-500 px-4 py-2 border-red-500 border-2 rounded-lg flex">
                         <span className="mr-1">
                             <CircleAlert />
                         </span>
