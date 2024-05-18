@@ -8,8 +8,8 @@ import { Moon, User, LogIn } from 'lucide-react';
 const DropdownUser = ({ showLoginModal }) => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 
-	const logged = true;
-	// const logged = false;
+	// const logged = true;
+	const logged = false;
 
 	const trigger = useRef(null);
 	const dropdown = useRef(null);

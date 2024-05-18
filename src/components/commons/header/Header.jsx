@@ -87,7 +87,7 @@ const Header = (props) => {
 					</form>
 				</div>
 
-				{showSmallSearch && <div className="absolute -bottom-1/2 right-0 w-full border-b border-black">
+				{showSmallSearch && <div className="absolute -bottom-1/2 right-0 w-full border-b border-stroke dark:border-black">
 					<form>
 						<div className="relative bg-gray dark:bg-meta-4 p-2">
 							<input

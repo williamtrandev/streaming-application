@@ -138,7 +138,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
 							<SidebarLinkGroup
 								activeCondition={
-									pathname === '/followers' || pathname.includes('followers')
+									pathname === '' || pathname.includes('followers')
 								}
 							>
 								{(handleClick, open) => {
@@ -146,7 +146,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 										<>
 											<NavLink
 												to="#"
-												className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/followers' ||
+												className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '' ||
 													pathname.includes('followers')) &&
 													'bg-purple-600 dark:bg-meta-4 text-white'
 													}`}
@@ -184,7 +184,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 													{followers.map((follower, index) => (
 														<li key={index}>
 															<NavLink
-																to={`/followers/${follower.id}`}
+																to={`/${follower.id}`}
 																className={({ isActive }) =>
 																	'group relative flex items-center gap-2.5 rounded-md px-4 font-medium dark:text-bodydark2 duration-300 ease-in-out hover:text-white ' +
 																	(isActive && '!text-white')

@@ -6,7 +6,7 @@ const StreamCard = ({
 	streamer
 }) => {
 	return (
-		<Link to={`/live/${streamer.id}`}>
+		<Link to={`/live/${streamer.id}`} className="hover:scale-105">
 			<div className='bg-white dark:bg-meta-4 rounded-2xl text-theme shadow-md overflow-hidden'>
 				<img src={streamer.preview_image} alt="" className="object-contain" />
 				<div className='p-3 flex flex-wrap items-center gap-1 space-x-2'>
@@ -17,7 +17,7 @@ const StreamCard = ({
 					</div>
 					<p className="w-full flex justify-end items-center space-x-2">
 						<Users className="w-4" />
-						<span>{streamer.num_viewers}</span>
+						<span>{streamer.num_viewers.toLocaleString('en-US')}</span>
 					</p>
 				</div>
 			</div>
