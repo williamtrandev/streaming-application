@@ -1,28 +1,17 @@
 import { ThumbsDown, ThumbsUp, Users } from "lucide-react";
 import axios from 'axios';
 import { useEffect, useState } from "react";
+import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
 
-const formatNumber = (num) => {
-	if (num >= 1000000000) {
-		return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
-	} else if (num >= 1000000) {
-		return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-	} else if (num >= 1000) {
-		return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-	} else {
-		return num.toString();
-	}
-};
-
-const Streamer = ({ stream }) => {
+const Streamer = ({ user }) => {
 	return (
 		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
 			<div className="w-full flex justify-between">
 				<div className="flex gap-3">
-					<img src={stream.user.avatar} alt="" className="rounded-full w-[3rem] h-[3rem] object-cover" />
-					<div className="">
-						<div className="text-lg font-bold">{stream.user.name}</div>
-						<div>Followers: {stream.user.num_followers.toLocaleString('en-US')}</div>
+					<img src={user.avatar} alt="" className="rounded-full w-[3rem] h-[3rem] object-cover" />
+					<div>
+						<div className="text-lg font-bold">{user.name}</div>
+						<div>{formatNumFollowers(user.num_followers)} followers</div>
 					</div>
 				</div>
 
@@ -45,18 +34,18 @@ const StreamDescription = ({ stream }) => {
 			<div className="flex justify-between">
 				<div className="flex space-x-2">
 					<Users className="w-[1rem]" />
-					<span>{stream.num_viewers.toLocaleString('en-US')}</span>
+					<span>{formatNumViewers(stream.num_viewers)}</span>
 				</div>
 				<div className="flex divide-x-2 divide-white dark:divide-boxdark mb-4 text-xs md:text-base">
 					<button className="px-2 py-1 md:px-4 md:py-2 rounded-l-full flex gap-2 items-center
 						bg-neutral-300 dark:bg-black hover:bg-purple-600 dark:hover:bg-purple-500 hover:text-white">
 						<ThumbsUp size={20} />
-						{formatNumber(stream.num_likes)}
+						{formatNumLikes(stream.num_likes)}
 					</button>
 					<button className="px-2 py-1 md:px-4 md:py-2 rounded-r-full flex gap-2 items-center
 						bg-neutral-300 dark:bg-black hover:bg-purple-600 dark:hover:bg-purple-500 hover:text-white">
 						<ThumbsDown size={20} />
-						{formatNumber(stream.num_dislikes)}
+						{formatNumLikes(stream.num_dislikes)}
 					</button>
 				</div>
 			</div>
@@ -130,7 +119,7 @@ const Video = () => {
 const StreamVideo = ({ stream }) => {
 	return (
 		<div className="w-full flex flex-col items-center space-y-3">
-			<Streamer stream={stream} />
+			<Streamer user={stream.user} />
 			<Video />
 			<StreamDescription stream={stream} />
 		</div>

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Radio, Users } from "lucide-react";
 import { formatNumViewers } from '../../utils/formatNumber';
-const StreamCard = ({
+const SmallStreamCard = ({
 	index,
 	stream
 }) => {
@@ -11,24 +11,17 @@ const StreamCard = ({
 				hover:border-purple-400 dark:hover:border-purple-800'>
 				<div className="relative">
 					<img src={stream.preview_image} alt="" className="object-contain" />
-					<div className="bg-red-600 text-white px-1 rounded-md text-sm
+					<div className="bg-slate-700 text-white px-1 rounded-md text-sm
 						absolute bottom-3 right-3 flex items-center gap-1">
-						<Radio size={16} />
-						LIVE
+						01:02:03
 					</div>
 				</div>
 				
-				<div className='p-3 flex flex-wrap items-center gap-1 space-x-2'>
-					<img src={stream.user.avatar} alt="" className="rounded-full w-8" />
-					<div>
-						<h3 className='text-theme font-bold text-md'>{stream.title}</h3>
-						<div className='font-extralight text-sm hover:underline'>
-							<Link to={`/${stream.user.id}`}>{stream.user.name}</Link>
-						</div>
-					</div>
+				<div className='p-3 space-y-2'>
+					<h3 className='text-theme font-bold text-md'>{stream.title}</h3>
 					
-					<p className="w-full flex justify-end items-center space-x-2">
-						<Users className="w-4" />
+					<p className="w-full flex items-center gap-1 text-sm">
+						<Users size={14} className="w-4" />
 						{formatNumViewers(stream.num_viewers)}
 					</p>
 				</div>
@@ -37,4 +30,4 @@ const StreamCard = ({
 	);
 };
 
-export default StreamCard;
+export default SmallStreamCard;

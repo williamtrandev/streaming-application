@@ -2,14 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import UserOne from '../../../assets/lightmode.jpg';
-import DarkModeSwitcher from './DarkModeSwitcher';
-import { Moon, User, LogIn } from 'lucide-react';
+
+import { Video, User, LogIn } from 'lucide-react';
 
 const DropdownUser = ({ showLoginModal }) => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 
-	// const logged = true;
-	const logged = false;
+	const logged = true;
+	// const logged = false;
 
 	const trigger = useRef(null);
 	const dropdown = useRef(null);
@@ -120,6 +120,15 @@ const DropdownUser = ({ showLoginModal }) => {
 						</Link>
 					</li>
 					<li>
+						<Link 
+							to="/studio"
+							className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+						>
+							<Video />
+							Studio
+						</Link>
+					</li>
+					<li>
 						<Link
 							to="/pages/settings"
 							className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
@@ -145,11 +154,6 @@ const DropdownUser = ({ showLoginModal }) => {
 						</Link>
 					</li>
 				</ul>}
-				<div className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
-					<Moon />
-					Theme
-					<DarkModeSwitcher />
-				</div>
 				{logged && <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
 					<svg
 						className="fill-current"

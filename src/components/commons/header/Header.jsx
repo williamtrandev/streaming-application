@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import DropdownNotification from '../header/DropdownNotification';
+import DarkModeSwitcher from './DarkModeSwitcher';
 import DropdownUser from '../header/DropdownUser';
 import LogoIcon from '../../../assets/lightmode.jpg';
 import { Search } from 'lucide-react';
@@ -129,7 +130,10 @@ const Header = (props) => {
 						>
 							<Search className="h-8.5 w-8.5 p-1.5 rounded-full border-[0.5px] border-stroke bg-gray dark:border-strokedark dark:bg-meta-4 dark:text-white" />
 						</button>
-
+						<div className="hidden md:block">
+							<DarkModeSwitcher />
+						</div>
+						
 						<DropdownNotification />
 						<DropdownUser showLoginModal={() => props.setShowLoginModal(true)} />
 					</ul>

@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
-import { Podcast, Telescope, Tv } from 'lucide-react';
+import { Moon, Podcast, Telescope, Tv } from 'lucide-react';
+import DarkModeSwitcher from '../header/DarkModeSwitcher';
 
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
@@ -222,6 +223,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 									<Telescope className='w-5' />
 									<p className='text-base'>Live</p>
 								</NavLink>
+							</li>
+							<li className="md:hidden group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium">
+								<Moon />
+								<DarkModeSwitcher />
 							</li>
 						</ul>
 					</div>
