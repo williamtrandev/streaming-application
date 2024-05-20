@@ -1,27 +1,63 @@
-import { Users } from "lucide-react";
+import { ThumbsDown, ThumbsUp, Users } from "lucide-react";
 import axios from 'axios';
-import { useEffect } from "react";
-const HeaderStreamVideo = ({stream}) => {
-	return (
-		<div className="w-full flex space-x-3 items-center">
-			<img src={stream.user.avatar} alt="" className="rounded-full w-[3rem] h-[3rem] object-cover" />
+import { useEffect, useState } from "react";
+import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
 
-			<div className="w-full">
-				<div className="w-full flex justify-between">
-					<h3 className="font-bold text-2xl">{stream.title}</h3>
-					<button type="button" class="flex space-x-2 items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+const Streamer = ({ user }) => {
+	return (
+		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
+			<div className="w-full flex justify-between">
+				<div className="flex gap-3">
+					<img src={user.avatar} alt="" className="rounded-full w-[3rem] h-[3rem] object-cover" />
+					<div>
+						<div className="text-lg font-bold">{user.name}</div>
+						<div>{formatNumFollowers(user.num_followers)} followers</div>
+					</div>
+				</div>
+
+				<div className="flex items-center">
+					<button type="button" className="flex space-x-2 items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
 						<span className="font-bold text-lg">+</span>
 						<span>Follow</span>
 					</button>
 				</div>
-				<div className="flex space-x-4 text-sm">
-					<span>{stream.user.name}</span>
-					<p className="flex space-x-2">
-						<Users className="w-[1rem]" />
-						<span>{stream.num_viewers}</span>
-					</p>
-					<span>Followers: {stream.user.num_followers}</span>
+			</div>
+		</div>
+	);
+}
+
+const StreamDescription = ({ stream }) => {
+	const [isExpanded, setIsExpanded] = useState(false);
+	return (
+		<div className="w-full items-center space-y-3 bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
+			<h3 className="font-bold text-2xl w-full">{stream.title}</h3>
+			<div className="flex justify-between">
+				<div className="flex space-x-2">
+					<Users className="w-[1rem]" />
+					<span>{formatNumViewers(stream.num_viewers)}</span>
 				</div>
+				<div className="flex divide-x-2 divide-white dark:divide-boxdark mb-4 text-xs md:text-base">
+					<button className="px-2 py-1 md:px-4 md:py-2 rounded-l-full flex gap-2 items-center
+						bg-neutral-300 dark:bg-black hover:bg-purple-600 dark:hover:bg-purple-500 hover:text-white">
+						<ThumbsUp size={20} />
+						{formatNumLikes(stream.num_likes)}
+					</button>
+					<button className="px-2 py-1 md:px-4 md:py-2 rounded-r-full flex gap-2 items-center
+						bg-neutral-300 dark:bg-black hover:bg-purple-600 dark:hover:bg-purple-500 hover:text-white">
+						<ThumbsDown size={20} />
+						{formatNumLikes(stream.num_dislikes)}
+					</button>
+				</div>
+			</div>
+			<div className={isExpanded ? "flex flex-col gap-4" : ""}>
+				{isExpanded ? stream.description : `${stream.description.substring(0, 200)}...`}
+				<button
+					className="px-1 rounded-lg bg-neutral-200 dark:bg-neutral-700
+						hover:bg-neutral-300 dark:hover:bg-neutral-600 w-fit text-start"
+					onClick={() => setIsExpanded(!isExpanded)}
+				>
+					{isExpanded ? "Show less" : "More"}
+				</button>
 			</div>
 		</div>
 	)
@@ -80,12 +116,13 @@ const Video = () => {
 	)
 }
 
-const StreamVideo = ({stream}) => {
+const StreamVideo = ({ stream }) => {
 	return (
-		<div className="w-full h-full flex flex-col items-center justify-center bg-white shadow-md dark:bg-boxdark px-4 py-6 rounded-md space-y-3">
-			<HeaderStreamVideo stream={stream} />
+		<div className="w-full flex flex-col items-center space-y-3">
+			<Streamer user={stream.user} />
 			<Video />
-		</div>			
+			<StreamDescription stream={stream} />
+		</div>
 	)
 }
 

@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
-import { Podcast, Telescope, Tv } from 'lucide-react';
+import { Moon, Podcast, Telescope, Tv } from 'lucide-react';
+import DarkModeSwitcher from '../header/DarkModeSwitcher';
 
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
@@ -79,7 +80,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 			<div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
 				<NavLink to="/" className="flex items-center space-x-4">
 					<img src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="Logo" className='w-15 h-15 rounded-full' />
-					<p>Will Streaming</p>
+					<p className="font-bold">Will Streaming</p>
 				</NavLink>
 
 				<button
@@ -138,7 +139,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
 							<SidebarLinkGroup
 								activeCondition={
-									pathname === '/followers' || pathname.includes('followers')
+									pathname === '' || pathname.includes('followers')
 								}
 							>
 								{(handleClick, open) => {
@@ -146,7 +147,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 										<>
 											<NavLink
 												to="#"
-												className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/followers' ||
+												className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '' ||
 													pathname.includes('followers')) &&
 													'bg-purple-600 dark:bg-meta-4 text-white'
 													}`}
@@ -184,7 +185,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 													{followers.map((follower, index) => (
 														<li key={index}>
 															<NavLink
-																to={`/followers/${follower.id}`}
+																to={`/${follower.id}`}
 																className={({ isActive }) =>
 																	'group relative flex items-center gap-2.5 rounded-md px-4 font-medium dark:text-bodydark2 duration-300 ease-in-out hover:text-white ' +
 																	(isActive && '!text-white')
@@ -222,6 +223,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 									<Telescope className='w-5' />
 									<p className='text-base'>Live</p>
 								</NavLink>
+							</li>
+							<li className="md:hidden group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium">
+								<Moon />
+								<DarkModeSwitcher />
 							</li>
 						</ul>
 					</div>

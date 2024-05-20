@@ -82,9 +82,9 @@ const ChatBox = () => {
 	};
 
 	return (
-		<div className="w-full h-full bg-white dark:bg-boxdark p-3 rounded-md shadow-md space-y-2">
-			
-			<div className="flex flex-col gap-4 overflow-auto h-[calc(100%-3rem)]">
+		<div className="w-full h-full bg-white dark:bg-boxdark rounded-md shadow-md space-y-2">
+			<div className="font-semibold text-center border-b px-3 pt-3">Stream chat</div>
+			<div className="flex flex-col gap-4 pl-3 overflow-auto h-[calc(100%-6.55rem)]">
 				{msgs.map((message, index) => {
 					return (
 						<div key={index}>
@@ -98,7 +98,10 @@ const ChatBox = () => {
 				})}
 				<div ref={messagesEndRef}></div>
 			</div>
-			<MessageInput onMessageSubmit={handleMessageSubmit} />
+			<div className="px-3">
+				<MessageInput onMessageSubmit={handleMessageSubmit} />
+			</div>
+			
 		</div>
 
 	)

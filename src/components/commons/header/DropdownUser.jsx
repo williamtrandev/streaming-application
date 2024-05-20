@@ -3,8 +3,13 @@ import { Link } from 'react-router-dom';
 
 import UserOne from '../../../assets/lightmode.jpg';
 
-const DropdownUser = () => {
+import { Video, User, LogIn } from 'lucide-react';
+
+const DropdownUser = ({ showLoginModal }) => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
+
+	const logged = true;
+	// const logged = false;
 
 	const trigger = useRef(null);
 	const dropdown = useRef(null);
@@ -40,18 +45,22 @@ const DropdownUser = () => {
 			<Link
 				ref={trigger}
 				onClick={() => setDropdownOpen(!dropdownOpen)}
-				className="flex items-center gap-4"
+				className="flex items-center gap-2"
 				to="#"
 			>
-				<span className="hidden text-right lg:block">
+				{/* <span className="hidden text-right lg:block">
 					<span className="block text-sm font-medium text-black dark:text-white">
 						William Tran
 					</span>
-				</span>
+				</span> */}
 
-				<span className="h-12 w-12 rounded-full">
+				{logged && <span className="h-10 w-10 rounded-full">
 					<img src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="User" className="w-10 h-10 rounded-full" />
-				</span>
+				</span>}
+
+				{!logged && <span className="h-10 w-10 rounded-full">
+					<User className="w-10 h-10 rounded-full bg-purple-600 text-white" />
+				</span>}
 
 				<svg
 					className="hidden fill-current sm:block"
@@ -75,10 +84,16 @@ const DropdownUser = () => {
 				ref={dropdown}
 				onFocus={() => setDropdownOpen(true)}
 				onBlur={() => setDropdownOpen(false)}
-				className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${dropdownOpen === true ? 'block' : 'hidden'
-					}`}
+				className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${dropdownOpen === true ? 'block' : 'hidden'} 
+					divide-y divide-stroke dark:divide-strokedark`}
 			>
-				<ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
+				{logged && <div className="px-6 py-4 flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out lg:text-base truncate">
+					<span className="h-10 w-10 rounded-full">
+						<img src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="User" className="w-10 h-10 rounded-full" />
+					</span>
+					William Tran
+				</div>}
+				{logged && <ul className="flex flex-col gap-5 px-6 py-4">
 					<li>
 						<Link
 							to="/profile"
@@ -102,6 +117,15 @@ const DropdownUser = () => {
 								/>
 							</svg>
 							My Profile
+						</Link>
+					</li>
+					<li>
+						<Link 
+							to="/studio"
+							className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+						>
+							<Video />
+							Studio
 						</Link>
 					</li>
 					<li>
@@ -129,8 +153,8 @@ const DropdownUser = () => {
 							Account Settings
 						</Link>
 					</li>
-				</ul>
-				<button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+				</ul>}
+				{logged && <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
 					<svg
 						className="fill-current"
 						width="22"
@@ -149,7 +173,14 @@ const DropdownUser = () => {
 						/>
 					</svg>
 					Log Out
-				</button>
+				</button>}
+				{!logged && <button 
+					className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+					onClick={showLoginModal}
+				>
+					<LogIn />
+					Log In
+				</button>}
 			</div>
 		</div>
 	);

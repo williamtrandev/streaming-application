@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { X, User, LockKeyhole, Eye, EyeOff, CircleAlert } from "lucide-react";
 
 const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
     if (!isVisible) return null;
@@ -19,18 +20,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                             hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded"
                         onClick={() => onClose(false)}
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            class="lucide lucide-x"
-                        ><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                        <X />
                     </button>
                 </div>
                 <div>
@@ -38,8 +28,8 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                         <div className="mb-1">Username</div>
                         <div id="usernameInput" className="text-black w-full">
                             <div className="relative">
-                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center fill-current">
+                                    <User />
                                 </span>
                                 <input 
                                     type="text" 
@@ -57,7 +47,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                         <div id="passwordInput" className="text-black w-full">
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="lucide lucide-lock-keyhole"><circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg>
+                                    <LockKeyhole />
                                 </span>
                                 <input 
                                     type={showPassword} 
@@ -73,8 +63,8 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                                         setShowPassword(showPassword === "password" ? "text" : "password");
                                     }}
                                 >
-                                    {((showPassword == "password") && (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="lucide lucide-eye"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>))}
-                                    {((showPassword == "text") && (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="lucide lucide-eye-off"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>))}
+                                    {showPassword == "password" && (<Eye />)}
+                                    {showPassword == "text" && (<EyeOff />)}
                                 </button>
                             </div>
                         </div>
@@ -86,7 +76,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                     </div>
                     <div className="mb-5 text-red-500 px-4 py-2 border-red-500 border-2 rounded-lg flex">
                         <span className="mr-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="lucide lucide-circle-alert"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                            <CircleAlert />
                         </span>
                         Username or password was incorrect.
                     </div>

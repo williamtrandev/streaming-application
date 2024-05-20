@@ -8,6 +8,7 @@ import StreamsPage from './pages/StreamsPage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import Streaming from './pages/Streaming';
+import StreamerPage from './pages/StreamerPage';
 
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
           <Route path='/live/:id' element={<DetailStreamPage />} />
           <Route path='/profile' element={<ProfilePage />} />
           <Route path='/streaming' element={<Streaming />} />
-
+          <Route path='/:id' element={<StreamerPage />} />
         </Route>
         <Route path='/login' element={<LoginPage />} />
       </Routes>
