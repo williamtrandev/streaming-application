@@ -187,8 +187,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 															<NavLink
 																to={`/${follower.id}`}
 																className={({ isActive }) =>
-																	'group relative flex items-center gap-2.5 rounded-md px-4 font-medium dark:text-bodydark2 duration-300 ease-in-out hover:text-white ' +
-																	(isActive && '!text-white')
+																	'group relative flex items-center gap-2.5 rounded-md px-4 font-medium duration-300 ease-in-out dark:text-bodydark2 hover:font-bold dark:hover:text-white ' +
+																	(isActive && '!font-bold dark:!text-white')
 																}
 															>
 																<div className="relative flex">
@@ -211,19 +211,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 									);
 								}}
 							</SidebarLinkGroup>
-
-							<li>
-								<NavLink
-									to="/live"
-									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/live' ||
-										pathname.includes('live')) &&
-										'bg-purple-600 dark:bg-meta-4 text-white'
-										}`}
-								>
-									<Telescope className='w-5' />
-									<p className='text-base'>Live</p>
-								</NavLink>
-							</li>
 							<li className="md:hidden group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium">
 								<Moon />
 								<DarkModeSwitcher />

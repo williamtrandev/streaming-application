@@ -2,24 +2,29 @@ import { ThumbsDown, ThumbsUp, Users } from "lucide-react";
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
+import FollowButton from "../detailStreamer/FollowButton";
+import FollowedButton from "../detailStreamer/FollowedButton";
+import { Link } from "react-router-dom";
 
 const Streamer = ({ user }) => {
+	const [followed, setFollowed] = useState(false);
 	return (
 		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
-			<div className="w-full flex justify-between">
-				<div className="flex gap-3">
+			<div className="w-full md:flex md:justify-between">
+				<Link 
+					to={`/${user.id}`}
+					className="flex gap-3"
+				>
 					<img src={user.avatar} alt="" className="rounded-full w-[3rem] h-[3rem] object-cover" />
 					<div>
 						<div className="text-lg font-bold">{user.name}</div>
 						<div>{formatNumFollowers(user.num_followers)} followers</div>
 					</div>
-				</div>
+				</Link>
 
-				<div className="flex items-center">
-					<button type="button" className="flex space-x-2 items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-						<span className="font-bold text-lg">+</span>
-						<span>Follow</span>
-					</button>
+				<div className="flex items-center ml-15 mt-1 md:ml-4 md:mt-0">
+					{!followed && <FollowButton onClick={() => setFollowed(true)} />}
+                    {followed && <FollowedButton unfollow={() => setFollowed(false)} />}
 				</div>
 			</div>
 		</div>
