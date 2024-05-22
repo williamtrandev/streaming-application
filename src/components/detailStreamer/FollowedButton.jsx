@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Bell, BellOff, ChevronDown, UserMinus } from "lucide-react";
 
-const FollowedButton = ({ unfollow }) => {
+const FollowedButton = ({ onUnfollowClick, streamerName }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [notification, setNotification] = useState(true);
     return (
@@ -35,7 +35,10 @@ const FollowedButton = ({ unfollow }) => {
                     {!notification && <span>Notification</span>}
                 </button>
                 <button 
-                    onClick={() => unfollow()}
+                    onClick={() => {
+                        onUnfollowClick(streamerName);
+                        setDropdownOpen(false);
+                    }}
                     className="flex gap-2 items-center p-4
                     bg-white dark:bg-boxdark hover:bg-neutral-200 dark:hover:bg-neutral-700">
                     <UserMinus size={20} />

@@ -1,7 +1,8 @@
-import useSwitchMode from "../../../hooks/useSwitchMode";
+import { useContext } from "react";
+import { UnfollowModalContext } from "../../detailStreamer/UnfollowModalContext";
 
 const DarkModeSwitcher = () => {
-	const [colorMode, setColorMode] = useSwitchMode();
+	const {colorMode, setColorMode} = useContext(UnfollowModalContext);
 
 	return (
 		<div>

@@ -1,13 +1,14 @@
 import { ThumbsDown, ThumbsUp, Users } from "lucide-react";
 import axios from 'axios';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
 import FollowButton from "../detailStreamer/FollowButton";
 import FollowedButton from "../detailStreamer/FollowedButton";
 import { Link } from "react-router-dom";
+import { UnfollowModalContext } from "../detailStreamer/UnfollowModalContext";
 
 const Streamer = ({ user }) => {
-	const [followed, setFollowed] = useState(false);
+	const { handleShowUnfollowModal, followed, setFollowed } = useContext(UnfollowModalContext);
 	return (
 		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
 			<div className="w-full md:flex md:justify-between">
@@ -15,7 +16,7 @@ const Streamer = ({ user }) => {
 					to={`/${user.id}`}
 					className="flex gap-3"
 				>
-					<img src={user.avatar} alt="" className="rounded-full w-[3rem] h-[3rem] object-cover" />
+					<img src={user.profile_picture} alt="" className="rounded-full w-[3rem] h-[3rem] object-cover" />
 					<div>
 						<div className="text-lg font-bold">{user.name}</div>
 						<div>{formatNumFollowers(user.num_followers)} followers</div>
@@ -24,7 +25,9 @@ const Streamer = ({ user }) => {
 
 				<div className="flex items-center ml-15 mt-1 md:ml-4 md:mt-0">
 					{!followed && <FollowButton onClick={() => setFollowed(true)} />}
-                    {followed && <FollowedButton unfollow={() => setFollowed(false)} />}
+                    {followed && <FollowedButton
+                        onUnfollowClick={handleShowUnfollowModal}
+                        streamerName={user.name} />}
 				</div>
 			</div>
 		</div>

@@ -1,25 +1,21 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { streams } from "../constants";
-import ProfileHeader from "../components/detailStreamer/ProfileHeader";
-import HomeTab from "../components/detailStreamer/HomeTab";
-import StreamsTab from "../components/detailStreamer/StreamsTab";
-import AboutTab from "../components/detailStreamer/AboutTab";
+import { Link, useParams } from "react-router-dom";
+import ProfileHeader from "../../components/detailStreamer/ProfileHeader";
+import AboutTab from "../../components/detailStreamer/AboutTab";
 
-const StreamerPage = () => {
-	const { id } = useParams();
-	const [activeTab, setActiveTab] = useState(0);
+const StreamerAboutPage = () => {
+    const { id } = useParams();
 
 	const tabData = [
-		{ id: 0, label: "Home" },
-		{ id: 1, label: "Streams" },
-		{ id: 2, label: "About" },
+		{ id: 0, label: "Home", link: "" },
+		{ id: 1, label: "Streams", link: "streams" },
+		{ id: 2, label: "About", link: "about" },
 	];
 
 	const fakeStreamer = {
-		profile_cover: "https://react-demo.tailadmin.com/assets/cover-01-e8bbef04.png",
-		avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
+		profile_banner: "https://react-demo.tailadmin.com/assets/cover-01-e8bbef04.png",
+		profile_picture: 'https://avatars.githubusercontent.com/u/102520170?v=4',
 		name: "William Tran",
+		username: "WilliamTran123",
 		num_followers: 113315,
 		about: {
 			text: `F8 là cộng đồng học tập và chia sẻ kiến thức lập trình dành cho tất cả mọi người. Các khóa học đều được đầu tư kỹ lưỡng về mặt nội dung, âm thanh và hình ảnh. Học viên có thể học từ con số 0 tới khi trở thành lập trình viên chuyên nghiệp tại đây.
@@ -57,35 +53,20 @@ Email: contact@fullstack.edu.vn
 			<div className="w-full">
 				<div className="flex border-b border-gray-200 gap-8">
 					{tabData.map((tab) => (
-						<button
+						<Link
+							to={tab.label === "Home" ? `/${id}` : `/${id}/${tab.link}`}
 							key={tab.id}
-							onClick={() => setActiveTab(tab.id)}
-							className={`px-4 py-2 font-bold text-md md:text-xl ${activeTab === tab.id
+							className={`px-4 py-2 font-bold text-md md:text-xl ${tab.label === "About"
 								? 'border-b-4 border-black-2 text-black-2 dark:border-white dark:text-white'
 								: 'border-b-2 border-transparent text-neutral-600 dark:text-neutral-400 hover:border-neutral-600 dark:hover:border-neutral-400'
 								}`}
 						>
 							{tab.label}
-						</button>
+						</Link>
 					))}
 				</div>
 				<div className="py-4">
-					<div
-						key={0}
-						className={`${activeTab === 0 ? 'block' : 'hidden'}`}
-					>
-						<HomeTab currentStream={streams[0]} mostLikedStream={streams} mostViewedStream={streams} />
-					</div>
-					<div
-						key={1}
-						className={`${activeTab === 1 ? 'block' : 'hidden'}`}
-					>
-						<StreamsTab streams={streams} />
-					</div>
-					<div
-						key={2}
-						className={`${activeTab === 2 ? 'block' : 'hidden'}`}
-					>
+					<div>
 						<AboutTab about={fakeStreamer.about} />
 					</div>
 				</div>
@@ -94,4 +75,4 @@ Email: contact@fullstack.edu.vn
 	);
 }
 
-export default StreamerPage
+export default StreamerAboutPage;

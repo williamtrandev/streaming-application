@@ -3,12 +3,15 @@ import DropdownNotification from '../header/DropdownNotification';
 import DarkModeSwitcher from './DarkModeSwitcher';
 import DropdownUser from '../header/DropdownUser';
 import LogoIcon from '../../../assets/lightmode.jpg';
-import { Search } from 'lucide-react';
+import { LogIn, Search } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 const Header = (props) => {
 	const [isSearchVisible, setIsSearchVisible] = useState(false);
 	const searchRef = useRef(null);
+
+	const logged = true;
+	// const logged = false;
 
 	const handleClickOutside = (event) => {
 		if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -151,7 +154,16 @@ const Header = (props) => {
 						</div>
 
 						<DropdownNotification />
-						<DropdownUser showLoginModal={() => props.setShowLoginModal(true)} />
+						{logged && <DropdownUser />}
+						{!logged && <div>
+							<button className="flex gap-1 px-2 py-1 text-white rounded-lg
+								bg-purple-600 hover:bg-purple-700 dark:hover:bg-purple-500"
+								onClick={() => props.setShowLoginModal(true)}
+							>
+								<LogIn />
+								Login
+							</button>
+						</div>}
 					</ul>
 				</div>
 			</div>

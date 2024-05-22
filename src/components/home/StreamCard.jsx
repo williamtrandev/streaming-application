@@ -19,7 +19,7 @@ const StreamCard = ({
 				</div>
 				
 				<div className='p-3 flex flex-wrap items-center gap-1 space-x-2'>
-					<img src={stream.user.avatar} alt="" className="rounded-full w-8" />
+					<img src={stream.user.profile_picture} alt="" className="rounded-full w-8" />
 					<div>
 						<h3 className='text-theme font-bold text-md'>{stream.title}</h3>
 						<div className='font-extralight text-sm hover:underline'>

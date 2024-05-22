@@ -7,7 +7,7 @@ const DetailStreamPage = () => {
 	const fakeStream = {
 		title: 'Test Stream', 	
 		user: {
-			avatar: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
+			profile_picture: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
 			name: "Thanh Chan",
 			num_followers: 100
 		},

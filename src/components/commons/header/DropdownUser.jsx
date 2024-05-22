@@ -3,13 +3,10 @@ import { Link } from 'react-router-dom';
 
 import UserOne from '../../../assets/lightmode.jpg';
 
-import { Video, User, LogIn } from 'lucide-react';
+import { Video } from 'lucide-react';
 
-const DropdownUser = ({ showLoginModal }) => {
+const DropdownUser = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
-
-	const logged = true;
-	// const logged = false;
 
 	const trigger = useRef(null);
 	const dropdown = useRef(null);
@@ -48,19 +45,9 @@ const DropdownUser = ({ showLoginModal }) => {
 				className="flex items-center gap-2"
 				to="#"
 			>
-				{/* <span className="hidden text-right lg:block">
-					<span className="block text-sm font-medium text-black dark:text-white">
-						William Tran
-					</span>
-				</span> */}
-
-				{logged && <span className="h-10 w-10 rounded-full">
+				<span className="h-10 w-10 rounded-full">
 					<img src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="User" className="w-10 h-10 rounded-full" />
-				</span>}
-
-				{!logged && <span className="h-10 w-10 rounded-full">
-					<User className="w-10 h-10 rounded-full bg-purple-600 text-white" />
-				</span>}
+				</span>
 
 				<svg
 					className="hidden fill-current sm:block"
@@ -87,16 +74,16 @@ const DropdownUser = ({ showLoginModal }) => {
 				className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${dropdownOpen === true ? 'block' : 'hidden'} 
 					divide-y divide-stroke dark:divide-strokedark`}
 			>
-				{logged && <div className="px-6 py-4 flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out lg:text-base truncate">
+				<div className="px-6 py-4 flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out lg:text-base truncate">
 					<span className="h-10 w-10 rounded-full">
 						<img src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="User" className="w-10 h-10 rounded-full" />
 					</span>
 					William Tran
-				</div>}
-				{logged && <ul className="flex flex-col gap-5 px-6 py-4">
+				</div>
+				<ul className="flex flex-col gap-5 px-6 py-4">
 					<li>
 						<Link
-							to="/profile"
+							to="/myid"
 							className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
 						>
 							<svg
@@ -116,7 +103,7 @@ const DropdownUser = ({ showLoginModal }) => {
 									fill=""
 								/>
 							</svg>
-							My Profile
+							My Channel
 						</Link>
 					</li>
 					<li>
@@ -130,7 +117,7 @@ const DropdownUser = ({ showLoginModal }) => {
 					</li>
 					<li>
 						<Link
-							to="/pages/settings"
+							to="/settings/profile"
 							className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
 						>
 							<svg
@@ -150,11 +137,11 @@ const DropdownUser = ({ showLoginModal }) => {
 									fill=""
 								/>
 							</svg>
-							Account Settings
+							Settings
 						</Link>
 					</li>
-				</ul>}
-				{logged && <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+				</ul>
+				<button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
 					<svg
 						className="fill-current"
 						width="22"
@@ -173,14 +160,7 @@ const DropdownUser = ({ showLoginModal }) => {
 						/>
 					</svg>
 					Log Out
-				</button>}
-				{!logged && <button 
-					className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-					onClick={showLoginModal}
-				>
-					<LogIn />
-					Log In
-				</button>}
+				</button>
 			</div>
 		</div>
 	);
