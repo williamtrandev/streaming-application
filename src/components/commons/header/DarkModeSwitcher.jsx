@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { UnfollowModalContext } from "../../detailStreamer/UnfollowModalContext";
+import { ModalContext } from "../../../layouts/ModalContext";
 
 const DarkModeSwitcher = () => {
-	const {colorMode, setColorMode} = useContext(UnfollowModalContext);
+	const {colorMode, setColorMode} = useContext(ModalContext);
 
 	return (
 		<div>

@@ -4,14 +4,19 @@ import Header from '../components/commons/header/Header';
 import { Outlet } from 'react-router-dom';
 import LoginModal from '../components/auth/LoginModal';
 import RegisterModal from '../components/auth/RegisterModal';
-import { UnfollowModalContext, UnfollowModalProvider } from '../components/detailStreamer/UnfollowModalContext';
 import UnfollowModal from '../components/detailStreamer/UnfollowModal';
+import { ModalContext, ModalProvider } from './ModalContext';
+import CropperModal from '../components/settings/CroperModal';
 
 const MainLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [showRegisterModal, setShowRegisterModal] = useState(false);
-	const { showUnfollowModal, unfollowName, handleCloseUnfollowModal, setFollowed } = useContext(UnfollowModalContext);
+	const { 
+		showUnfollowModal, unfollowName, handleCloseUnfollowModal, 
+		setFollowed, 
+		showCropperModal, setShowCropperModal, src, setPreview
+	} = useContext(ModalContext);
 
 	return (
 		<div className="dark:bg-boxdark-2 dark:text-bodydark bg-[#edf2f9]">
@@ -38,12 +43,18 @@ const MainLayout = () => {
 					handleCloseUnfollowModal();
 				}} 
 				streamerName={unfollowName} />
+			<CropperModal
+				show={showCropperModal}
+				onClose={() => setShowCropperModal(false)}
+				src={src}
+				setPreview={setPreview}
+			/>
 		</div>
 	);
 }
 
 export default () => (
-	<UnfollowModalProvider>
+	<ModalProvider>
 		<MainLayout />
-	</UnfollowModalProvider>
+	</ModalProvider>
 );

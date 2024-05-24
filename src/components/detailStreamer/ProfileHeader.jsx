@@ -2,12 +2,12 @@ import { useState, useContext } from "react";
 import { formatNumFollowers } from "../../utils/formatNumber";
 import FollowButton from "./FollowButton";
 import FollowedButton from "./FollowedButton";
-import { UnfollowModalContext } from "./UnfollowModalContext";
 import { Dot } from "lucide-react";
+import { ModalContext } from "../../layouts/ModalContext";
 
 const ProfileHeader = ({ streamer }) => {
 
-    const { handleShowUnfollowModal, followed, setFollowed } = useContext(UnfollowModalContext);
+    const { handleShowUnfollowModal, followed, setFollowed } = useContext(ModalContext);
 
     return (
         <div className="rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">

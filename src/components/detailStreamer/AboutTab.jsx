@@ -10,13 +10,17 @@ const AboutTab = ({ about }) => {
                 <div className="font-bold text-2xl">Links</div>
                 <div className="flex flex-col gap-1 mt-2 text-lg">
                     {about.links.map((link, index) => (
-                        <Link 
-                            key={index}
-                            to={link.link}
-                            className="text-blue-600 dark:text-blue-500 hover:underline"
-                        >
-                            {link.title}
-                        </Link>
+                        <div key={index}>
+                            <div>{link.title}</div>
+                            <div>
+                                <Link
+                                    to={link.link}
+                                    className="text-blue-600 dark:text-blue-500 hover:underline"
+                                >
+                                    {link.link}
+                                </Link>
+                            </div>
+                        </div>
                     ))}
                 </div>
             </div>}

@@ -5,10 +5,10 @@ import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../util
 import FollowButton from "../detailStreamer/FollowButton";
 import FollowedButton from "../detailStreamer/FollowedButton";
 import { Link } from "react-router-dom";
-import { UnfollowModalContext } from "../detailStreamer/UnfollowModalContext";
+import { ModalContext } from "../../layouts/ModalContext";
 
 const Streamer = ({ user }) => {
-	const { handleShowUnfollowModal, followed, setFollowed } = useContext(UnfollowModalContext);
+	const { handleShowUnfollowModal, followed, setFollowed } = useContext(ModalContext);
 	return (
 		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
 			<div className="w-full md:flex md:justify-between">
