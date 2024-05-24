@@ -12,6 +12,7 @@ import StreamerHomePage from './pages/StreamerPages/StreamerHomePage';
 import StreamerAboutPage from './pages/StreamerPages/StreamerAboutPage';
 import StreamerStreamsPage from './pages/StreamerPages/StreamerStreamsPage';
 import SettingProfilePage from './pages/SettingPages/SettingProfilePage';
+import FollowingPage from './pages/FollowingPage';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           {/* <Route path='/profile' element={<ProfilePage />} /> */}
           <Route path='/streaming' element={<Streaming />} />
           <Route path='/settings/profile' element={<SettingProfilePage />} />
+          <Route path='/following' element={<FollowingPage />} />
           <Route path='/:id/about' element={<StreamerAboutPage />} />
           <Route path='/:id/streams' element={<StreamerStreamsPage />} />
           <Route path='/:id' element={<StreamerHomePage />} />

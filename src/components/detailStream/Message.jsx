@@ -20,9 +20,9 @@ const Message = ({msg}) => {
 				<img src={photoURL} alt="" className="w-6 h-6 rounded-full" />
 				<div className="flex space-x-2 items-center">
 					<p className='font-bold'>{displayName}</p>
-					{/* <p className='text-xs'>
+					<p className='text-xs'>
 						{formatDate(createdAt)}
-					</p> */}
+					</p>
 				</div>
 			</div>
 			<p className='text-md'>{message}</p>
