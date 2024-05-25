@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
-import { ChevronDown, ChevronUp, Moon, Podcast, Telescope, Tv } from 'lucide-react';
+import { ChevronDown, ChevronUp, History, Moon, Podcast, Telescope, ThumbsUp, Tv } from 'lucide-react';
 import DarkModeSwitcher from '../header/DarkModeSwitcher';
 
 
@@ -169,14 +169,27 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
 							<li>
 								<NavLink
-									to="/discover"
-									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/discover' ||
-										pathname.includes('discover')) &&
+									to="/history"
+									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/history' ||
+										pathname.includes('history')) &&
 										'bg-purple-600 dark:bg-meta-4 text-white'
 										}`}
 								>
-									<Telescope className='w-5' />
-									<p className='text-base'>Discover</p>
+									<History className='w-5' />
+									<p className='text-base'>History</p>
+								</NavLink>
+							</li>
+
+							<li>
+								<NavLink
+									to="/liked"
+									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/liked' ||
+										pathname.includes('liked')) &&
+										'bg-purple-600 dark:bg-meta-4 text-white'
+										}`}
+								>
+									<ThumbsUp className='w-5' />
+									<p className='text-base'>Liked streams</p>
 								</NavLink>
 							</li>
 

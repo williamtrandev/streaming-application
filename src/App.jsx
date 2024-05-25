@@ -4,7 +4,6 @@ import './index.css';
 import { MainLayout } from './layouts';
 import HomePage from './pages/HomePage';
 import DetailStreamPage from './pages/DetailStreamPage';
-import StreamsPage from './pages/StreamsPage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import Streaming from './pages/Streaming';
@@ -13,6 +12,7 @@ import StreamerAboutPage from './pages/StreamerPages/StreamerAboutPage';
 import StreamerStreamsPage from './pages/StreamerPages/StreamerStreamsPage';
 import SettingProfilePage from './pages/SettingPages/SettingProfilePage';
 import FollowingPage from './pages/FollowingPage';
+import HistoryPage from './pages/HistoryPage';
 
 
 function App() {
@@ -21,7 +21,7 @@ function App() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route index element={<HomePage />} />
-          <Route path='/discover' element={<StreamsPage />} />
+          <Route path='/history' element={<HistoryPage />} />
           <Route path='/live/:id' element={<DetailStreamPage />} />
           {/* <Route path='/profile' element={<ProfilePage />} /> */}
           <Route path='/streaming' element={<Streaming />} />

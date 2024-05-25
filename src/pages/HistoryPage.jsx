@@ -1,6 +1,6 @@
 import { streams } from "../constants";
 import StreamCard from "../components/home/StreamCard";
-const StreamsPage = () => {
+const HistoryPage = () => {
 	return (
 		<div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
 			{streams.map((stream, index) => (
@@ -14,4 +14,4 @@ const StreamsPage = () => {
 	)
 }
 
-export default StreamsPage;
+export default HistoryPage;
