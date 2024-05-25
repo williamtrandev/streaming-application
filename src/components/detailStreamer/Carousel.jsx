@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SmallStreamCard from './SmallStreamCard';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Carousel = ({ streams }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const cardsPerSlide = 4;
+    const [cardsPerSlide, setCardsPerSlide] = useState(4);
+
+    const updateCardsPerSlide = () => {
+        if (window.innerWidth < 640) {
+            setCardsPerSlide(1); // màn hình nhỏ
+        } else {
+            setCardsPerSlide(4); // màn hình lớn hơn
+        }
+    };
+
+    useEffect(() => {
+        updateCardsPerSlide();
+        window.addEventListener('resize', updateCardsPerSlide);
+        return () => window.removeEventListener('resize', updateCardsPerSlide);
+    }, []);
 
     const prevSlide = () => {
         const isFirstSlide = currentIndex === 0;
@@ -24,7 +38,7 @@ const Carousel = ({ streams }) => {
                 {streams.map((stream, index) => (
                     <div
                         key={index}
-                        className="w-1/4 px-2 flex-shrink-0"
+                        className="w-full md:w-1/4 px-2 flex-shrink-0"
                     >
                         <SmallStreamCard
                             index={index}

@@ -7,7 +7,7 @@ const DetailStreamPage = () => {
 	const fakeStream = {
 		title: 'Test Stream', 	
 		user: {
-			avatar: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
+			profile_picture: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
 			name: "Thanh Chan",
 			num_followers: 100
 		},
@@ -18,11 +18,11 @@ const DetailStreamPage = () => {
 	}
 	return (
 		<div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)]">
-			<div className="md:flex items-center w-full md:space-x-2 h-full">
-				<div className="md:w-[70%] sm:w-full md:h-full mb-4 md:mb-0 overflow-auto">
+			<div className="md:grid md:grid-cols-3 md:gap-2 h-full w-full space-y-3 md:space-y-0">
+				<div className="md:col-span-2 w-full h-full md:overflow-auto">
 					<StreamVideo stream={fakeStream}/>
 				</div>
-				<div className="md:w-[30%] md:flex sm:w-full h-full">
+				<div className="h-full w-full overflow-auto">
 					<ChatBox />
 				</div>
 			</div>

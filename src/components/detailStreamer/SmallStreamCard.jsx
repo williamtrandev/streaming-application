@@ -16,14 +16,19 @@ const SmallStreamCard = ({
 						01:02:03
 					</div>
 				</div>
-				
+
 				<div className='p-3 space-y-2'>
 					<h3 className='text-theme font-bold text-md'>{stream.title}</h3>
-					
-					<p className="w-full flex items-center gap-1 text-sm">
-						<Users size={14} className="w-4" />
-						{formatNumViewers(stream.num_viewers)}
-					</p>
+					<div className="flex justify-between">
+						<p className="w-full flex items-center gap-1 text-sm">
+							<Users size={14} className="w-4" />
+							{formatNumViewers(stream.num_viewers)}
+						</p>
+						<p className="text-sm whitespace-nowrap">
+							3 days ago
+						</p>
+					</div>
+
 				</div>
 			</div>
 		</Link>

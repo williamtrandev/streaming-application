@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
-import { Moon, Podcast, Telescope, Tv } from 'lucide-react';
+import { ChevronDown, ChevronUp, History, Moon, Podcast, Telescope, ThumbsUp, Tv } from 'lucide-react';
 import DarkModeSwitcher from '../header/DarkModeSwitcher';
 
 
@@ -24,8 +24,49 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
 			id: 3,
 			isLive: false,
-		}
-
+		},
+		{
+			name: 'Thanh Tran Tan Thanh Thanh',
+			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
+			id: 4,
+			isLive: false,
+		},
+		{
+			name: 'Thanh Tran Tan Thanh Thanh',
+			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
+			id: 5,
+			isLive: false,
+		},
+		{
+			name: 'Thanh Tran Tan Thanh Thanh',
+			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
+			id: 6,
+			isLive: false,
+		},
+		{
+			name: 'Thanh Tran Tan Thanh Thanh',
+			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
+			id: 7,
+			isLive: false,
+		},
+		{
+			name: 'Thanh Tran Tan Thanh Thanh',
+			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
+			id: 8,
+			isLive: false,
+		},
+		{
+			name: 'Thanh Tran Tan Thanh Thanh',
+			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
+			id: 9,
+			isLive: false,
+		},
+		{
+			name: 'Thanh Tran Tan Thanh Thanh',
+			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
+			id: 10,
+			isLive: false,
+		},
 	]
 	const location = useLocation();
 	const { pathname } = location;
@@ -37,6 +78,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 	const [sidebarExpanded, setSidebarExpanded] = useState(
 		storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
 	);
+
+	const [followedShow, setFollowedShow] = useState(followers.slice(0, 5));
 
 	useEffect(() => {
 		const clickHandler = ({ target }) => {
@@ -108,7 +151,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
 			<div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
 				<nav className="pb-4 px-4 lg:px-6">
-					<div>
+					<div className="divide-y divide-gray-300 dark:divide-gray-600">
 
 						<ul className="mb-6 flex flex-col gap-6">
 							<li>
@@ -119,25 +162,51 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 										'bg-purple-600 dark:bg-meta-4 text-white'
 										}`}
 								>
-									<Tv className='w-5'/>
+									<Tv className='w-5' />
 									<p className='text-base'>Home</p>
 								</NavLink>
 							</li>
 
 							<li>
 								<NavLink
-									to="/discover"
-									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/discover' ||
-										pathname.includes('discover')) &&
+									to="/history"
+									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/history' ||
+										pathname.includes('history')) &&
 										'bg-purple-600 dark:bg-meta-4 text-white'
 										}`}
 								>
-									<Telescope className='w-5' />
-									<p className='text-base'>Discover</p>
+									<History className='w-5' />
+									<p className='text-base'>History</p>
 								</NavLink>
 							</li>
 
-							<SidebarLinkGroup
+							<li>
+								<NavLink
+									to="/liked"
+									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/liked' ||
+										pathname.includes('liked')) &&
+										'bg-purple-600 dark:bg-meta-4 text-white'
+										}`}
+								>
+									<ThumbsUp className='w-5' />
+									<p className='text-base'>Liked streams</p>
+								</NavLink>
+							</li>
+
+							<li>
+								<NavLink
+									to="/following"
+									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/following' ||
+										pathname.includes('following')) &&
+										'bg-purple-600 dark:bg-meta-4 text-white'
+										}`}
+								>
+									<Podcast className='w-5' />
+									<p className='text-base'>Following</p>
+								</NavLink>
+							</li>
+
+							{/* <SidebarLinkGroup
 								activeCondition={
 									pathname === '' || pathname.includes('followers')
 								}
@@ -158,8 +227,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 														: setSidebarExpanded(true);
 												}}
 											>
-												<Podcast className='w-5'/>
-												<p className='text-base'>Followers</p>
+												<Podcast className='w-5' />
+												<p className='text-base'>Followed Channels</p>
 												<svg
 													className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && 'rotate-180'
 														}`}
@@ -187,8 +256,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 															<NavLink
 																to={`/${follower.id}`}
 																className={({ isActive }) =>
-																	'group relative flex items-center gap-2.5 rounded-md px-4 font-medium dark:text-bodydark2 duration-300 ease-in-out hover:text-white ' +
-																	(isActive && '!text-white')
+																	'group relative flex items-center gap-2.5 rounded-md px-4 font-medium duration-300 ease-in-out dark:text-bodydark2 hover:font-bold dark:hover:text-white ' +
+																	(isActive && '!font-bold dark:!text-white')
 																}
 															>
 																<div className="relative flex">
@@ -203,28 +272,65 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
 															</NavLink>
 														</li>
-														
+
 													))}
 												</ul>
 											</div>
 										</>
 									);
 								}}
-							</SidebarLinkGroup>
-
+							</SidebarLinkGroup> */}
+						</ul>
+						<ul className="mb-6 flex flex-col gap-2">
 							<li>
-								<NavLink
-									to="/live"
-									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/live' ||
-										pathname.includes('live')) &&
-										'bg-purple-600 dark:bg-meta-4 text-white'
-										}`}
+								<div
+									className="group relative flex items-center gap-4 rounded-lg px-6 pt-3 font-medium dark:text-bodydark1 ease-in-out"
 								>
-									<Telescope className='w-5' />
-									<p className='text-base'>Live</p>
-								</NavLink>
+									Followed channels
+								</div>
 							</li>
-							<li className="md:hidden group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium">
+							{followedShow.map((follower, index) => (
+								<li key={index}>
+									<NavLink
+										to={`/${follower.id}`}
+										className={({ isActive }) =>
+											'group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ' +
+											(isActive && 'bg-purple-600 dark:bg-meta-4 text-white')
+										}
+									>
+										<div className="relative flex">
+											<img src={follower.avatar} alt="" className='w-6 h-6 rounded-full' />
+											{follower.isLive &&
+												<span className="absolute -bottom-0.5 right-0 z-1 h-2 w-2 rounded-full bg-meta-1 inline">
+													<span className="absolute -z-1 inline-flex h-full w-full animate-ping rounded-full bg-meta-1 opacity-75"></span>
+												</span>
+											}
+										</div>
+										<p className='truncate flex-1'>{follower.name}</p>
+									</NavLink>
+								</li>
+							))}
+							<button
+								className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium 
+									dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white
+									${followedShow.length === 5 ? "" : "hidden"}`}
+								onClick={() => setFollowedShow(followers)}
+							>
+								<ChevronDown />
+								<span>More</span>
+							</button>
+							<button
+								className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium 
+									dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white
+									${followedShow.length === 5 ? "hidden" : ""}`}
+								onClick={() => setFollowedShow(followers.slice(0, 5))}
+							>
+								<ChevronUp />
+								<span>Show less</span>
+							</button>
+						</ul>
+						<ul className="md:hidden">
+							<li className="group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium">
 								<Moon />
 								<DarkModeSwitcher />
 							</li>
