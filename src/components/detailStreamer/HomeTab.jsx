@@ -4,7 +4,7 @@ import HorizontalStreamCard from "./HorizontalStreamCard";
 
 const HomeTab = ({ currentStream, mostLikedStream, mostViewedStream }) => {
     return (
-        <div className="w-full divide-y">
+        <div className="w-full divide-y divide-gray-300 dark:divide-gray-600">
             <div className="pb-4">
                 <div className="hidden md:block">
                     <HorizontalStreamCard stream={currentStream} />

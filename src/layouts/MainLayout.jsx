@@ -15,7 +15,7 @@ const MainLayout = () => {
 	const { 
 		showUnfollowModal, unfollowName, handleCloseUnfollowModal, 
 		setFollowed, 
-		showCropperModal, setShowCropperModal, src, setPreview
+		showCropperModal, setShowCropperModal, src, setPreview, setSettingProfilePicture
 	} = useContext(ModalContext);
 
 	return (
@@ -48,6 +48,7 @@ const MainLayout = () => {
 				onClose={() => setShowCropperModal(false)}
 				src={src}
 				setPreview={setPreview}
+				setProfilePicture={setSettingProfilePicture}
 			/>
 		</div>
 	);

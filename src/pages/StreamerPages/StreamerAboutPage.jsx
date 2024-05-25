@@ -51,7 +51,7 @@ Email: contact@fullstack.edu.vn
 			<ProfileHeader streamer={fakeStreamer} />
 
 			<div className="w-full">
-				<div className="flex border-b border-gray-200 gap-8">
+				<div className="flex border-b border-gray-300 dark:border-gray-600 gap-8">
 					{tabData.map((tab) => (
 						<Link
 							to={tab.label === "Home" ? `/${id}` : `/${id}/${tab.link}`}

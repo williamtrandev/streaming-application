@@ -151,7 +151,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
 			<div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
 				<nav className="pb-4 px-4 lg:px-6">
-					<div className="divide-y">
+					<div className="divide-y divide-gray-300 dark:divide-gray-600">
 
 						<ul className="mb-6 flex flex-col gap-6">
 							<li>

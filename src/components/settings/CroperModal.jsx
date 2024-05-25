@@ -2,7 +2,7 @@ import { ZoomIn, ZoomOut } from "lucide-react";
 import { useRef, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 
-const CropperModal = ({ show, src, setPreview, onClose }) => {
+const CropperModal = ({ show, src, setPreview, setProfilePicture, onClose }) => {
     const cropRef = useRef(null);
     const [scale, setScale] = useState(1.0);
     if (!show) return null;
@@ -57,13 +57,15 @@ const CropperModal = ({ show, src, setPreview, onClose }) => {
                         onClick={async () => {
                             if (cropRef.current) {
                                 const dataUrl = cropRef.current.getImage().toDataURL();
-                                const result = await fetch(dataUrl);
-                                const blob = await result.blob();
-                                setPreview(URL.createObjectURL(blob));
+                                // const result = await fetch(dataUrl);
+                                // const blob = await result.blob();
+                                // setPreview(URL.createObjectURL(blob));
+                                setPreview(dataUrl);
+                                setProfilePicture(cropRef.current.getImage());
                                 onClose();
                             }
                         }}
-                    >Save</button>
+                    >OK</button>
                 </div>
             </div>
         </div>

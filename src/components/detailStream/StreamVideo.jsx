@@ -1,4 +1,4 @@
-import { ThumbsDown, ThumbsUp, Users } from "lucide-react";
+import { Calendar, ThumbsDown, ThumbsUp, Timer, Users } from "lucide-react";
 import axios from 'axios';
 import { useEffect, useState, useContext } from "react";
 import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
@@ -40,9 +40,19 @@ const StreamDescription = ({ stream }) => {
 		<div className="w-full items-center space-y-3 bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
 			<h3 className="font-bold text-2xl w-full">{stream.title}</h3>
 			<div className="flex justify-between">
-				<div className="flex space-x-2">
-					<Users className="w-[1rem]" />
-					<span>{formatNumViewers(stream.num_viewers)}</span>
+				<div className="space-y-1">
+					<div className="flex gap-2">
+						<Timer className="w-[1rem]" />
+						<span>09:02:20</span>
+					</div>
+					{/* <div className="flex gap-2">
+						<Calendar className="w-[1rem]" />
+						<span>25/05/2024</span>
+					</div> */}
+					<div className="flex gap-2">
+						<Users className="w-[1rem]" />
+						<span>{formatNumViewers(stream.num_viewers)}</span>
+					</div>
 				</div>
 				<div className="flex divide-x-2 divide-white dark:divide-boxdark mb-4 text-xs md:text-base">
 					<button className="px-2 py-1 md:px-4 md:py-2 rounded-l-full flex gap-2 items-center
