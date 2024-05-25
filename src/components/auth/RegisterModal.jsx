@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
-import { X, User, LockKeyhole, Eye, EyeOff, Check, CircleAlert, Mail } from "lucide-react";
+import { X, User, LockKeyhole, Eye, EyeOff, Check, CircleAlert, Mail, SquareUser } from "lucide-react";
 
 const RegisterModal = ({ isVisible, onClose }) => {
     if (!isVisible) return null;
     
     const [showPassword, setShowPassword] = useState("password");
     const [username, setUsername] = useState("");
+    const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
 
-    const isValidUsername = username.length >= 4 && username.length <= 40;
+    const isAvailableUsername = false;
+    const isValidUsername = username.length >= 4 && username.length <= 25;
+
+    const isValidName = name.length >= 4 && name.length <= 40;
 
     const password8Char = password.length >= 8;
     const passwordIncludeUsername = password.includes(username);
@@ -18,7 +22,8 @@ const RegisterModal = ({ isVisible, onClose }) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isValidEmail = emailRegex.test(email);
 
-    const signupDisabled = username == "" || !isValidUsername ||
+    const signupDisabled = username == "" || !isValidUsername || !isAvailableUsername ||
+        name == "" || !isValidName ||
         password == "" || !isValidPassword ||
         email == "" || !isValidEmail;
 
@@ -54,10 +59,36 @@ const RegisterModal = ({ isVisible, onClose }) => {
                             </div>
                         </div>
                         <div className="text-red-500 mt-1 text-sm">
-                            {!isValidUsername && username != "" ? "*Usernames must be between 4 and 40 characters." : ""}
+                            {!isAvailableUsername && isValidUsername ? "*This username is unavailable." : ""}
+                            {!isValidUsername && username != "" ? "*Username must be between 4 and 25 characters." : ""}
                         </div>
                         <div className="mt-1 text-sm">
-                            {username == "" ? "This is the name people will know you by on Will Streaming. You can always change it later." : ""}
+                            {username == "" ? "Username must be unique. Username can be changed twice every 14 days." : ""}
+                        </div>
+                    </div>
+                    <div className="mb-4">
+                        <div className="mb-1">Display name</div>
+                        <div id="usernameInput" className="text-black w-full">
+                            <div className="relative">
+                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
+                                    <SquareUser />
+                                </span>
+                                <input 
+                                    type="text" 
+                                    className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300 
+                                        focus:outline-none focus:border-indigo-500 
+                                        focus:ring focus:ring-indigo-200 
+                                        transition duration-150 ease-in-out"
+                                    value={name}
+                                    onChange={e => setName(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        <div className="text-red-500 mt-1 text-sm">
+                            {!isValidName && name != "" ? "*Display name must be between 4 and 40 characters." : ""}
+                        </div>
+                        <div className="mt-1 text-sm">
+                            {name == "" ? "This is the name people will know you by on Will Streaming. You can always change it later." : ""}
                         </div>
                     </div>
                     <div className="mb-4">

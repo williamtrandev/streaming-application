@@ -20,7 +20,7 @@ export const streams = [
 		preview_image: "https://github.com/williamtrandev/oauth/assets/102520170/6b48ff15-33ac-422f-80ba-c39129882c04",
 		user: {
 			id: 1,
-			avatar: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
+			profile_picture: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
 			name: "Thanh Chan"
 		},
 		num_viewers: 70000,
@@ -31,7 +31,7 @@ export const streams = [
 		preview_image: "https://github.com/williamtrandev/oauth/assets/102520170/6b48ff15-33ac-422f-80ba-c39129882c04",
 		user: {
 			id: 1,
-			avatar: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
+			profile_picture: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
 			name: "Thanh Chan"
 		},
 		num_viewers: 70000,
@@ -42,7 +42,7 @@ export const streams = [
 		preview_image: "https://github.com/williamtrandev/oauth/assets/102520170/6b48ff15-33ac-422f-80ba-c39129882c04",
 		user: {
 			id: 1,
-			avatar: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
+			profile_picture: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
 			name: "Thanh Chan"
 		},
 		num_viewers: 70000,
@@ -53,7 +53,7 @@ export const streams = [
 		preview_image: "https://github.com/williamtrandev/oauth/assets/102520170/6b48ff15-33ac-422f-80ba-c39129882c04",
 		user: {
 			id: 1,
-			avatar: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
+			profile_picture: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
 			name: "Thanh Chan"
 		},
 		num_viewers: 70000,
@@ -64,7 +64,7 @@ export const streams = [
 		preview_image: "https://github.com/williamtrandev/oauth/assets/102520170/6b48ff15-33ac-422f-80ba-c39129882c04",
 		user: {
 			id: 1,
-			avatar: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
+			profile_picture: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
 			name: "Thanh Chan"
 		},
 		num_viewers: 70000,
@@ -75,7 +75,7 @@ export const streams = [
 		preview_image: "https://github.com/williamtrandev/oauth/assets/102520170/6b48ff15-33ac-422f-80ba-c39129882c04",
 		user: {
 			id: 1,
-			avatar: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
+			profile_picture: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
 			name: "Thanh Chan"
 		},
 		num_viewers: 70000,
@@ -86,7 +86,7 @@ export const streams = [
 		preview_image: "https://github.com/williamtrandev/oauth/assets/102520170/6b48ff15-33ac-422f-80ba-c39129882c04",
 		user: {
 			id: 1,
-			avatar: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
+			profile_picture: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
 			name: "Thanh Chan"
 		},
 		num_viewers: 70000,
@@ -97,7 +97,7 @@ export const streams = [
 		preview_image: "https://github.com/williamtrandev/oauth/assets/102520170/6b48ff15-33ac-422f-80ba-c39129882c04",
 		user: {
 			id: 1,
-			avatar: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
+			profile_picture: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
 			name: "Thanh Chan"
 		},
 		num_viewers: 70000,
@@ -108,7 +108,7 @@ export const streams = [
 		preview_image: "https://github.com/williamtrandev/oauth/assets/102520170/6b48ff15-33ac-422f-80ba-c39129882c04",
 		user: {
 			id: 1,
-			avatar: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
+			profile_picture: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
 			name: "Thanh Chan"
 		},
 		num_viewers: 70000,

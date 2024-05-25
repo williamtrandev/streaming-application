@@ -1,10 +1,11 @@
-import useSwitchMode from "../../../hooks/useSwitchMode";
+import { useContext } from "react";
+import { ModalContext } from "../../../layouts/ModalContext";
 
 const DarkModeSwitcher = () => {
-	const [colorMode, setColorMode] = useSwitchMode();
+	const {colorMode, setColorMode} = useContext(ModalContext);
 
 	return (
-		<li>
+		<div>
 			<label
 				className={`relative m-0 block h-7.5 w-14 rounded-full ${colorMode === 'dark' ? 'bg-primary' : 'bg-stroke'
 					}`}
@@ -56,7 +57,7 @@ const DarkModeSwitcher = () => {
 					</span>
 				</span>
 			</label>
-		</li>
+		</div>
 	);
 };
 

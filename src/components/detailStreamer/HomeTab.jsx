@@ -1,11 +1,17 @@
+import StreamCard from "../home/StreamCard";
 import Carousel from "./Carousel";
 import HorizontalStreamCard from "./HorizontalStreamCard";
 
 const HomeTab = ({ currentStream, mostLikedStream, mostViewedStream }) => {
     return (
-        <div className="w-full divide-y">
+        <div className="w-full divide-y divide-gray-300 dark:divide-gray-600">
             <div className="pb-4">
-                <HorizontalStreamCard stream={currentStream} />
+                <div className="hidden md:block">
+                    <HorizontalStreamCard stream={currentStream} />
+                </div>
+                <div className="block md:hidden">
+                    <StreamCard stream={currentStream} />
+                </div>
             </div>
             <div className="py-4">
                 <div className="font-bold text-xl">Most viewed streams</div>
