@@ -4,8 +4,6 @@ import './index.css';
 import { MainLayout, StudioLayout } from './layouts';
 import HomePage from './pages/HomePage';
 import DetailStreamPage from './pages/DetailStreamPage';
-import LoginPage from './pages/LoginPage';
-import ProfilePage from './pages/ProfilePage';
 import Streaming from './pages/Streaming';
 import StudioPage from './pages/StudioPage';
 import { ToastContainer } from 'react-toastify';
@@ -29,7 +27,6 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path='/history' element={<HistoryPage />} />
           <Route path='/live/:id' element={<DetailStreamPage />} />
-          {/* <Route path='/profile' element={<ProfilePage />} /> */}
           <Route path='/streaming' element={<Streaming />} />
           <Route path='/settings/profile' element={<SettingProfilePage />} />
           <Route path='/following' element={<FollowingPage />} />
@@ -43,7 +40,6 @@ function App() {
           <Route path='community' element={<CommunityPage />} />
           <Route path='settings' element={<SettingsPage />} />
         </Route>
-        <Route path='/login' element={<LoginPage />} />
       </Routes>
       <ToastContainer />
     </BrowserRouter>
