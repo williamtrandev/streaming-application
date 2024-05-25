@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
-import SectionWrapper from '../components/commons/SectionWrapper';
-import StreamVideo from '../components/detailStream/StreamVideo';
-import ChatBox from '../components/detailStream/ChatBox';
+import StreamVideo from '../../components/detailStream/StreamVideo';
+import ChatBox from '../../components/detailStream/ChatBox';
 const DetailStreamPage = () => {
 	const { id } = useParams();
 	const fakeStream = {
