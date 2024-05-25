@@ -1,5 +1,5 @@
-import { streams } from "../constants";
-import StreamCard from "../components/home/StreamCard";
+import { streams } from "../../constants";
+import StreamCard from "../../components/home/StreamCard";
 
 const HomePage = () => {
 	return (
