@@ -40,6 +40,7 @@ const colors = [
 defaults.responsive = true;
 defaults.plugins.title.align = "start";
 defaults.plugins.title.font.size = 20;
+// const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color');
 
 const AnalyticsPage = () => {
 	return (
@@ -66,6 +67,25 @@ const AnalyticsPage = () => {
 									tension: 0.5,
 								},
 							},
+							// scales: {
+							// 	x: {
+							// 		ticks: {
+							// 			color: textColor,
+							// 		},
+							// 	},
+							// 	y: {
+							// 		ticks: {
+							// 			color: textColor,
+							// 		},
+							// 	},
+							// },
+							// plugins: {
+							// 	legend: {
+							// 		labels: {
+							// 			color: textColor,
+							// 		},
+							// 	},
+							// },
 						}}
 					/>
 				</div>
@@ -102,7 +122,7 @@ const AnalyticsPage = () => {
 				</div>
 			</div>
 			<p className="!mt-10 font-bold text-theme text-2xl">Followers and Subcribers in your 10 latest stream</p>
-			<div className="w-full">
+			<div className="w-full bg-white dark:bg-meta-4 rounded-md shadow-md space-y-3 p-5">
 				<Bar className="max-h-[70vh]"
 					data={{
 						labels: newFollowersSubscribers.map((data) => data.streamId),

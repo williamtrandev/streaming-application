@@ -27,7 +27,6 @@ export default {
         primary: '#3C50E0',
         secondary: '#80CAEE',
         stroke: '#E2E8F0',
-        gray: '#EFF4FB',
         graydark: '#333A48',
         'gray-2': '#F7F9FC',
         'gray-3': '#FAFAFA',
@@ -52,7 +51,7 @@ export default {
         danger: '#D34053',
         warning: '#FFA70B',
         'primary': '#5E35B1',
-        'primary-active': '#EDE7F6',
+        'primary-active': '#EDE7F6'
       },
       fontSize: {
         'title-xxl': ['44px', '55px'],
@@ -249,3 +248,4 @@ export default {
   },
   plugins: [],
 }
+

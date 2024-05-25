@@ -13,6 +13,8 @@ import StudioPage from './pages/StudioPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AnalyticsPage from './pages/AnalyticsPage';
+import CommunityPage from './pages/CommunityPage';
+import SettingsPage from './pages/SettingsPage';
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
         <Route path='/studio' element={<StudioLayout />}>
           <Route path='manager' element={<StudioPage />} />
           <Route path='analytics' element={<AnalyticsPage />} />
+          <Route path='community' element={<CommunityPage />} />
+          <Route path='settings' element={<SettingsPage />} />
         </Route>
         <Route path='/login' element={<LoginPage />} />
       </Routes>

@@ -117,9 +117,9 @@ const SidebarStudio = ({ sidebarOpen, setSidebarOpen }) => {
 							</li>
 							<li>
 								<NavLink
-									to="/live"
-									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/live' ||
-										pathname.includes('live')) &&
+									to="community"
+									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/studio/community' ||
+										pathname.includes('community')) &&
 										'bg-purple-600 dark:bg-meta-4 text-white'
 										}`}
 								>
@@ -129,9 +129,9 @@ const SidebarStudio = ({ sidebarOpen, setSidebarOpen }) => {
 							</li>
 							<li>
 								<NavLink
-									to="/live"
-									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/live' ||
-										pathname.includes('live')) &&
+									to="settings"
+									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/studio/settings' ||
+										pathname.includes('settings')) &&
 										'bg-purple-600 dark:bg-meta-4 text-white'
 										}`}
 								>
