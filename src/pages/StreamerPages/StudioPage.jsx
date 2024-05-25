@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ChevronRight, Pencil } from 'lucide-react';
-import TagItem from '../components/studio/TagItem';
+import TagItem from '../../components/studio/TagItem';
 import { toast } from 'react-toastify';
 const rainbowColors = [
 	"#FF0000", "#FF6F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#8B00FF",

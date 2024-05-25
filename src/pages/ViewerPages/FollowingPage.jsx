@@ -1,5 +1,5 @@
-import { streams } from "../constants";
-import StreamCard from "../components/home/StreamCard";
+import { streams } from "../../constants";
+import StreamCard from "../../components/home/StreamCard";
 const FollowingPage = () => {
 	return (
 		<div className='w-full mb-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5'>
