@@ -32,8 +32,7 @@ const Header = (props) => {
 
 	return (
 		<header className="sticky top-0 z-999 flex w-full h-20 bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
-			<div className={`flex flex-grow items-center ${isStudioPath ? 'justify-end' : 'justify-between'
-				} px-4 py-4 shadow-2 md:px-6 2xl:px-11`}>
+			<div className="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
 				<div className="flex items-center gap-2 sm:gap-4 lg:hidden">
 					<button
 						aria-controls="sidebar"
@@ -70,7 +69,7 @@ const Header = (props) => {
 							</span>
 						</span>
 					</button>
-
+					
 					<Link className="block flex-shrink-0 lg:hidden" to="/">
 						<img src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="Logo" className='w-10 h-10 rounded-full' />
 					</Link>
@@ -147,7 +146,7 @@ const Header = (props) => {
 						</div>
 					</form>
 				</div>}
-
+				{isStudioPath && <div></div>}
 				<div className="flex items-center gap-3 2xsm:gap-7">
 					<ul className="flex items-center gap-2 2xsm:gap-4">
 						<button className="block sm:hidden"
