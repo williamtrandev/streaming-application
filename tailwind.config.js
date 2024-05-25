@@ -51,7 +51,7 @@ export default {
         danger: '#D34053',
         warning: '#FFA70B',
         'primary': '#5E35B1',
-        'primary-active': '#EDE7F6',
+        'primary-active': '#EDE7F6'
       },
       fontSize: {
         'title-xxl': ['44px', '55px'],
@@ -248,3 +248,4 @@ export default {
   },
   plugins: [],
 }
+
