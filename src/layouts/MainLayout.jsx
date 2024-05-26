@@ -7,6 +7,7 @@ import RegisterModal from '../components/auth/RegisterModal';
 import UnfollowModal from '../components/detailStreamer/UnfollowModal';
 import { ModalContext, ModalProvider } from './ModalContext';
 import CropperModal from '../components/settings/CroperModal';
+import ChangePasswordModal from '../components/settings/ChangePasswordModal';
 
 const MainLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -15,7 +16,8 @@ const MainLayout = () => {
 	const { 
 		showUnfollowModal, unfollowName, handleCloseUnfollowModal, 
 		setFollowed, 
-		showCropperModal, setShowCropperModal, src, setPreview, setSettingProfilePicture
+		showCropperModal, setShowCropperModal, src, setPreview, setSettingProfilePicture,
+		showChangePasswordModal, setShowChangePasswordModal
 	} = useContext(ModalContext);
 
 	return (
@@ -49,6 +51,10 @@ const MainLayout = () => {
 				src={src}
 				setPreview={setPreview}
 				setProfilePicture={setSettingProfilePicture}
+			/>
+			<ChangePasswordModal 
+				show={showChangePasswordModal}
+				onClose={() => setShowChangePasswordModal(false)}
 			/>
 		</div>
 	);

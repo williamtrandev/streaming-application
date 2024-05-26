@@ -28,14 +28,13 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                         <div className="mb-1">Username</div>
                         <div id="usernameInput" className="text-black w-full">
                             <div className="relative">
-                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center fill-current">
+                                <span className="absolute inset-y-0 left-0 pl-2 flex items-center text-black dark:text-bodydark">
                                     <User />
                                 </span>
                                 <input 
                                     type="text" 
-                                    className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300 
-                                        focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 
-                                        transition duration-150 ease-in-out"
+                                    className="w-full pl-10 pr-3 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
+                                        text-black dark:text-white"
                                     value={username}
                                     onChange={e => setUsername(e.target.value)}
                                 />
@@ -46,19 +45,19 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                         <div className="mb-1">Password</div>
                         <div id="passwordInput" className="text-black w-full">
                             <div className="relative">
-                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
+                                <span className="absolute inset-y-0 left-0 pl-2 flex items-center text-black dark:text-bodydark">
                                     <LockKeyhole />
                                 </span>
                                 <input 
                                     type={showPassword} 
-                                    className="w-full pl-10 pr-13 py-2 rounded-lg border border-gray-300 
-                                        focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 
-                                        transition duration-150 ease-in-out" 
+                                    className="w-full pl-10 pr-16 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
+                                        text-black dark:text-white" 
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}    
                                 />
                                 <button 
-                                    className="absolute inset-y-0 right-0 px-3 flex items-center rounded-r-lg hover:bg-neutral-300"
+                                    className="absolute inset-y-0 right-0 px-3 flex items-center rounded-r-lg
+                                        text-black dark:text-bodydark hover:bg-slate-300 dark:hover:bg-slate-600"
                                     onClick={() => {
                                         setShowPassword(showPassword === "password" ? "text" : "password");
                                     }}
