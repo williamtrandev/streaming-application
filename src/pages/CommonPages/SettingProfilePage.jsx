@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from "react";
 import { fakeStreamer } from "../../constants";
 import { ModalContext } from "../../layouts/ModalContext";
-import { Check } from "lucide-react";
+import { Check, Pencil, RotateCcw } from "lucide-react";
 
 const SettingProfilePage = () => {
 
@@ -19,6 +19,9 @@ const SettingProfilePage = () => {
     // const [links, setLinks] = useState(user.about.links);
     // const [newLinkTitle, setNewLinkTitle] = useState("");
     // const [newLink, setNewLink] = useState("");
+
+    const usernameRef = useRef(null);
+    const [usernameReadOnly, setUsernameReadOnly] = useState(true);
 
     const [changeSaved, setChangeSaved] = useState(false);
 
@@ -91,13 +94,35 @@ const SettingProfilePage = () => {
                     bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
                     <div className="flex justify-between w-full gap-4 items-start py-4">
                         <div className="w-[35%] font-bold">Username</div>
-                        <div className="w-full">
+                        <div className="w-full relative">
                             <input type="text"
                                 value={username}
+                                ref={usernameRef}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className="w-full px-3 py-1 dark:text-white rounded-lg
-                                    bg-slate-200 dark:bg-meta-4"
+                                className="w-full px-3 py-1 dark:text-white rounded-lg bg-slate-200 dark:bg-meta-4 
+                                    read-only:focus:outline-none read-only:bg-slate-300 read-only:dark:bg-slate-700"
+                                readOnly={usernameReadOnly}
                             />
+                            {usernameReadOnly && <button 
+                                className="absolute right-0 p-2 h-full hover:bg-slate-400 
+                                    dark:hover:bg-slate-500 rounded-r-lg"
+                                onClick={() => {
+                                    setUsernameReadOnly(false);
+                                    usernameRef.current.focus();
+                                }}
+                            >
+                                <Pencil size={16} />
+                            </button>}
+                            {!usernameReadOnly && <button 
+                                className="absolute right-0 p-2 h-full hover:bg-slate-400 
+                                    dark:hover:bg-slate-500 rounded-r-lg"
+                                onClick={() => {
+                                    setUsername(user.username);
+                                    setUsernameReadOnly(true);
+                                }}
+                            >
+                                <RotateCcw size={16} />
+                            </button>}
                         </div>
                     </div>
 

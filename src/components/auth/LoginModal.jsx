@@ -11,7 +11,8 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
 
     return (
         <div className="fixed z-9999 inset-0 flex justify-center items-center
-        bg-black bg-opacity-75 backdrop-blur-sm">
+            bg-black bg-opacity-75 backdrop-blur-sm"
+        >
             <div className="w-[500px] relative bg-white dark:bg-boxdark p-5 rounded-lg">
                 <div className="flex justify-center mb-6">
                     <div className="text-xl font-bold">Log in to Will Streaming</div>

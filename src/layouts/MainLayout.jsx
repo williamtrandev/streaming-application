@@ -8,11 +8,13 @@ import UnfollowModal from '../components/detailStreamer/UnfollowModal';
 import { ModalContext, ModalProvider } from './ModalContext';
 import CropperModal from '../components/settings/CroperModal';
 import ChangePasswordModal from '../components/settings/ChangePasswordModal';
+import VerifyEmailModal from '../components/auth/VerifyEmailModal';
 
 const MainLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [showRegisterModal, setShowRegisterModal] = useState(false);
+	const [showVerifyEmailModal, setShowVerifyEmailModal] = useState(false);
 	const { 
 		showUnfollowModal, unfollowName, handleCloseUnfollowModal, 
 		setFollowed, 
@@ -34,9 +36,19 @@ const MainLayout = () => {
 					</main>
 				</div>
 			</div>
-			<LoginModal isVisible={showLoginModal} onClose={setShowLoginModal}
-				openRegisterModal={setShowRegisterModal} />
-			<RegisterModal isVisible={showRegisterModal} onClose={setShowRegisterModal} />
+			<LoginModal 
+				isVisible={showLoginModal} 
+				onClose={setShowLoginModal}
+				openRegisterModal={setShowRegisterModal} 
+			/>
+			<RegisterModal 
+				isVisible={showRegisterModal} 
+				onClose={() => setShowRegisterModal(false)}
+				showVerifyEmailModal={() => setShowVerifyEmailModal(true)}
+			/>
+			<VerifyEmailModal 
+				show={showVerifyEmailModal} close={() => setShowVerifyEmailModal(false)}
+			/>
 			<UnfollowModal 
 				show={showUnfollowModal} 
 				onClose={handleCloseUnfollowModal}

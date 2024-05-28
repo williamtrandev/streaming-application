@@ -120,6 +120,7 @@ export const fakeStreamer = {
 	profile_picture: 'https://avatars.githubusercontent.com/u/102520170?v=4',
 	name: "William Tran",
 	username: "WilliamTran123",
+	email: "abc123@gmail.com",
 	num_followers: 113315,
 	about: {
 		text: `F8 là cộng đồng học tập và chia sẻ kiến thức lập trình dành cho tất cả mọi người. Các khóa học đều được đầu tư kỹ lưỡng về mặt nội dung, âm thanh và hình ảnh. Học viên có thể học từ con số 0 tới khi trở thành lập trình viên chuyên nghiệp tại đây.
