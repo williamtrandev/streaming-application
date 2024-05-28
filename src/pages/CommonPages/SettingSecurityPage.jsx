@@ -3,7 +3,7 @@ import { ModalContext } from "../../layouts/ModalContext";
 import { fakeStreamer } from "../../constants";
 import { Pencil } from "lucide-react";
 
-const SettingSecurity = () => {
+const SettingSecurityPage = () => {
     const user = fakeStreamer;
 
     const { setShowChangePasswordModal } = useContext(ModalContext);
@@ -16,6 +16,8 @@ const SettingSecurity = () => {
     const isValidEmail = emailRegex.test(email);
 
     const saveEmailDisable = email == "" || email == user.email || !isValidEmail;
+
+    const { setShowVerifyEmailModal } = useContext(ModalContext);
 
     return (
         <div className="space-y-6">
@@ -64,6 +66,7 @@ const SettingSecurity = () => {
                                     className={`px-2 py-1 rounded-md bg-purple-600 text-white hover:bg-purple-700
                                     ${saveEmailDisable ? "pointer-events-none opacity-50" : ""}`}
                                     onClick={() => {
+                                        setShowVerifyEmailModal(true);
                                         setEmailReadOnly(true);
                                     }}
                                 >Save</button>
@@ -87,4 +90,4 @@ const SettingSecurity = () => {
     );
 }
 
-export default SettingSecurity;
+export default SettingSecurityPage;

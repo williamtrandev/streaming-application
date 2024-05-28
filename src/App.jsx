@@ -19,7 +19,7 @@ import {
   SettingsPage,
   StudioPage
 } from './pages/StreamerPages';
-import { SettingProfilePage, SettingSecurity } from './pages/CommonPages';
+import { SettingProfilePage, SettingSecurityPage } from './pages/CommonPages';
 import StreamerInfoTabs from './layouts/StreamerInfoTabs';
 import ViewerSettingTabs from './layouts/ViewerSettingTabs';
 
@@ -39,7 +39,7 @@ function App() {
           </Route>
           <Route path='/settings' element={<ViewerSettingTabs />}>
             <Route path='profile' element={<SettingProfilePage />} />
-            <Route path='security' element={<SettingSecurity />} />
+            <Route path='security' element={<SettingSecurityPage />} />
           </Route>
         </Route>
         <Route path='/studio' element={<StudioLayout />}>

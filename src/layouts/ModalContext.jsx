@@ -15,6 +15,7 @@ export const ModalProvider = ({ children }) => {
     const [preview, setPreview] = useState(null);
     const [settingProfilePicture, setSettingProfilePicture] = useState(null);
 
+    const [showVerifyEmailModal, setShowVerifyEmailModal] = useState(false);
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
     const handleShowUnfollowModal = (name) => {
@@ -34,7 +35,8 @@ export const ModalProvider = ({ children }) => {
                 followed, setFollowed, 
                 colorMode, setColorMode,
                 showCropperModal, setShowCropperModal, src, setSrc, preview, setPreview, settingProfilePicture, setSettingProfilePicture,
-                showChangePasswordModal, setShowChangePasswordModal
+                showChangePasswordModal, setShowChangePasswordModal,
+                showVerifyEmailModal, setShowVerifyEmailModal
             }}
         >
             {children}

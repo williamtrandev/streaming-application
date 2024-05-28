@@ -14,8 +14,8 @@ const Header = (props) => {
 	const [isSearchVisible, setIsSearchVisible] = useState(false);
 	const searchRef = useRef(null);
 
-	// const logged = true;
-	const logged = false;
+	const logged = true;
+	// const logged = false;
 
 	const handleClickOutside = (event) => {
 		if (searchRef.current && !searchRef.current.contains(event.target)) {

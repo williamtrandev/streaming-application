@@ -14,12 +14,13 @@ const MainLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [showRegisterModal, setShowRegisterModal] = useState(false);
-	const [showVerifyEmailModal, setShowVerifyEmailModal] = useState(false);
+	
 	const { 
 		showUnfollowModal, unfollowName, handleCloseUnfollowModal, 
 		setFollowed, 
 		showCropperModal, setShowCropperModal, src, setPreview, setSettingProfilePicture,
-		showChangePasswordModal, setShowChangePasswordModal
+		showChangePasswordModal, setShowChangePasswordModal,
+		showVerifyEmailModal, setShowVerifyEmailModal
 	} = useContext(ModalContext);
 
 	return (

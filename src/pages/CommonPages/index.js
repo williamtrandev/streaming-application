@@ -1,6 +1,6 @@
 import SettingProfilePage from "./SettingProfilePage";
-import SettingSecurity from "./SettingSecurity";
+import SettingSecurityPage from "./SettingSecurityPage";
 export {
 	SettingProfilePage,
-	SettingSecurity,
+	SettingSecurityPage,
 }

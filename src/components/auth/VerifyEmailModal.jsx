@@ -9,7 +9,6 @@ const VerifyEmailModal = ({ show, close }) => {
     const inputRefs = useRef([]);
 
     useEffect(() => {
-        // Kiểm tra nếu tất cả các ô input đều được điền đầy đủ
         const allFilled = otp.every(val => val !== '');
         setIsComplete(allFilled);
     }, [otp]);
