@@ -16,7 +16,7 @@ export const navLinks = [
 export const streams = [
 	{
 		id: 1,
-		title: "Streamer 1",
+		title: "Streamer 1 This is a very longgggg title to test if truncate in the title work or not, bruh it still not long enough",
 		preview_image: "https://github.com/williamtrandev/oauth/assets/102520170/6b48ff15-33ac-422f-80ba-c39129882c04",
 		user: {
 			id: 1,

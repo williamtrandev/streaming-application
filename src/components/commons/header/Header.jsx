@@ -8,9 +8,7 @@ import { useState, useEffect, useRef } from 'react';
 
 const Header = (props) => {
 	const location = useLocation();
-	const { pathname } = location;
 	const isStudioPath = location.pathname.includes('studio');
-	const [showSmallSearch, setShowSmallSearch] = useState(false);
 	const [isSearchVisible, setIsSearchVisible] = useState(false);
 	const searchRef = useRef(null);
 

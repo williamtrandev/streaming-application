@@ -22,6 +22,7 @@ import {
 import { SettingProfilePage, SettingSecurityPage } from './pages/CommonPages';
 import StreamerInfoTabs from './layouts/StreamerInfoTabs';
 import ViewerSettingTabs from './layouts/ViewerSettingTabs';
+import LikedPage from './pages/ViewerPages/LikedPage';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path='/history' element={<HistoryPage />} />
+          <Route path='/liked' element={<LikedPage />} />
           <Route path='/live/:id' element={<DetailStreamPage />} />
           <Route path='/following' element={<FollowingPage />} />
           <Route path='/:id' element={<StreamerInfoTabs />}>

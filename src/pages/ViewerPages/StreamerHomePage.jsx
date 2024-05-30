@@ -13,7 +13,7 @@ const StreamerHomePage = () => {
                 <div className="hidden md:block">
                     <HorizontalStreamCard stream={currentStream} />
                 </div>
-                <div className="block md:hidden">
+                <div className="md:hidden">
                     <StreamCard stream={currentStream} />
                 </div>
             </div>
