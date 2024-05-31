@@ -46,7 +46,6 @@ Email: contact@fullstack.edu.vn
 			]
 		},
 	}
-
 	return (
 		<div>
 			<ProfileHeader streamer={fakeStreamer} />

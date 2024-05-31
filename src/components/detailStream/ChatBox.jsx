@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
-import MessageInput from './MessageInput'
+import MessageInput from './MessageInput';
 import Message from './Message';
+import APIClient from '../../utils/APIClient';
+
 const messages = [
 	{
 		message: "Hey there! How's everything going on your end?"
@@ -59,11 +61,11 @@ function generateRandomMessage() {
 
 const randomMessages = Array.from({ length: 10 }, () => generateRandomMessage());
 
-const ChatBox = () => {
+const ChatBox = ({ socket, streamId }) => {
 	const [msgs, setMsgs] = useState(randomMessages);
 	const messagesEndRef = useRef(null);
 
-	const handleMessageSubmit = (msg) => {
+	const handleMessageSubmit = async (msg) => {
 		const newMessage = {
 			message: msg,
 			displayName: 'Tấn Thành',
@@ -72,11 +74,17 @@ const ChatBox = () => {
 		};
 		const updatedMsgs = [...msgs, newMessage];
 		setMsgs(updatedMsgs);
+		const response = await APIClient.post('/chat/message', {
+			streamId: streamId,
+			userId: '1',
+			content: msg,
+			duration: 0
+		});
+		console.log(response.data);
 	};
 	useEffect(() => {
 		scrollToBottom();
 	}, [msgs]);
-
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 	};
@@ -107,4 +115,4 @@ const ChatBox = () => {
 	)
 }
 
-export default ChatBox
+export default ChatBox;
