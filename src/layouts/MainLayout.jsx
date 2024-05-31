@@ -9,6 +9,7 @@ import { ModalContext, ModalProvider } from './ModalContext';
 import CropperModal from '../components/settings/CroperModal';
 import ChangePasswordModal from '../components/settings/ChangePasswordModal';
 import VerifyEmailModal from '../components/auth/VerifyEmailModal';
+import ChangeUsernameModal from '../components/settings/ChangeUsernameModal';
 
 const MainLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -20,7 +21,8 @@ const MainLayout = () => {
 		setFollowed, 
 		showCropperModal, setShowCropperModal, src, setPreview, setSettingProfilePicture,
 		showChangePasswordModal, setShowChangePasswordModal,
-		showVerifyEmailModal, setShowVerifyEmailModal
+		showVerifyEmailModal, setShowVerifyEmailModal,
+		showChangeUsernameModal, setShowChangeUsernameModal
 	} = useContext(ModalContext);
 
 	return (
@@ -68,6 +70,10 @@ const MainLayout = () => {
 			<ChangePasswordModal 
 				show={showChangePasswordModal}
 				onClose={() => setShowChangePasswordModal(false)}
+			/>
+			<ChangeUsernameModal
+				show={showChangeUsernameModal}
+				onClose={() => setShowChangeUsernameModal(false)}
 			/>
 		</div>
 	);

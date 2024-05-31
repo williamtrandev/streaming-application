@@ -5,28 +5,24 @@ import { Check, Pencil, RotateCcw } from "lucide-react";
 
 const SettingProfilePage = () => {
 
-	const user = fakeStreamer;
+    const user = fakeStreamer;
 
-    const { setShowCropperModal, setSrc, preview, settingProfilePicture } = useContext(ModalContext);
+    const { setShowCropperModal, setSrc, preview, settingProfilePicture, setShowChangeUsernameModal } = useContext(ModalContext);
     const fileInputRef = useRef(null);
 
     const [previewBanner, setPreviewBanner] = useState(null);
     const [profileBanner, setProfileBanner] = useState(null);
 
-    const [username, setUsername] = useState(user.username);
+    // const [username, setUsername] = useState(user.username);
     const [name, setName] = useState(user.name);
     // const [about, setAbout] = useState(user.about.text);
     // const [links, setLinks] = useState(user.about.links);
     // const [newLinkTitle, setNewLinkTitle] = useState("");
     // const [newLink, setNewLink] = useState("");
 
-    const usernameRef = useRef(null);
-    const [usernameReadOnly, setUsernameReadOnly] = useState(true);
-
     const [changeSaved, setChangeSaved] = useState(false);
 
-    const saveDisable = (username === user.username && name === user.name && !profileBanner && !settingProfilePicture) || 
-        username === "" || name === "";
+    const saveDisable = (name === user.name && !profileBanner && !settingProfilePicture) || name === "";
 
     return (
         <div className="space-y-6">
@@ -52,7 +48,7 @@ const SettingProfilePage = () => {
                                     setShowCropperModal(true);
                                 }}
                             />
-                            Choose profile picture
+                            Change profile picture
                         </label>
                         <p className="text-center md:text-start">Must be JPG, JPEG, PNG and cannot exceed 10MB.</p>
                     </div>
@@ -81,8 +77,12 @@ const SettingProfilePage = () => {
                                     setProfileBanner(e.target.files[0]);
                                 }}
                             />
-                            Choose profile banner
+                            Change profile banner
                         </label>
+                        {profileBanner && <button className="cursor-pointer px-3 py-2 text-white rounded-lg w-fit
+                            bg-purple-600 hover:bg-purple-700">
+                            Save banner
+                        </button>}
                         <p className="text-center md:text-start">File format: JPG, JPEG, PNG (recommended 5x1 ratio, max 10MB)</p>
                     </div>
                 </div>
@@ -94,35 +94,19 @@ const SettingProfilePage = () => {
                     bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
                     <div className="flex justify-between w-full gap-4 items-start py-4">
                         <div className="w-[35%] font-bold">Username</div>
-                        <div className="w-full relative">
-                            <input type="text"
-                                value={username}
-                                ref={usernameRef}
-                                onChange={(e) => setUsername(e.target.value)}
-                                className="w-full px-3 py-1 dark:text-white rounded-lg bg-slate-200 dark:bg-meta-4 
-                                    read-only:focus:outline-none read-only:bg-slate-300 read-only:dark:bg-slate-700"
-                                readOnly={usernameReadOnly}
-                            />
-                            {usernameReadOnly && <button 
-                                className="absolute right-0 p-2 h-full hover:bg-slate-400 
-                                    dark:hover:bg-slate-500 rounded-r-lg"
-                                onClick={() => {
-                                    setUsernameReadOnly(false);
-                                    usernameRef.current.focus();
-                                }}
+                        <div className="w-full flex">
+                            <div
+                                className="w-full px-3 py-1 dark:text-white rounded-l-lg bg-slate-300 dark:bg-slate-700"
+                            >
+                                {user.username}
+                            </div>
+                            <button
+                                className="p-2 h-full rounded-r-lg dark:text-white border border-gray-600 dark:border-gray-300
+                                    bg-neutral-300 hover:bg-neutral-400 dark:bg-neutral-600 dark:hover:bg-neutral-700"
+                                onClick={() => setShowChangeUsernameModal(true)}
                             >
                                 <Pencil size={16} />
-                            </button>}
-                            {!usernameReadOnly && <button 
-                                className="absolute right-0 p-2 h-full hover:bg-slate-400 
-                                    dark:hover:bg-slate-500 rounded-r-lg"
-                                onClick={() => {
-                                    setUsername(user.username);
-                                    setUsernameReadOnly(true);
-                                }}
-                            >
-                                <RotateCcw size={16} />
-                            </button>}
+                            </button>
                         </div>
                     </div>
 
@@ -211,23 +195,23 @@ const SettingProfilePage = () => {
                         </div>
                     </div> */}
 
-
+                    <div className="flex justify-end py-4">
+                        {!changeSaved && <button
+                            className={`px-3 py-1 bg-purple-600 rounded-lg text-xl text-white hover:bg-purple-700
+                                ${saveDisable ? "pointer-events-none opacity-50" : ""}`}
+                            onClick={() => setChangeSaved(true)}
+                        >Save</button>}
+                        {changeSaved && <div
+                            className="px-3 py-1 bg-green-500 rounded-lg text-xl text-black flex gap-2"
+                        >
+                            <Check />
+                            Saved
+                        </div>}
+                    </div>
                 </div>
             </div>
 
-            <div className="flex justify-end py-4">
-                {!changeSaved && <button
-                    className={`px-3 py-1 bg-purple-600 rounded-lg text-xl text-white hover:bg-purple-700
-                                ${saveDisable ? "pointer-events-none opacity-50" : ""}`}
-                    onClick={() => setChangeSaved(true)}
-                >Save</button>}
-                {changeSaved && <div
-                    className="px-3 py-1 bg-green-500 rounded-lg text-xl text-black flex gap-2"
-                >
-                    <Check />
-                    Saved
-                </div>}
-            </div>
+
         </div>
     );
 }
