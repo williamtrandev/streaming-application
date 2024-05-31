@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react'
 import MessageInput from './MessageInput';
 import Message from './Message';
 import APIClient from '../../utils/APIClient';
+import { useSendMessage } from '../../api/chat';
+import { useAuth } from '../../contexts/AuthContext';
 
 const messages = [
 	{
@@ -64,7 +66,8 @@ const randomMessages = Array.from({ length: 10 }, () => generateRandomMessage())
 const ChatBox = ({ socket, streamId }) => {
 	const [msgs, setMsgs] = useState(randomMessages);
 	const messagesEndRef = useRef(null);
-
+	const { auth } = useAuth();
+	const { mutate: sendMessage, isError, isSuccess, error, data } = useSendMessage();
 	const handleMessageSubmit = async (msg) => {
 		const newMessage = {
 			message: msg,
@@ -74,13 +77,12 @@ const ChatBox = ({ socket, streamId }) => {
 		};
 		const updatedMsgs = [...msgs, newMessage];
 		setMsgs(updatedMsgs);
-		const response = await APIClient.post('/chat/message', {
+		sendMessage({
 			streamId: streamId,
-			userId: '1',
+			userId: auth?.user?.userId,
 			content: msg,
-			duration: 0
+			duration: '0'
 		});
-		console.log(response.data);
 	};
 	useEffect(() => {
 		scrollToBottom();

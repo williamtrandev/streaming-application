@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, User, LockKeyhole, Eye, EyeOff, CircleAlert } from "lucide-react";
+import { toast } from "react-toastify";
 import { useLogin } from "../../api/auth";
+import { useAuth } from "../../contexts/AuthContext";
 
 const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
     if (!isVisible) return null;
@@ -10,15 +12,27 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
     const [password, setPassword] = useState("");
 
     const loginDisabled = username === "" || password === "";
-    const { mutate, isLoading, isError, error } = useLogin();
+    const { mutate, isLoading, isError, error, isSuccess, data } = useLogin();
+    const { login } = useAuth();
 
     const handleSubmitLogin = () => {
-        console.log("Submit Login Clicked");
-        if (!loginDisabled) {
-            console.log("Attempting to login with:", { username, password });
-            mutate({ username, password });
-        }
+        mutate({ username, password });
     };
+    useEffect(() => {
+        if(data) {
+            toast.success("Login Successfully");
+            login(data);
+            onClose(false);
+        }
+    }, [isSuccess]);
+
+    useEffect(() => {
+        const statusCode = error?.response?.status;
+        const errorMessage = error?.response?.data?.error;
+        if (statusCode === 401) {
+            toast.error(errorMessage);
+        }
+    }, [isError]);
 
     return (
         <div className="fixed z-9999 inset-0 flex justify-center items-center bg-black bg-opacity-75 backdrop-blur-sm">
@@ -40,8 +54,8 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center fill-current">
                                     <User />
                                 </span>
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300 
                                         focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 
                                         transition duration-150 ease-in-out"
@@ -58,15 +72,15 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
                                     <LockKeyhole />
                                 </span>
-                                <input 
-                                    type={showPassword} 
+                                <input
+                                    type={showPassword}
                                     className="w-full pl-10 pr-13 py-2 rounded-lg border border-gray-300 
                                         focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 
-                                        transition duration-150 ease-in-out" 
+                                        transition duration-150 ease-in-out"
                                     value={password}
-                                    onChange={e => setPassword(e.target.value)}    
+                                    onChange={e => setPassword(e.target.value)}
                                 />
-                                <button 
+                                <button
                                     className="absolute inset-y-0 right-0 px-3 flex items-center rounded-r-lg hover:bg-neutral-300"
                                     onClick={() => {
                                         setShowPassword(showPassword === "password" ? "text" : "password");
@@ -79,18 +93,10 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                         </div>
                     </div>
                     <div className="mb-4">
-                        <button 
+                        <button
                             className="text-sm text-blue-700 dark:text-blue-500 hover:underline"
                         >Forgot your password?</button>
                     </div>
-                    {isError && (
-                        <div className="mb-5 text-red-500 px-4 py-2 border-red-500 border-2 rounded-lg flex">
-                            <span className="mr-1">
-                                <CircleAlert />
-                            </span>
-                            {error?.response?.data?.message || "Username or password was incorrect."}
-                        </div>
-                    )}
                     <div className="mb-3">
                         <button disabled={loginDisabled}
                             className={`bg-blue-700 dark:bg-blue-500 text-white 

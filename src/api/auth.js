@@ -1,4 +1,3 @@
-import useLocalStorage from "../hooks/useLocalStorage";
 import APIClient from "../utils/APIClient";
 import { useMutation } from "@tanstack/react-query";
 
@@ -13,14 +12,7 @@ const login = async (data) => {
 
 const useLogin = () => {
     return useMutation({
-        mutationFn: (data) => login(data),
-        onSuccess: (result) => {
-	        const [auth, setAuth] = useLocalStorage('auth', null);
-            setAuth(result);
-        },
-        onError: (error) => {
-            console.log(error);
-        }
+        mutationFn: (data) => login(data)
     })
 }
 

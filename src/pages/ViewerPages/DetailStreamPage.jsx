@@ -5,7 +5,8 @@ import { io } from "socket.io-client";
 import { useEffect } from 'react';
 
 const DetailStreamPage = () => {
-	const { streamId } = useParams();
+	// const { streamId } = useParams();
+	const streamId = "665a0c65d4c7ea0c213ea920";
 	const fakeStream = {
 		title: 'Test Stream', 	
 		user: {
