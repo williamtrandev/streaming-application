@@ -7,7 +7,6 @@ const MessageInput = ({ onMessageSubmit }) => {
 	const { conversationId } = useParams();
 	const [inputText, setInputText] = useState("");
 	const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
 	const onEmojiPickerClick = (emojiData) => {
 		setInputText((inputValue) => inputValue + emojiData.emoji);
 	};
@@ -26,7 +25,7 @@ const MessageInput = ({ onMessageSubmit }) => {
 		}
 	};
 	return (
-		<div className="w-full h-10 self-end py-3 px-5 flex gap-2 justify-center items-center bg-gray dark:bg-meta-4 rounded-lg">
+		<div className="w-full h-10 self-end py-3 px-5 flex gap-2 justify-center items-center bg-gray-100 dark:bg-meta-4 rounded-lg">
 			
 			<span className="relative w-full">
 				<div className="flex space-x-4">
