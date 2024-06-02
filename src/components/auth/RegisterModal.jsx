@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { X, User, LockKeyhole, Eye, EyeOff, Check, CircleAlert, Mail, SquareUser } from "lucide-react";
+import { appName } from "../../constants";
 
 const RegisterModal = ({ isVisible, onClose, showVerifyEmailModal }) => {
     if (!isVisible) return null;
@@ -33,7 +34,7 @@ const RegisterModal = ({ isVisible, onClose, showVerifyEmailModal }) => {
         >
             <div className="w-[500px] h-fit relative bg-white dark:bg-boxdark p-5 rounded-lg">
                 <div className="flex justify-center mb-6">
-                    <div className="text-xl font-bold">Join Will Streaming today</div>
+                    <div className="text-xl font-bold">Join {appName} today</div>
                     <button
                         className="text-xl place-self-end absolute top-2 right-2
                             hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded"
@@ -85,7 +86,7 @@ const RegisterModal = ({ isVisible, onClose, showVerifyEmailModal }) => {
                             {!isValidName && name != "" ? "*Display name must be between 4 and 40 characters." : ""}
                         </div>
                         <div className="mt-1 text-sm">
-                            {name == "" ? "This is the name people will know you by on Will Streaming. You can always change it later." : ""}
+                            {name == "" ? `This is the name people will know you by on ${appName}. You can always change it later.` : ""}
                         </div>
                     </div>
                     <div className="mb-4">

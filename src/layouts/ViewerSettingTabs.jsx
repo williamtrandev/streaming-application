@@ -3,7 +3,7 @@ import { NavLink, Outlet } from "react-router-dom";
 const ViewerSettingTabs = () => {
     return (
         <div className="space-y-5">
-            <div className="text-2xl font-bold">Settings</div>
+            <div className="text-2xl font-bold">Account Settings</div>
             <div className="sticky top-18 z-99 flex border-b
                 bg-[#edf2f9] dark:bg-boxdark-2
                 border-gray-300 dark:border-gray-600 gap-5"

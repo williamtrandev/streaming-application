@@ -1,5 +1,7 @@
 import { lightmode, darkmode } from "../assets";
 
+export const appName = "Duo Streaming"
+
 export const navLinks = [
 	{
 		id: "home",
@@ -122,8 +124,7 @@ export const fakeStreamer = {
 	username: "WilliamTran123",
 	email: "abc123@gmail.com",
 	num_followers: 113315,
-	about: {
-		text: `F8 là cộng đồng học tập và chia sẻ kiến thức lập trình dành cho tất cả mọi người. Các khóa học đều được đầu tư kỹ lưỡng về mặt nội dung, âm thanh và hình ảnh. Học viên có thể học từ con số 0 tới khi trở thành lập trình viên chuyên nghiệp tại đây.
+	about: `F8 là cộng đồng học tập và chia sẻ kiến thức lập trình dành cho tất cả mọi người. Các khóa học đều được đầu tư kỹ lưỡng về mặt nội dung, âm thanh và hình ảnh. Học viên có thể học từ con số 0 tới khi trở thành lập trình viên chuyên nghiệp tại đây.
 
 Truy cập ngay https://fullstack.edu.vn/ và học tại đây để làm bài tập, quản lý được tiến độ học và hơn thế nữa!
 		
@@ -138,15 +139,14 @@ Email: contact@fullstack.edu.vn
 © Bản quyền thuộc về Channel F8 Official ☞ Do not Reup
 © Nghiêm cấm sử dụng video nhằm mục đích thương mại dưới mọi hình thức.
 #hoclaptrinh_online #hoc_html_css #hoc_javascript #reactjs`,
-		links: [
-			{
-				title: "link 1",
-				link: "/link1/123",
-			},
-			{
-				title: "link 2",
-				link: "/link2/456",
-			},
-		]
-	},
+	links: [
+		{
+			title: "link 1",
+			link: "/link1/123",
+		},
+		{
+			title: "link 2",
+			link: "/link2/456",
+		},
+	]
 }

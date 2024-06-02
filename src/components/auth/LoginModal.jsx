@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { X, User, LockKeyhole, Eye, EyeOff, CircleAlert } from "lucide-react";
+import { appName } from "../../constants";
 
 const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
     if (!isVisible) return null;
@@ -15,7 +16,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
         >
             <div className="w-[500px] relative bg-white dark:bg-boxdark p-5 rounded-lg">
                 <div className="flex justify-center mb-6">
-                    <div className="text-xl font-bold">Log in to Will Streaming</div>
+                    <div className="text-xl font-bold">Log in to {appName}</div>
                     <button
                         className="text-xl place-self-end absolute top-2 right-2
                             hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded"
