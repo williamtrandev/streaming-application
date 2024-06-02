@@ -7,6 +7,9 @@ import RegisterModal from '../components/auth/RegisterModal';
 import UnfollowModal from '../components/detailStreamer/UnfollowModal';
 import { ModalContext, ModalProvider } from './ModalContext';
 import CropperModal from '../components/settings/CroperModal';
+import ChangePasswordModal from '../components/settings/ChangePasswordModal';
+import VerifyEmailModal from '../components/auth/VerifyEmailModal';
+import ChangeUsernameModal from '../components/settings/ChangeUsernameModal';
 import { useDispatch } from 'react-redux';
 import { initializeSocket } from '../redux/slices/socketSlice';
 import { useEffect } from 'react';
@@ -16,10 +19,14 @@ const MainLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [showRegisterModal, setShowRegisterModal] = useState(false);
-	const {
-		showUnfollowModal, unfollowName, handleCloseUnfollowModal,
-		setFollowed,
-		showCropperModal, setShowCropperModal, src, setPreview, setSettingProfilePicture
+	
+	const { 
+		showUnfollowModal, unfollowName, handleCloseUnfollowModal, 
+		setFollowed, 
+		showCropperModal, setShowCropperModal, src, setPreview, setSettingProfilePicture,
+		showChangePasswordModal, setShowChangePasswordModal,
+		showVerifyEmailModal, setShowVerifyEmailModal,
+		showChangeUsernameModal, setShowChangeUsernameModal
 	} = useContext(ModalContext);
 	const { auth } = useAuth();
 	const isLogged = auth !== null;
@@ -41,11 +48,21 @@ const MainLayout = () => {
 					</main>
 				</div>
 			</div>
-			<LoginModal isVisible={showLoginModal} onClose={setShowLoginModal}
-				openRegisterModal={setShowRegisterModal} />
-			<RegisterModal isVisible={showRegisterModal} onClose={setShowRegisterModal} />
-			<UnfollowModal
-				show={showUnfollowModal}
+			<LoginModal 
+				isVisible={showLoginModal} 
+				onClose={setShowLoginModal}
+				openRegisterModal={setShowRegisterModal} 
+			/>
+			<RegisterModal 
+				isVisible={showRegisterModal} 
+				onClose={() => setShowRegisterModal(false)}
+				showVerifyEmailModal={() => setShowVerifyEmailModal(true)}
+			/>
+			<VerifyEmailModal 
+				show={showVerifyEmailModal} close={() => setShowVerifyEmailModal(false)}
+			/>
+			<UnfollowModal 
+				show={showUnfollowModal} 
 				onClose={handleCloseUnfollowModal}
 				onUnfollow={() => {
 					setFollowed(false);
@@ -58,6 +75,14 @@ const MainLayout = () => {
 				src={src}
 				setPreview={setPreview}
 				setProfilePicture={setSettingProfilePicture}
+			/>
+			<ChangePasswordModal 
+				show={showChangePasswordModal}
+				onClose={() => setShowChangePasswordModal(false)}
+			/>
+			<ChangeUsernameModal
+				show={showChangeUsernameModal}
+				onClose={() => setShowChangeUsernameModal(false)}
 			/>
 		</div>
 	);
