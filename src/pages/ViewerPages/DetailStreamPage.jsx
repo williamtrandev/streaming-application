@@ -1,14 +1,24 @@
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import StreamVideo from '../../components/detailStream/StreamVideo';
 import ChatBox from '../../components/detailStream/ChatBox';
-import { io } from "socket.io-client";
-import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { selectSocket } from '../../redux/slices/socketSlice';
+import { useAuth } from '../../contexts/AuthContext';
 
 const DetailStreamPage = () => {
 	// const { streamId } = useParams();
+	const { auth } = useAuth();
+	const userId = auth?.user?.userId;
+	const socket = useSelector(selectSocket);
+	useEffect(() => {
+		if (socket) {
+			socket.emit('joinRoom', streamId, userId);
+		}
+	}, [socket]);
 	const streamId = "665a0c65d4c7ea0c213ea920";
 	const fakeStream = {
-		title: 'Test Stream', 	
+		title: 'Test Stream', 																								
 		user: {
 			profile_picture: "https://img.nimo.tv/t/1629511737952/202308101691689784491_1629511737952_avatar.png/w120_l0/img.webp",
 			name: "Thanh Chan",
@@ -19,25 +29,21 @@ const DetailStreamPage = () => {
 		num_likes: 12340,
 		num_dislikes: 1000,
 	};
-	var socket = null;
-	useEffect(() => {
-		const userId = Math.floor(Math.random() * 10);
-
-		socket = io("http://localhost:3000");
-		socket.emit("add-user", streamId, userId);
-		console.log("Start")
-	}, [])
+	
 	return (
-		<div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)]">
-			<div className="md:grid md:grid-cols-3 md:gap-2 h-full w-full space-y-3 md:space-y-0">
-				<div className="md:col-span-2 w-full h-full md:overflow-auto">
-					<StreamVideo stream={fakeStream}/>
-				</div>
-				<div className="h-full w-full overflow-auto">
-					<ChatBox socket={socket} streamId={streamId} />
+		<div className="space-y-3">
+			<div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)]">
+				<div className="md:grid md:grid-cols-3 md:gap-2 h-full w-full space-y-3 md:space-y-0">
+					<div className="md:col-span-2 w-full h-full md:overflow-auto">
+						<StreamVideo stream={fakeStream}/>
+					</div>
+					<div className="h-full w-full overflow-auto">
+						<ChatBox streamId={streamId} socket={socket} />
+					</div>
 				</div>
 			</div>
 		</div>
+
 	)
 }
 
