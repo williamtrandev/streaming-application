@@ -10,6 +10,10 @@ import CropperModal from '../components/settings/CroperModal';
 import ChangePasswordModal from '../components/settings/ChangePasswordModal';
 import VerifyEmailModal from '../components/auth/VerifyEmailModal';
 import ChangeUsernameModal from '../components/settings/ChangeUsernameModal';
+import { useDispatch } from 'react-redux';
+import { initializeSocket } from '../redux/slices/socketSlice';
+import { useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 
 const MainLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -24,7 +28,12 @@ const MainLayout = () => {
 		showVerifyEmailModal, setShowVerifyEmailModal,
 		showChangeUsernameModal, setShowChangeUsernameModal
 	} = useContext(ModalContext);
-
+	const { auth } = useAuth();
+	const isLogged = auth !== null;
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(initializeSocket());
+	}, [dispatch]);
 	return (
 		<div className="dark:bg-boxdark-2 dark:text-bodydark bg-[#edf2f9]">
 			<div className="flex h-screen overflow-hidden">
@@ -58,7 +67,7 @@ const MainLayout = () => {
 				onUnfollow={() => {
 					setFollowed(false);
 					handleCloseUnfollowModal();
-				}} 
+				}}
 				streamerName={unfollowName} />
 			<CropperModal
 				show={showCropperModal}

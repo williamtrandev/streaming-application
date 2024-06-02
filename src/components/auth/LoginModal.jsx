@@ -1,14 +1,39 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { X, User, LockKeyhole, Eye, EyeOff, CircleAlert } from "lucide-react";
 import { appName } from "../../constants";
+import { toast } from "react-toastify";
+import { useLogin } from "../../api/auth";
+import { useAuth } from "../../contexts/AuthContext";
 
 const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
     if (!isVisible) return null;
+
     const [showPassword, setShowPassword] = useState("password");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const loginDisabled = username == "" || password == "";
+    const loginDisabled = username === "" || password === "";
+    const { mutate, isLoading, isError, error, isSuccess, data } = useLogin();
+    const { login } = useAuth();
+
+    const handleSubmitLogin = () => {
+        mutate({ username, password });
+    };
+    useEffect(() => {
+        if(data) {
+            toast.success("Login Successfully");
+            login(data);
+            onClose(false);
+        }
+    }, [isSuccess]);
+
+    useEffect(() => {
+        const statusCode = error?.response?.status;
+        const errorMessage = error?.response?.data?.error;
+        if (statusCode === 401) {
+            toast.error(errorMessage);
+        }
+    }, [isError]);
 
     return (
         <div className="fixed z-9999 inset-0 flex justify-center items-center
@@ -18,8 +43,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                 <div className="flex justify-center mb-6">
                     <div className="text-xl font-bold">Log in to {appName}</div>
                     <button
-                        className="text-xl place-self-end absolute top-2 right-2
-                            hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded"
+                        className="text-xl place-self-end absolute top-2 right-2 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded"
                         onClick={() => onClose(false)}
                     >
                         <X />
@@ -55,7 +79,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                                     className="w-full pl-10 pr-16 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
                                         text-black dark:text-white" 
                                     value={password}
-                                    onChange={e => setPassword(e.target.value)}    
+                                    onChange={e => setPassword(e.target.value)}
                                 />
                                 <button 
                                     className="absolute inset-y-0 right-0 px-3 flex items-center rounded-r-lg
@@ -64,29 +88,26 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                                         setShowPassword(showPassword === "password" ? "text" : "password");
                                     }}
                                 >
-                                    {showPassword == "password" && (<Eye />)}
-                                    {showPassword == "text" && (<EyeOff />)}
+                                    {showPassword === "password" && (<Eye />)}
+                                    {showPassword === "text" && (<EyeOff />)}
                                 </button>
                             </div>
                         </div>
                     </div>
                     <div className="mb-4">
-                        <button 
+                        <button
                             className="text-sm text-blue-700 dark:text-blue-500 hover:underline"
                         >Forgot your password?</button>
-                    </div>
-                    <div className="mb-5 text-red-500 px-4 py-2 border-red-500 border-2 rounded-lg flex">
-                        <span className="mr-1">
-                            <CircleAlert />
-                        </span>
-                        Username or password was incorrect.
                     </div>
                     <div className="mb-3">
                         <button disabled={loginDisabled}
                             className={`bg-blue-700 dark:bg-blue-500 text-white 
                                 font-bold w-full py-1 rounded-lg hover:bg-blue-800 dark:hover:bg-blue-700
                                 ${loginDisabled ? "pointer-events-none opacity-50" : ""}`}
-                        >Log In</button>
+                            onClick={handleSubmitLogin}
+                        >
+                            {isLoading ? "Logging in..." : "Log In"}
+                        </button>
                     </div>
                     <div>
                         <button
@@ -104,4 +125,4 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
     );
 }
 
-export default LoginModal
+export default LoginModal;

@@ -24,6 +24,7 @@ import StreamerInfoTabs from './layouts/StreamerInfoTabs';
 import ViewerSettingTabs from './layouts/ViewerSettingTabs';
 import LikedPage from './pages/ViewerPages/LikedPage';
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -32,7 +33,8 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path='/history' element={<HistoryPage />} />
           <Route path='/liked' element={<LikedPage />} />
-          <Route path='/live/:id' element={<DetailStreamPage />} />
+          <Route path='/live/:streamId' element={<DetailStreamPage />} />
+          <Route path='/settings/profile' element={<SettingProfilePage />} />
           <Route path='/following' element={<FollowingPage />} />
           <Route path='/:id' element={<StreamerInfoTabs />}>
             <Route path='about' element={<StreamerAboutPage />} />

@@ -5,15 +5,16 @@ import DropdownUser from '../header/DropdownUser';
 import LogoIcon from '../../../assets/lightmode.jpg';
 import { LogIn, Search } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const Header = (props) => {
 	const location = useLocation();
 	const isStudioPath = location.pathname.includes('studio');
 	const [isSearchVisible, setIsSearchVisible] = useState(false);
 	const searchRef = useRef(null);
-
-	const logged = true;
-	// const logged = false;
+	const { auth } = useAuth();
+	// const logged = true;
+	const logged = auth != null;
 
 	const handleClickOutside = (event) => {
 		if (searchRef.current && !searchRef.current.contains(event.target)) {

@@ -1,10 +1,10 @@
-import { formatRelative } from 'date-fns';
+import { formatRelative, parseISO } from 'date-fns';
 
-function formatDate(seconds) {
+function formatDate(date) {
 	let formattedDate = '';
 
-	if (seconds) {
-		formattedDate = formatRelative(new Date(seconds * 1000), new Date());
+	if (date) {
+		formattedDate = formatRelative(parseISO(date), new Date());
 
 		formattedDate =
 			formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
@@ -13,19 +13,20 @@ function formatDate(seconds) {
 	return formattedDate;
 }
 const Message = ({msg}) => {
-	const { message, displayName, createdAt, photoURL } = msg;
+	const { content, user, createdAt } = msg;
+	console.log(content, user, createdAt)
 	return (
 		<div className="space-y-2">
 			<div className="flex items-center space-x-3">
-				<img src={photoURL} alt="" className="w-6 h-6 rounded-full" />
+				<img src={user.profilePicture} alt="" className="w-6 h-6 rounded-full" />
 				<div className="flex space-x-2 items-center">
-					<p className='font-bold'>{displayName}</p>
+					<p className='font-bold'>{user?.fullname}</p>
 					<p className='text-xs'>
 						{formatDate(createdAt)}
 					</p>
 				</div>
 			</div>
-			<p className='text-md'>{message}</p>
+			<p className='text-md'>{content}</p>
 		</div>
 	);
 }
