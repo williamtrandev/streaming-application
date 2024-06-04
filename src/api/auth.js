@@ -1,5 +1,5 @@
 import APIClient from "../utils/APIClient";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const login = async (data) => {
     const { username, password } = data;
@@ -13,7 +13,73 @@ const login = async (data) => {
 const useLogin = () => {
     return useMutation({
         mutationFn: (data) => login(data)
-    })
+    });
 }
 
-export { useLogin };
+const checkUsernameAvailable = async (data) => {
+    const { username } = data;
+    const response = await APIClient.post("/auth/check/username-available", {
+        username
+    });
+    return response.data;
+}
+
+const useCheckUsernameAvailable = () => {
+    return useMutation({
+        mutationFn: (data) => checkUsernameAvailable(data)
+    });
+}
+
+const checkEmailAvailable = async (data) => {
+    const { email } = data;
+    const response = await APIClient.post("/auth/check/email-available", {
+        email
+    });
+    return response.data;
+}
+
+const useCheckEmailAvailable = () => {
+    return useMutation({
+        mutationFn: (data) => checkEmailAvailable(data)
+    });
+}
+
+const sendOtp = async (data) => {
+    const { email } = data;
+    const response = await APIClient.post("/auth/send-verify-email", {
+        email
+    });
+    return response.data;
+}
+
+const useSendOtp = () => {
+    return useMutation({
+        mutationFn: (data) => sendOtp(data)
+    });
+}
+
+const register = async (data) => {
+    const { username, fullname, password, email, otp } = data;
+    const response = await APIClient.post("/auth/register", {
+        username,
+        fullname,
+        password,
+        email,
+        otp
+    });
+    return response.data;
+}
+
+const useRegister = () => {
+    return useMutation({
+        mutationFn: (data) => register(data)
+    });
+}
+
+export { 
+    useLogin, 
+    useCheckUsernameAvailable,
+    useCheckEmailAvailable,
+    useSendOtp,
+    useRegister
+};

@@ -4,7 +4,6 @@ import { Outlet } from 'react-router-dom';
 import LoginModal from '../components/auth/LoginModal';
 import RegisterModal from '../components/auth/RegisterModal';
 import SidebarStudio from '../components/commons/sidebar/SidebarStudio';
-import { ModalProvider } from './ModalContext';
 
 const StudioLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -32,8 +31,4 @@ const StudioLayout = () => {
 	);
 }
 
-export default () => (
-	<ModalProvider>
-		<StudioLayout />
-	</ModalProvider>
-);
+export default StudioLayout;

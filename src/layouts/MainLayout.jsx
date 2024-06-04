@@ -5,7 +5,6 @@ import { Outlet } from 'react-router-dom';
 import LoginModal from '../components/auth/LoginModal';
 import RegisterModal from '../components/auth/RegisterModal';
 import UnfollowModal from '../components/detailStreamer/UnfollowModal';
-import { ModalContext, ModalProvider } from './ModalContext';
 import CropperModal from '../components/settings/CroperModal';
 import ChangePasswordModal from '../components/settings/ChangePasswordModal';
 import VerifyEmailModal from '../components/auth/VerifyEmailModal';
@@ -14,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { initializeSocket } from '../redux/slices/socketSlice';
 import { useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { ModalContext } from '../contexts/ModalContext';
 
 const MainLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,7 +25,6 @@ const MainLayout = () => {
 		setFollowed, 
 		showCropperModal, setShowCropperModal, src, setPreview, setSettingProfilePicture,
 		showChangePasswordModal, setShowChangePasswordModal,
-		showVerifyEmailModal, setShowVerifyEmailModal,
 		showChangeUsernameModal, setShowChangeUsernameModal
 	} = useContext(ModalContext);
 	const { auth } = useAuth();
@@ -50,16 +49,12 @@ const MainLayout = () => {
 			</div>
 			<LoginModal 
 				isVisible={showLoginModal} 
-				onClose={setShowLoginModal}
-				openRegisterModal={setShowRegisterModal} 
+				onClose={() => setShowLoginModal(false)}
+				openRegisterModal={() => setShowRegisterModal(true)} 
 			/>
 			<RegisterModal 
 				isVisible={showRegisterModal} 
 				onClose={() => setShowRegisterModal(false)}
-				showVerifyEmailModal={() => setShowVerifyEmailModal(true)}
-			/>
-			<VerifyEmailModal 
-				show={showVerifyEmailModal} close={() => setShowVerifyEmailModal(false)}
 			/>
 			<UnfollowModal 
 				show={showUnfollowModal} 
@@ -88,8 +83,4 @@ const MainLayout = () => {
 	);
 }
 
-export default () => (
-	<ModalProvider>
-		<MainLayout />
-	</ModalProvider>
-);
+export default MainLayout;

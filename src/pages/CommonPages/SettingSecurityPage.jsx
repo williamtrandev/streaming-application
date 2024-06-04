@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from "react";
-import { ModalContext } from "../../layouts/ModalContext";
 import { fakeStreamer } from "../../constants";
 import { Pencil } from "lucide-react";
+import { ModalContext } from "../../contexts/ModalContext";
 
 const SettingSecurityPage = () => {
     const user = fakeStreamer;

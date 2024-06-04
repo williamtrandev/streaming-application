@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from "react";
 import { fakeStreamer } from "../../constants";
-import { ModalContext } from "../../layouts/ModalContext";
 import { Check, Pencil, Trash2, Plus, Link } from "lucide-react";
+import { ModalContext } from "../../contexts/ModalContext";
 
 const SettingProfilePage = () => {
 

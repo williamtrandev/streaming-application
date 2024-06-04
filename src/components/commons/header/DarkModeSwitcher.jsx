@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ModalContext } from "../../../layouts/ModalContext";
+import { ModalContext } from "../../../contexts/ModalContext";
 
 const DarkModeSwitcher = () => {
 	const {colorMode, setColorMode} = useContext(ModalContext);

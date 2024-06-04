@@ -5,7 +5,7 @@ import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../util
 import FollowButton from "../detailStreamer/FollowButton";
 import FollowedButton from "../detailStreamer/FollowedButton";
 import { Link } from "react-router-dom";
-import { ModalContext } from "../../layouts/ModalContext";
+import { ModalContext } from "../../contexts/ModalContext";
 
 const Streamer = ({ user }) => {
 	const { handleShowUnfollowModal, followed, setFollowed } = useContext(ModalContext);
