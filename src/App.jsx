@@ -20,9 +20,25 @@ import {
   StudioPage
 } from './pages/StreamerPages';
 import { SettingProfilePage } from './pages/CommonPages';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { initializeSocket, selectSocket } from './redux/slices/socketSlice';
+import { useEffect } from 'react';
+import { useAuth } from './contexts/AuthContext';
 
 function App() {
+  const { auth } = useAuth();
+  const isLogged = auth !== null;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(initializeSocket());
+  }, [dispatch]);
+  const socket = useSelector(selectSocket);
+
+  useEffect(() => {
+    if (isLogged && socket) {
+      socket.emit('logged', auth?.user?.userId);
+    }
+  }, [isLogged, socket]);
   return (
     <BrowserRouter>
       <Routes>

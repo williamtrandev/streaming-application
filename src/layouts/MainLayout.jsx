@@ -7,10 +7,6 @@ import RegisterModal from '../components/auth/RegisterModal';
 import UnfollowModal from '../components/detailStreamer/UnfollowModal';
 import { ModalContext, ModalProvider } from './ModalContext';
 import CropperModal from '../components/settings/CroperModal';
-import { useDispatch } from 'react-redux';
-import { initializeSocket } from '../redux/slices/socketSlice';
-import { useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 
 const MainLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,12 +17,7 @@ const MainLayout = () => {
 		setFollowed,
 		showCropperModal, setShowCropperModal, src, setPreview, setSettingProfilePicture
 	} = useContext(ModalContext);
-	const { auth } = useAuth();
-	const isLogged = auth !== null;
-	const dispatch = useDispatch();
-	useEffect(() => {
-		dispatch(initializeSocket());
-	}, [dispatch]);
+	
 	return (
 		<div className="dark:bg-boxdark-2 dark:text-bodydark bg-[#edf2f9]">
 			<div className="flex h-screen overflow-hidden">
