@@ -19,6 +19,10 @@ import {
   SettingsPage,
   StudioPage
 } from './pages/StreamerPages';
+import { useDispatch, useSelector } from 'react-redux';
+import { initializeSocket, selectSocket } from './redux/slices/socketSlice';
+import { useEffect } from 'react';
+import { useAuth } from './contexts/AuthContext';
 import { SettingProfilePage, SettingSecurityPage } from './pages/CommonPages';
 import StreamerInfoTabs from './layouts/StreamerInfoTabs';
 import ViewerSettingTabs from './layouts/ViewerSettingTabs';
@@ -26,6 +30,19 @@ import LikedPage from './pages/ViewerPages/LikedPage';
 
 
 function App() {
+  const { auth } = useAuth();
+  const isLogged = auth !== null;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(initializeSocket());
+  }, [dispatch]);
+  const socket = useSelector(selectSocket);
+
+  useEffect(() => {
+    if (isLogged && socket) {
+      socket.emit('logged', auth?.user?.userId);
+    }
+  }, [isLogged, socket]);
   return (
     <BrowserRouter>
       <Routes>

@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectSocket } from '../../../redux/slices/socketSlice';
+import { formatDate } from '../../../utils/formatDate';
 
 const DropdownNotification = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
-	const [notifying, setNotifying] = useState(true);
+	const [notifying, setNotifying] = useState(false);
+	const socket = useSelector(selectSocket);
 
 	const trigger = useRef(null);
 	const dropdown = useRef(null);
@@ -32,7 +36,16 @@ const DropdownNotification = () => {
 		document.addEventListener('keydown', keyHandler);
 		return () => document.removeEventListener('keydown', keyHandler);
 	});
-
+	const [notifications, setNotifications] = useState([]);
+	useEffect(() => {
+		if(socket) {
+			socket.on("receiveNotification", (notification) => {
+				console.log("received notification", notification);
+				setNotifications(prevNotifications => [...prevNotifications, notification]);
+				setNotifying(true);
+			})
+		}
+	}, [socket]);
 	return (
 		<li className="relative">
 			<Link
@@ -78,32 +91,28 @@ const DropdownNotification = () => {
 				</div>
 
 				<ul className="flex h-auto flex-col overflow-y-auto">
-					<li>
-						<Link
-							className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-							to="#"
-						>
-							<p className="text-sm">
-								<span className="text-black dark:text-white">
-									William started streaming 4 minutes ago.
-								</span>{' '}
-								Hello everyone
-							</p>
-						</Link>
-					</li>
-					<li>
-						<Link
-							className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-							to="#"
-						>
-							<p className="text-sm">
-								<span className="text-black dark:text-white">
-									William started streaming 4 minutes ago.
-								</span>{' '}
-								Hello everyone
-							</p>
-						</Link>
-					</li>
+					{notifications.map((notification, index) => {
+						return (
+							<li key={index}>
+								<Link
+									className="flex items-center gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+									to={`/live/${notification._id}`}
+								>
+									<img src={notification.profilePicture} alt="" className="w-8 h-8 rounded-full" />
+									<div>
+										<p className="text-sm">
+											<span className="text-black dark:text-white">
+												{notification.fullname} is streaming: {notification.title}
+											</span>
+										</p>
+										<p className="text-xs text-gray-600">
+											{formatDate(notification.createdAt)}
+										</p>
+									</div>
+								</Link>
+							</li>
+						)
+					})}
 				</ul>
 			</div>
 		</li>
