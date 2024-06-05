@@ -72,7 +72,7 @@ const Header = (props) => {
 					</button>
 					
 					<Link className="block flex-shrink-0 lg:hidden" to="/">
-						<img src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="Logo" className='w-10 h-10 rounded-full' />
+						<img src={auth?.user?.profilePicture} alt="Logo" className='w-10 h-10 rounded-full' />
 					</Link>
 				</div>
 				{!isStudioPath && 

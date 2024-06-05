@@ -20,7 +20,9 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
     };
     useEffect(() => {
         if(data) {
-            toast.success("Login Successfully");
+            toast.success("Login Successfully", {
+                position: "bottom-right"
+            });
             login(data);
             onClose(false);
         }

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectSocket } from '../../../redux/slices/socketSlice';
 import { formatDate } from '../../../utils/formatDate';
+import { useGetNotifications } from '../../../api/studio';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const DropdownNotification = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -11,7 +13,15 @@ const DropdownNotification = () => {
 
 	const trigger = useRef(null);
 	const dropdown = useRef(null);
-
+	const { auth } = useAuth();
+	const userId = auth?.user?.userId;
+	const { data: notificationData } = useGetNotifications(userId);
+	useEffect(() => {
+		if (notificationData) {
+			console.log(notificationData);
+			setNotifications(notificationData.notifications);
+		}
+	}, [notificationData]);
 	useEffect(() => {
 		const clickHandler = ({ target }) => {
 			if (!dropdown.current) return;
@@ -41,7 +51,7 @@ const DropdownNotification = () => {
 		if(socket) {
 			socket.on("receiveNotification", (notification) => {
 				console.log("received notification", notification);
-				setNotifications(prevNotifications => [...prevNotifications, notification]);
+				setNotifications(prevNotifications => [notification, ...prevNotifications]);
 				setNotifying(true);
 			})
 		}
@@ -98,11 +108,13 @@ const DropdownNotification = () => {
 									className="flex items-center gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
 									to={`/live/${notification._id}`}
 								>
-									<img src={notification.profilePicture} alt="" className="w-8 h-8 rounded-full" />
+									<img src={notification?.user?.profilePicture} alt="" className="w-8 h-8 rounded-full" />
 									<div>
 										<p className="text-sm">
 											<span className="text-black dark:text-white">
-												{notification.fullname} is streaming: {notification.title}
+												{
+													notification?.content ? notification?.content : 
+													`${notification?.user?.fullname} is streaming: ${notification.title}`}
 											</span>
 										</p>
 										<p className="text-xs text-gray-600">

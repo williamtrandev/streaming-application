@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ChevronRight, Pencil } from 'lucide-react';
 import TagItem from '../../components/studio/TagItem';
 import { toast } from 'react-toastify';
-import { useSaveStream } from '../../api/studio';
+import { useSaveNotification, useSaveStream } from '../../api/studio';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSelector } from 'react-redux';
 import { selectSocket } from '../../redux/slices/socketSlice';
@@ -25,7 +25,8 @@ const StudioPage = () => {
 	const [tagArr, setTagArr] = useState([]);
 	const [image, setImage] = useState('https://wp.technologyreview.com/wp-content/uploads/2023/11/MIT_Universe_fibnal.jpg');
 	const [modalOpen, setModalOpen] = useState(false);
-	const { mutate: saveStream, isError, isSuccess, error, data: streamData } = useSaveStream();
+	const { mutate: saveStream, isSuccess: isSuccessStream, data: streamData } = useSaveStream();
+	const { mutate: saveNotification, isError: isErrorNotification, isSuccess: isSuccessNotification, data: notificationData } = useSaveNotification();
 	const { auth } = useAuth();
 	const userId = auth?.user?.userId;
 	const socket = useSelector(selectSocket);
@@ -80,17 +81,21 @@ const StudioPage = () => {
 			tags: tags
 		}
 		saveStream(data);
+		saveNotification({
+			userId: userId,
+			content: `${auth?.user?.fullname} is streaming: ${title}`
+		});
 	}
 
 	useEffect(() => {
-		if (socket && isSuccess) {
+		if (socket && isSuccessStream) {
 			const data = {
 				stream: streamData?.stream, 
 				userId: userId
 			}
 			socket.emit('sendNotification', data);
 		}
-	}, [socket, isSuccess]);
+	}, [socket, isSuccessStream]);
 
 	return (
 		<>
