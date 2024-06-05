@@ -9,7 +9,8 @@ const CropperModal = ({ show, src, setPreview, setProfilePicture, onClose }) => 
 
     return (
         <div className="fixed z-9999 inset-0 flex justify-center items-center
-        bg-black bg-opacity-75 backdrop-blur-sm">
+            bg-black bg-opacity-75 backdrop-blur-sm"
+        >
             <div className="relative bg-white dark:bg-boxdark p-5 rounded-lg space-y-4">
                 <div className="text-xl text-center">
                     Change profile picture

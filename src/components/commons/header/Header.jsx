@@ -9,9 +9,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 
 const Header = (props) => {
 	const location = useLocation();
-	const { pathname } = location;
 	const isStudioPath = location.pathname.includes('studio');
-	const [showSmallSearch, setShowSmallSearch] = useState(false);
 	const [isSearchVisible, setIsSearchVisible] = useState(false);
 	const searchRef = useRef(null);
 	const { auth } = useAuth();
@@ -168,7 +166,7 @@ const Header = (props) => {
 								onClick={() => props.setShowLoginModal(true)}
 							>
 								<LogIn />
-								Login
+								Log In
 							</button>
 						</div>}
 					</ul>
