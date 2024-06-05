@@ -23,7 +23,7 @@ const MainLayout = () => {
 	const { 
 		showUnfollowModal, unfollowName, handleCloseUnfollowModal, 
 		setFollowed, 
-		showCropperModal, setShowCropperModal, src, setPreview, setSettingProfilePicture,
+		showCropperModal, setShowCropperModal,
 		showChangePasswordModal, setShowChangePasswordModal,
 		showChangeUsernameModal, setShowChangeUsernameModal
 	} = useContext(ModalContext);
@@ -67,9 +67,6 @@ const MainLayout = () => {
 			<CropperModal
 				show={showCropperModal}
 				onClose={() => setShowCropperModal(false)}
-				src={src}
-				setPreview={setPreview}
-				setProfilePicture={setSettingProfilePicture}
 			/>
 			<ChangePasswordModal 
 				show={showChangePasswordModal}

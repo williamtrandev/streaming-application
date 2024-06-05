@@ -1,11 +1,39 @@
 import { ZoomIn, ZoomOut } from "lucide-react";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState, useEffect } from "react";
 import AvatarEditor from "react-avatar-editor";
+import { useChangeProfilePicture } from "../../api/user";
+import { toast } from "react-toastify";
+import { ModalContext } from "../../contexts/ModalContext";
+import { useAuth } from "../../contexts/AuthContext";
 
-const CropperModal = ({ show, src, setPreview, setProfilePicture, onClose }) => {
+const CropperModal = ({ show, onClose }) => {
+    if (!show) return null;
     const cropRef = useRef(null);
     const [scale, setScale] = useState(1.0);
-    if (!show) return null;
+    const { src, setPreview } = useContext(ModalContext);
+
+    const { auth } = useAuth();
+    const token = auth?.accessToken;
+    const { mutate, isLoading, isError, error, isSuccess, data } = useChangeProfilePicture();
+
+    const handleSave = async () => {
+        const image = cropRef.current.getImage();
+        const profilePicture = await new Promise(resolve => image.toBlob(resolve, 'image/jpg'));
+        mutate({ token, profilePicture });
+    };
+
+    useEffect(() => {
+        if(data) {
+            setPreview(data.newProfilePicture);
+            toast.success("Change profile picture successfully");
+            onClose();
+        }
+    }, [isSuccess]);
+
+    useEffect(() => {
+        const errorMessage = error?.response?.data?.error;
+        toast.error(errorMessage);
+    }, [isError]);
 
     return (
         <div className="fixed z-9999 inset-0 flex justify-center items-center
@@ -55,18 +83,10 @@ const CropperModal = ({ show, src, setPreview, setProfilePicture, onClose }) => 
                     <button
                         className="px-2 py-1 rounded-md
                             bg-purple-600 text-white hover:bg-purple-700"
-                        onClick={async () => {
-                            if (cropRef.current) {
-                                const dataUrl = cropRef.current.getImage().toDataURL();
-                                // const result = await fetch(dataUrl);
-                                // const blob = await result.blob();
-                                // setPreview(URL.createObjectURL(blob));
-                                setPreview(dataUrl);
-                                setProfilePicture(cropRef.current.getImage());
-                                onClose();
-                            }
-                        }}
-                    >OK</button>
+                        onClick={handleSave}
+                    >
+                        {isLoading ? "Saving..." : "Save"}
+                    </button>
                 </div>
             </div>
         </div>

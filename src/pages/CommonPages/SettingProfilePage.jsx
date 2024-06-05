@@ -1,28 +1,35 @@
-import { useContext, useRef, useState } from "react";
-import { fakeStreamer } from "../../constants";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Check, Pencil, Trash2, Plus, Link } from "lucide-react";
 import { ModalContext } from "../../contexts/ModalContext";
+import { useGetProfile } from "../../api/user";
+import { useAuth } from "../../contexts/AuthContext";
 
 const SettingProfilePage = () => {
+    const { auth } = useAuth();
+	const userId = auth?.user?.userId;
+    const { data: userData } = useGetProfile(userId);
 
-    const user = fakeStreamer;
-
-    const { setShowCropperModal, setSrc, preview, settingProfilePicture, setShowChangeUsernameModal } = useContext(ModalContext);
+    const { setShowCropperModal, setSrc, preview, setShowChangeUsernameModal } = useContext(ModalContext);
     const fileInputRef = useRef(null);
 
     const [previewBanner, setPreviewBanner] = useState(null);
     const [profileBanner, setProfileBanner] = useState(null);
 
-    // const [username, setUsername] = useState(user.username);
-    const [name, setName] = useState(user.name);
-    const [about, setAbout] = useState(user.about);
-    const [links, setLinks] = useState(user.links);
+    const [fullname, setFullname] = useState(userData?.fullname);
+    const [about, setAbout] = useState(userData?.about);
+    const [links, setLinks] = useState(userData?.links);
     const [newLinkTitle, setNewLinkTitle] = useState("");
     const [newLinkUrl, setNewLinkUrl] = useState("");
 
     const [changeSaved, setChangeSaved] = useState(false);
 
-    const saveDisable = (name === user.name && !profileBanner && !settingProfilePicture) || name === "";
+    const saveDisable = (fullname === userData?.fullname) || fullname === "";
+
+    useEffect(() => {
+		setFullname(userData?.fullname);
+        setAbout(userData?.about);
+        setLinks(userData?.links)
+	}, [userData]);
 
     return (
         <div className="space-y-6">
@@ -31,7 +38,7 @@ const SettingProfilePage = () => {
                 <div className="flex flex-col md:flex-row gap-6 items-center p-4 md:p-6 rounded-lg
                     bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
                     <div className="h-30 w-30">
-                        <img src={preview || user.profile_picture} alt="profile" className="rounded-full object-cover" />
+                        <img src={preview || userData?.profilePicture} alt="profile" className="rounded-full object-cover" />
                     </div>
                     <div className="space-y-5 flex flex-col items-center md:items-start md:justify-start">
                         <label
@@ -61,7 +68,7 @@ const SettingProfilePage = () => {
                     bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
                     <div className="z-20 h-16 md:h-50 overflow-hidden">
                         <img
-                            src={previewBanner || user.profile_banner}
+                            src={previewBanner || userData?.profileBanner}
                             alt="profile banner"
                             className="object-cover object-center aspect-[5/1] w-full"
                         />
@@ -98,7 +105,7 @@ const SettingProfilePage = () => {
                             <div
                                 className="w-full px-3 py-1 dark:text-white rounded-l-lg bg-slate-300 dark:bg-slate-700"
                             >
-                                {user.username}
+                                {userData?.username}
                             </div>
                             <button
                                 className="p-2 h-full rounded-r-lg dark:text-white border border-gray-600 dark:border-gray-300
@@ -114,8 +121,8 @@ const SettingProfilePage = () => {
                         <div className="w-[35%] font-bold">Display name</div>
                         <div className="w-full">
                             <input type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                value={fullname}
+                                onChange={(e) => setFullname(e.target.value)}
                                 className="w-full px-3 py-1 dark:text-white rounded-lg
                                     bg-slate-200 dark:bg-meta-4"
                             />
@@ -199,7 +206,7 @@ const SettingProfilePage = () => {
                         </div>
                     </div>
                     <div className="space-y-2 py-4">
-                        {links.map((link, index) => (
+                        {links?.map((link, index) => (
                             <div
                                 key={index}
                                 className="border border-gray-300 dark:border-gray-600 rounded-lg p-3 
