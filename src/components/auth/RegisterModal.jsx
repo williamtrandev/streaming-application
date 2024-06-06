@@ -50,7 +50,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
 
     useEffect(() => {
         const statusCode = error?.response?.status;
-        const errorMessage = error?.response?.data?.message;
+        const errorMessage = error?.response?.data?.error;
         if (statusCode === 400) {
             toast.error(errorMessage);
         }

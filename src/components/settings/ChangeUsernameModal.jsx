@@ -1,23 +1,48 @@
-import { User, Eye, EyeOff, X } from "lucide-react";
-import { useState } from "react";
-import { fakeStreamer } from "../../constants/index"
+import { Eye, EyeOff, X } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
+import { ModalContext } from "../../contexts/ModalContext";
+import NewUsernameInput from "./NewUsernameInput";
+import { useAuth } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
+import { useChangeUsername } from "../../api/auth";
 
 const ChangeUsernameModal = ({ show, onClose }) => {
     if (!show) return null;
 
-    const user = fakeStreamer;
-
+    const { currentUsername } = useContext(ModalContext);
     const [showPassword, setShowPassword] = useState("password");
 
-    const [username, setUsername] = useState(user.username);
+    const [username, setUsername] = useState(currentUsername);
     const [password, setPassword] = useState("");
 
-    const isAvailableUsername = true;
-    const isValidUsername = username.length >= 4 && username.length <= 25;
-    const isCorrectPassword = false;
+    const [isValidUsername, setIsValidUsername] = useState(false) ;
 
-    const changeUsernameDisabled = username == "" || password == "" || username == user.username;
-        !isValidUsername || !isAvailableUsername;
+    const changeUsernameDisabled = username == "" || password == "" || username == currentUsername;
+        !isValidUsername;
+
+        const { auth, changeAuthUsername } = useAuth();
+        const token = auth?.accessToken;
+        const { mutate, isLoading, isError, error, isSuccess, data } = useChangeUsername();
+    
+        const handleSave = async () => {
+            mutate({ token, username, password });
+        };
+    
+        useEffect(() => {
+            if(data) {
+                toast.success("Change username successfully");
+                changeAuthUsername(data.newUsername);
+                onClose();
+            }
+        }, [isSuccess]);
+    
+        useEffect(() => {
+            const statusCode = error?.response?.status;
+            const errorMessage = error?.response?.data?.error;
+            if (statusCode === 400) {
+                toast.error(errorMessage);
+            }
+        }, [isError]);
 
     return (
         <div className="fixed z-9999 inset-0 flex justify-center items-center
@@ -35,27 +60,11 @@ const ChangeUsernameModal = ({ show, onClose }) => {
                     </button>
                 </div>
                 <div className="space-y-6">
-                    <div>
-                    <div className="mb-1">New Username</div>
-                        <div id="usernameInput" className="text-black w-full">
-                            <div className="relative">
-                                {/* <span className="absolute inset-y-0 left-0 pl-2 flex items-center text-black dark:text-bodydark">
-                                    <User />
-                                </span> */}
-                                <input 
-                                    type="text" 
-                                    className="w-full px-4 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
-                                        text-black dark:text-white"
-                                    value={username}
-                                    onChange={e => setUsername(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        <div className="text-red-500 mt-1 text-sm">
-                            {!isAvailableUsername && isValidUsername ? "*This username is unavailable." : ""}
-                            {!isValidUsername && username != "" ? "*Username must be between 4 and 25 characters." : ""}
-                        </div>
-                    </div>
+                    <NewUsernameInput 
+                        value={username}
+                        setUsername={setUsername}
+                        setIsValid={setIsValidUsername}
+                    />
                     <div>
                         <div className="mb-1">Password</div>
                         <div className="text-black w-full">
@@ -79,9 +88,6 @@ const ChangeUsernameModal = ({ show, onClose }) => {
                                 </button>
                             </div>
                         </div>
-                        <div className="text-red-500 mt-1 text-sm">
-                            {!isCorrectPassword ? "*Incorrect password." : ""}
-                        </div>
                     </div>
                 </div>
                 <div className="flex justify-end gap-2">
@@ -93,11 +99,11 @@ const ChangeUsernameModal = ({ show, onClose }) => {
                     >Cancel</button>
                     <button
                         className={`px-2 py-1 rounded-md bg-purple-600 text-white hover:bg-purple-700
-                            ${changeUsernameDisabled ? "pointer-events-none opacity-50" : ""}`}
-                        onClick={() => {
-                            onClose();
-                        }}
-                    >Change Username</button>
+                            ${changeUsernameDisabled || isLoading ? "pointer-events-none opacity-50" : ""}`}
+                        onClick={handleSave}
+                    >
+                        {isLoading ? "Saving..." : "Change Username" }
+                    </button>
                 </div>
             </div>
         </div>

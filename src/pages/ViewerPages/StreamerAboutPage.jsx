@@ -4,16 +4,17 @@ import { fakeStreamer } from "../../constants";
 const StreamerAboutPage = () => {
 
     const about = fakeStreamer.about;
+    const links = fakeStreamer.links;
     
     return (
         <div className="">
             <div className="whitespace-pre-wrap">
-                {about.text}
+                {about}
             </div>
-            {about.links && <div className="mt-6">
+            {links && <div className="mt-6">
                 <div className="font-bold text-2xl">Links</div>
                 <div className="flex flex-col gap-1 mt-2 text-lg">
-                    {about.links.map((link, index) => (
+                    {links.map((link, index) => (
                         <div key={index}>
                             <div>{link.title}</div>
                             <div>

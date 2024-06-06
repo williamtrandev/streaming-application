@@ -18,6 +18,7 @@ export const ModalProvider = ({ children }) => {
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
     const [showChangeUsernameModal, setShowChangeUsernameModal] = useState(false);
+    const [currentUsername, setCurrentUsername] = useState("");
 
     const handleShowUnfollowModal = (name) => {
         setUnfollowName(name);
@@ -38,7 +39,7 @@ export const ModalProvider = ({ children }) => {
                 showCropperModal, setShowCropperModal, src, setSrc, preview, setPreview, 
                 showChangePasswordModal, setShowChangePasswordModal,
                 showVerifyEmailModal, setShowVerifyEmailModal,
-                showChangeUsernameModal, setShowChangeUsernameModal
+                showChangeUsernameModal, setShowChangeUsernameModal, currentUsername, setCurrentUsername
             }}
         >
             {children}

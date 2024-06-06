@@ -53,8 +53,28 @@ const useChangeProfileBanner = () => {
 	});
 }
 
+const changeProfileInfo = async (data) => {
+	const { token, fullname, about } = data;
+	const response = await APIClient.put("/user/change-profile-info", {
+		fullname,
+		about
+	}, {
+		headers: {
+			'Authorization': `Bearer ${token}`
+		},
+	});
+	return response.data;
+}
+
+const useChangeProfileInfo = () => {
+	return useMutation({
+		mutationFn: (data) => changeProfileInfo(data)
+	});
+}
+
 export {
 	useGetProfile,
 	useChangeProfilePicture,
-	useChangeProfileBanner
+	useChangeProfileBanner,
+	useChangeProfileInfo
 };

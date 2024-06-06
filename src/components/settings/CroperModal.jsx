@@ -12,7 +12,7 @@ const CropperModal = ({ show, onClose }) => {
     const [scale, setScale] = useState(1.0);
     const { src, setPreview } = useContext(ModalContext);
 
-    const { auth } = useAuth();
+    const { auth, changeAuthProfilePicture } = useAuth();
     const token = auth?.accessToken;
     const { mutate, isLoading, isError, error, isSuccess, data } = useChangeProfilePicture();
 
@@ -25,6 +25,7 @@ const CropperModal = ({ show, onClose }) => {
     useEffect(() => {
         if(data) {
             setPreview(data.newProfilePicture);
+            changeAuthProfilePicture(data.newProfilePicture);
             toast.success("Change profile picture successfully");
             onClose();
         }
@@ -81,8 +82,9 @@ const CropperModal = ({ show, onClose }) => {
                         onClick={onClose}
                     >Cancel</button>
                     <button
-                        className="px-2 py-1 rounded-md
-                            bg-purple-600 text-white hover:bg-purple-700"
+                        className={`px-2 py-1 rounded-md
+                            bg-purple-600 text-white hover:bg-purple-700
+                            ${isLoading ? "pointer-events-none opacity-50" : ""}`}
                         onClick={handleSave}
                     >
                         {isLoading ? "Saving..." : "Save"}

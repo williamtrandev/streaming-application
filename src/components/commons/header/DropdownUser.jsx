@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import UserOne from '../../../assets/lightmode.jpg';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -8,10 +8,11 @@ import { toast } from 'react-toastify';
 
 const DropdownUser = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
+	const navigate = useNavigate();
 
 	const trigger = useRef(null);
 	const dropdown = useRef(null);
-	const { logout } = useAuth();
+	const { auth, logout } = useAuth();
 	// close on click outside
 	useEffect(() => {
 		const clickHandler = ({ target }) => {
@@ -41,6 +42,7 @@ const DropdownUser = () => {
 	const handleLogout = () => {
 		toast.info('You have been logout');
 		logout();
+		navigate("/");
 	}
 
 	return (
@@ -52,7 +54,7 @@ const DropdownUser = () => {
 				to="#"
 			>
 				<span className="h-10 w-10 rounded-full">
-					<img src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="User" className="w-10 h-10 rounded-full" />
+					<img src={auth?.user?.profilePicture} alt="User" className="w-10 h-10 rounded-full" />
 				</span>
 
 				<svg
@@ -82,14 +84,14 @@ const DropdownUser = () => {
 			>
 				<div className="px-6 py-4 flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out lg:text-base truncate">
 					<span className="h-10 w-10 rounded-full">
-						<img src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="User" className="w-10 h-10 rounded-full" />
+						<img src={auth?.user?.profilePicture} alt="User" className="w-10 h-10 rounded-full" />
 					</span>
-					William Tran
+					{auth?.user?.fullname}
 				</div>
 				<ul className="flex flex-col gap-5 px-6 py-4">
 					<li>
 						<Link
-							to="/myid"
+							to={`/${auth?.user?.username}`}
 							className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
 						>
 							<svg

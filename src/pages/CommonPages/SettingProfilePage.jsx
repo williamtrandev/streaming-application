@@ -3,33 +3,27 @@ import { Check, Pencil, Trash2, Plus, Link } from "lucide-react";
 import { ModalContext } from "../../contexts/ModalContext";
 import { useGetProfile } from "../../api/user";
 import { useAuth } from "../../contexts/AuthContext";
+import ProfileBanner from "../../components/settings/ProfileBanner";
+import ProfileSettings from "../../components/settings/ProfileSettings";
 
 const SettingProfilePage = () => {
     const { auth } = useAuth();
 	const userId = auth?.user?.userId;
     const { data: userData } = useGetProfile(userId);
 
-    const { setShowCropperModal, setSrc, preview, setShowChangeUsernameModal } = useContext(ModalContext);
+    const { setShowCropperModal, setSrc, preview } = useContext(ModalContext);
     const fileInputRef = useRef(null);
 
-    const [previewBanner, setPreviewBanner] = useState(null);
-    const [profileBanner, setProfileBanner] = useState(null);
-
-    const [fullname, setFullname] = useState(userData?.fullname);
-    const [about, setAbout] = useState(userData?.about);
-    const [links, setLinks] = useState(userData?.links);
+    const [links, setLinks] = useState(userData?.links || []);
     const [newLinkTitle, setNewLinkTitle] = useState("");
     const [newLinkUrl, setNewLinkUrl] = useState("");
 
-    const [changeSaved, setChangeSaved] = useState(false);
-
-    const saveDisable = (fullname === userData?.fullname) || fullname === "";
-
     useEffect(() => {
-		setFullname(userData?.fullname);
-        setAbout(userData?.about);
-        setLinks(userData?.links)
-	}, [userData]);
+        // Update the links state when userData changes
+        if (userData) {
+            setLinks(userData.links || []);
+        }
+    }, [userData]);
 
     return (
         <div className="space-y-6">
@@ -62,100 +56,14 @@ const SettingProfilePage = () => {
                 </div>
             </div>
 
-            <div className="space-y-2">
-                <div className="text-xl">Profile Banner</div>
-                <div className="flex flex-col gap-4 items-center p-4 md:p-6 rounded-lg
-                    bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
-                    <div className="z-20 h-16 md:h-50 overflow-hidden">
-                        <img
-                            src={previewBanner || userData?.profileBanner}
-                            alt="profile banner"
-                            className="object-cover object-center aspect-[5/1] w-full"
-                        />
-                    </div>
-                    <div className="gap-3 flex flex-col items-center">
-                        <label
-                            htmlFor="pb_input"
-                            className="cursor-pointer px-3 py-2 text-white rounded-lg w-fit
-                            bg-purple-600 hover:bg-purple-700">
-                            <input type="file" id="pb_input" className="sr-only"
-                                onChange={async (e) => {
-                                    setPreviewBanner(URL.createObjectURL(e.target.files[0]));
-                                    setProfileBanner(e.target.files[0]);
-                                }}
-                            />
-                            Change profile banner
-                        </label>
-                        {profileBanner && <button className="cursor-pointer px-3 py-2 text-white rounded-lg w-fit
-                            bg-purple-600 hover:bg-purple-700">
-                            Save banner
-                        </button>}
-                        <p className="text-center md:text-start">File format: JPG, JPEG, PNG (recommended 5x1 ratio, max 10MB)</p>
-                    </div>
-                </div>
-            </div>
+            <ProfileBanner profileBanner={userData?.profileBanner} />
 
-            <div className="space-y-2">
-                <div className="text-xl">Profile Settings</div>
-                <div className="px-4 md:px-6 rounded-lg divide-y divide-gray-300 dark:divide-gray-600
-                    bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
-                    <div className="flex justify-between w-full gap-4 items-start py-4">
-                        <div className="w-[35%] font-bold">Username</div>
-                        <div className="w-full flex">
-                            <div
-                                className="w-full px-3 py-1 dark:text-white rounded-l-lg bg-slate-300 dark:bg-slate-700"
-                            >
-                                {userData?.username}
-                            </div>
-                            <button
-                                className="p-2 h-full rounded-r-lg dark:text-white border border-gray-600 dark:border-gray-300
-                                    bg-neutral-300 hover:bg-neutral-400 dark:bg-neutral-600 dark:hover:bg-neutral-700"
-                                onClick={() => setShowChangeUsernameModal(true)}
-                            >
-                                <Pencil size={16} />
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="flex justify-between w-full gap-4 items-start py-4">
-                        <div className="w-[35%] font-bold">Display name</div>
-                        <div className="w-full">
-                            <input type="text"
-                                value={fullname}
-                                onChange={(e) => setFullname(e.target.value)}
-                                className="w-full px-3 py-1 dark:text-white rounded-lg
-                                    bg-slate-200 dark:bg-meta-4"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="flex justify-between w-full gap-4 items-start py-4">
-                        <div className="w-[35%] font-bold">About</div>
-                        <div className="w-full">
-                            <textarea
-                                value={about}
-                                onChange={(e) => setAbout(e.target.value)}
-                                className="w-full px-3 py-1 dark:text-white rounded-lg
-                                    bg-slate-200 dark:bg-meta-4 h-60 resize-none"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="flex justify-end py-4">
-                        {!changeSaved && <button
-                            className={`px-3 py-1 bg-purple-600 rounded-lg text-white hover:bg-purple-700
-                                ${saveDisable ? "pointer-events-none opacity-50" : ""}`}
-                            onClick={() => setChangeSaved(true)}
-                        >Save</button>}
-                        {changeSaved && <div
-                            className="px-3 py-1 bg-green-500 rounded-lg text-black flex gap-2"
-                        >
-                            <Check />
-                            Saved
-                        </div>}
-                    </div>
-                </div>
-            </div>
+            <ProfileSettings 
+                username={userData?.username} 
+                userFullname={userData?.fullname} 
+                userAbout={userData?.about} 
+                canChangeUsername={userData?.canChangeUsername}
+            />
 
             <div className="space-y-2">
                 <div className="text-xl">Social Links</div>
