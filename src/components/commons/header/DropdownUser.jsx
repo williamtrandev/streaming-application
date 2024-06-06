@@ -6,6 +6,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { Video } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useGetMiniProfile } from '../../../api/user';
+import { useUser } from '../../../contexts/UserContext';
 
 const DropdownUser = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -13,16 +14,15 @@ const DropdownUser = () => {
 
 	const trigger = useRef(null);
 	const dropdown = useRef(null);
+	const { auth, logout } = useAuth();
 	const {
-		auth,
-		logout,
 		authUsername,
 		authFullname,
 		authProfilePicture,
 		setAuthUsername,
 		setAuthFullname,
 		setAuthProfilePicture
-	} = useAuth();
+	} = useUser();
 	// close on click outside
 	useEffect(() => {
 		const clickHandler = ({ target }) => {

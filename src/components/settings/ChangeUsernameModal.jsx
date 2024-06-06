@@ -5,22 +5,23 @@ import NewUsernameInput from "./NewUsernameInput";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
 import { useChangeUsername } from "../../api/auth";
+import { useUser } from "../../contexts/UserContext";
 
 const ChangeUsernameModal = ({ show, onClose }) => {
     if (!show) return null;
 
-    const { currentUsername } = useContext(ModalContext);
+    const { authUsername, setAuthUsername } = useUser();
     const [showPassword, setShowPassword] = useState("password");
 
-    const [username, setUsername] = useState(currentUsername);
+    const [username, setUsername] = useState(authUsername);
     const [password, setPassword] = useState("");
 
     const [isValidUsername, setIsValidUsername] = useState(false) ;
 
-    const changeUsernameDisabled = username == "" || password == "" || username == currentUsername;
+    const changeUsernameDisabled = username == "" || password == "" || username == authUsername;
         !isValidUsername;
 
-        const { auth, setAuthUsername } = useAuth();
+        const { auth } = useAuth();
         const token = auth?.accessToken;
         const { mutate, isLoading, isError, error, isSuccess, data } = useChangeUsername();
     

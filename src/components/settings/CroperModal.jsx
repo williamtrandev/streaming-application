@@ -5,14 +5,16 @@ import { useChangeProfilePicture } from "../../api/user";
 import { toast } from "react-toastify";
 import { ModalContext } from "../../contexts/ModalContext";
 import { useAuth } from "../../contexts/AuthContext";
+import { useUser } from "../../contexts/UserContext";
 
 const CropperModal = ({ show, onClose }) => {
     if (!show) return null;
     const cropRef = useRef(null);
     const [scale, setScale] = useState(1.0);
-    const { src, setPreview } = useContext(ModalContext);
+    const { src } = useContext(ModalContext);
 
-    const { auth, setAuthProfilePicture } = useAuth();
+    const { auth } = useAuth();
+    const { setAuthProfilePicture } = useUser();
     const token = auth?.accessToken;
     const { mutate, isLoading, isError, error, isSuccess, data } = useChangeProfilePicture();
 
@@ -24,7 +26,6 @@ const CropperModal = ({ show, onClose }) => {
 
     useEffect(() => {
         if(data) {
-            setPreview(data.newProfilePicture);
             setAuthProfilePicture(data.newProfilePicture);
             toast.success("Change profile picture successfully");
             onClose();

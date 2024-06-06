@@ -6,13 +6,15 @@ import { useAuth } from "../../contexts/AuthContext";
 import ProfileBanner from "../../components/settings/ProfileBanner";
 import ProfileSettings from "../../components/settings/ProfileSettings";
 import SocialLinks from "../../components/settings/SocialLinks";
+import { useUser } from "../../contexts/UserContext";
 
 const SettingProfilePage = () => {
     const { auth } = useAuth();
+    const { authProfilePicture } = useUser();
 	const userId = auth?.user?.userId;
     const { data: userData } = useGetProfile(userId);
 
-    const { setShowCropperModal, setSrc, preview } = useContext(ModalContext);
+    const { setShowCropperModal, setSrc } = useContext(ModalContext);
     const fileInputRef = useRef(null);
 
     return (
@@ -22,7 +24,7 @@ const SettingProfilePage = () => {
                 <div className="flex flex-col md:flex-row gap-6 items-center p-4 md:p-6 rounded-lg
                     bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
                     <span className="h-30 w-30 overflow-hidden">
-                        <img src={preview || userData?.profilePicture} alt="profile" className="rounded-full object-cover" />
+                        <img src={authProfilePicture || userData?.profilePicture} alt="profile" className="rounded-full object-cover" />
                     </span>
                     <div className="space-y-5 flex flex-col items-center md:items-start md:justify-start">
                         <label

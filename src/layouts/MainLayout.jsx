@@ -14,6 +14,7 @@ import { initializeSocket } from '../redux/slices/socketSlice';
 import { useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { ModalContext } from '../contexts/ModalContext';
+import ChangeEmailModal from '../components/settings/ChangeEmailModal';
 
 const MainLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,7 +26,8 @@ const MainLayout = () => {
 		setFollowed, 
 		showCropperModal, setShowCropperModal,
 		showChangePasswordModal, setShowChangePasswordModal,
-		showChangeUsernameModal, setShowChangeUsernameModal
+		showChangeUsernameModal, setShowChangeUsernameModal,
+		showChangeEmailModal, setShowChangeEmailModal
 	} = useContext(ModalContext);
 	const { auth } = useAuth();
 	const isLogged = auth !== null;
@@ -75,6 +77,10 @@ const MainLayout = () => {
 			<ChangeUsernameModal
 				show={showChangeUsernameModal}
 				onClose={() => setShowChangeUsernameModal(false)}
+			/>
+			<ChangeEmailModal 
+				show={showChangeEmailModal}
+				onClose={() => setShowChangeEmailModal(false)}
 			/>
 		</div>
 	);

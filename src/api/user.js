@@ -104,11 +104,26 @@ const useChangeLinks = () => {
 	});
 }
 
+const getEmail = async (userId) => {
+	const response = await APIClient.get(`/user/email/${userId}`);
+	return response.data;
+}
+
+const useGetEmail = (userId) => {
+	return useQuery({
+		queryKey: ["email", userId],
+		queryFn: () => getEmail(userId),
+		enabled: !!userId,
+		refetchOnWindowFocus: false
+	});
+}
+
 export {
 	useGetProfile,
 	useGetMiniProfile,
 	useChangeProfilePicture,
 	useChangeProfileBanner,
 	useChangeProfileInfo,
-	useChangeLinks
+	useChangeLinks,
+	useGetEmail
 };

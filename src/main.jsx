@@ -10,6 +10,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { store } from './redux/store.js';
 import { AuthProvider } from './contexts/AuthContext.jsx';
 import { ModalProvider } from './contexts/ModalContext.jsx';
+import { UserProvider } from './contexts/UserContext.jsx';
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -17,9 +18,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <QueryClientProvider client={queryClient}>
       <ReduxProvider store={store}>
         <AuthProvider>
-          <ModalProvider>
-            <App />
-          </ModalProvider>
+          <UserProvider>
+            <ModalProvider>
+              <App />
+            </ModalProvider>
+          </UserProvider>
         </AuthProvider>
       </ReduxProvider>
     </QueryClientProvider>

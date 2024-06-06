@@ -12,13 +12,15 @@ export const ModalProvider = ({ children }) => {
 
     const [showCropperModal, setShowCropperModal] = useState(false);
     const [src, setSrc] = useState(null);
-    const [preview, setPreview] = useState(null);
 
     const [showVerifyEmailModal, setShowVerifyEmailModal] = useState(false);
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
     const [showChangeUsernameModal, setShowChangeUsernameModal] = useState(false);
     const [currentUsername, setCurrentUsername] = useState("");
+
+    const [showChangeEmailModal, setShowChangeEmailModal] = useState(false);
+    const [currentEmail, setCurrentEmail] = useState("");
 
     const handleShowUnfollowModal = (name) => {
         setUnfollowName(name);
@@ -36,10 +38,11 @@ export const ModalProvider = ({ children }) => {
                 showUnfollowModal, unfollowName, handleShowUnfollowModal, handleCloseUnfollowModal,
                 followed, setFollowed, 
                 colorMode, setColorMode,
-                showCropperModal, setShowCropperModal, src, setSrc, preview, setPreview, 
+                showCropperModal, setShowCropperModal, src, setSrc, 
                 showChangePasswordModal, setShowChangePasswordModal,
                 showVerifyEmailModal, setShowVerifyEmailModal,
-                showChangeUsernameModal, setShowChangeUsernameModal, currentUsername, setCurrentUsername
+                showChangeUsernameModal, setShowChangeUsernameModal,
+                showChangeEmailModal, setShowChangeEmailModal,
             }}
         >
             {children}

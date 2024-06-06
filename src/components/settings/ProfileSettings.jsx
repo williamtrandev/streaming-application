@@ -4,16 +4,18 @@ import { toast } from "react-toastify";
 import { useChangeProfileInfo } from "../../api/user";
 import { useAuth } from "../../contexts/AuthContext";
 import { ModalContext } from "../../contexts/ModalContext";
+import { useUser } from "../../contexts/UserContext";
 
 const ProfileSettings = ({ username, userFullname = "", userAbout = "", canChangeUsername }) => {
-    const { setShowChangeUsernameModal, setCurrentUsername } = useContext(ModalContext);
+    const { setShowChangeUsernameModal } = useContext(ModalContext);
     const [currentProfile, setCurrentProfile] = useState({ fullname: userFullname, about: userAbout })
     const [fullname, setFullname] = useState(userFullname);
     const [about, setAbout] = useState(userAbout);
 
     const saveDisable = !fullname || (fullname == currentProfile.fullname && about == currentProfile.about);
 
-    const { auth, setAuthFullname } = useAuth();
+    const { auth } = useAuth();
+    const { authUsername, setAuthFullname } = useUser();
     const token = auth?.accessToken;
     const { mutate, isLoading, isError, error, isSuccess, data } = useChangeProfileInfo();
 
@@ -25,7 +27,7 @@ const ProfileSettings = ({ username, userFullname = "", userAbout = "", canChang
         if (data) {
             toast.success("Change profile settings successfully");
             setCurrentProfile(data.newUserInfo);
-            setAuthFullname(data.newUserInfo.fullname)
+            setAuthFullname(data.newUserInfo.fullname);
         }
     }, [isSuccess]);
 
@@ -52,18 +54,26 @@ const ProfileSettings = ({ username, userFullname = "", userAbout = "", canChang
                             <div
                                 className="w-full px-3 py-1 dark:text-white rounded-lg bg-slate-300 dark:bg-slate-700"
                             >
-                                {auth?.user?.username}
+                                {authUsername}
                             </div>
                             {canChangeUsername && <button
                                 className="absolute right-0 top-0 h-full p-2 rounded-r-lg dark:text-white 
                                 hover:bg-gray-500"
                                 onClick={() => {
                                     setShowChangeUsernameModal(true);
-                                    setCurrentUsername(username);
                                 }}
                             >
                                 <Pencil size={16} />
                             </button>}
+                            {/* <button
+                                className="absolute right-0 top-0 h-full p-2 rounded-r-lg dark:text-white 
+                                hover:bg-gray-500"
+                                onClick={() => {
+                                    setShowChangeUsernameModal(true);
+                                }}
+                            >
+                                <Pencil size={16} />
+                            </button> */}
                         </div>
                         <p>You can only change your username every 14 days</p>
                     </div>

@@ -159,7 +159,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                         <div className="mb-1">
                             Click the Send OTP button and we will send an OTP to your email to ensure the above email address is yours.
                         </div>
-                        <div id="usernameInput" className="text-black w-full flex gap-2 items-center">
+                        <div className="text-black w-full flex gap-2 items-center">
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 pl-2 flex items-center text-black dark:text-bodydark">
                                     <Shield />

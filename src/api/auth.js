@@ -114,6 +114,25 @@ const useChangePassword = () => {
     });
 }
 
+const changeEmail = async (data) => {
+	const { token, email, otp } = data;
+	const response = await APIClient.put("/auth/change-email", {
+		email,
+        otp
+	}, {
+		headers: {
+			'Authorization': `Bearer ${token}`
+		},
+	});
+	return response.data;
+}
+
+const useChangeEmail = () => {
+	return useMutation({
+		mutationFn: (data) => changeEmail(data)
+	});
+}
+
 export { 
     useLogin, 
     useCheckUsernameAvailable,
@@ -121,5 +140,6 @@ export {
     useSendOtp,
     useRegister,
     useChangeUsername,
-    useChangePassword
+    useChangePassword,
+    useChangeEmail
 };
