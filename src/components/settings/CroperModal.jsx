@@ -12,7 +12,7 @@ const CropperModal = ({ show, onClose }) => {
     const [scale, setScale] = useState(1.0);
     const { src, setPreview } = useContext(ModalContext);
 
-    const { auth, changeAuthProfilePicture } = useAuth();
+    const { auth, setAuthProfilePicture } = useAuth();
     const token = auth?.accessToken;
     const { mutate, isLoading, isError, error, isSuccess, data } = useChangeProfilePicture();
 
@@ -25,7 +25,7 @@ const CropperModal = ({ show, onClose }) => {
     useEffect(() => {
         if(data) {
             setPreview(data.newProfilePicture);
-            changeAuthProfilePicture(data.newProfilePicture);
+            setAuthProfilePicture(data.newProfilePicture);
             toast.success("Change profile picture successfully");
             onClose();
         }

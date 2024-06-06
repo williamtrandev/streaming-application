@@ -15,6 +15,20 @@ const useGetProfile = (userId) => {
 	});
 }
 
+const getMiniProfile = async (userId) => {
+	const response = await APIClient.get(`/user/mini-profile/${userId}`);
+	return response.data;
+}
+
+const useGetMiniProfile = (userId) => {
+	return useQuery({
+		queryKey: ["miniprofile", userId],
+		queryFn: () => getMiniProfile(userId),
+		enabled: !!userId,
+		refetchOnWindowFocus: false
+	});
+}
+
 const changeProfilePicture = async (data) => {
 	const { token, profilePicture } = data;
 	const formData = new FormData();
@@ -72,9 +86,29 @@ const useChangeProfileInfo = () => {
 	});
 }
 
+const changeLinks = async (data) => {
+	const { token, links } = data;
+	const response = await APIClient.put("/user/change-links", {
+		links
+	}, {
+		headers: {
+			'Authorization': `Bearer ${token}`
+		},
+	});
+	return response.data;
+}
+
+const useChangeLinks = () => {
+	return useMutation({
+		mutationFn: (data) => changeLinks(data)
+	});
+}
+
 export {
 	useGetProfile,
+	useGetMiniProfile,
 	useChangeProfilePicture,
 	useChangeProfileBanner,
-	useChangeProfileInfo
+	useChangeProfileInfo,
+	useChangeLinks
 };

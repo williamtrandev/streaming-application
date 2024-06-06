@@ -20,7 +20,7 @@ const ChangeUsernameModal = ({ show, onClose }) => {
     const changeUsernameDisabled = username == "" || password == "" || username == currentUsername;
         !isValidUsername;
 
-        const { auth, changeAuthUsername } = useAuth();
+        const { auth, setAuthUsername } = useAuth();
         const token = auth?.accessToken;
         const { mutate, isLoading, isError, error, isSuccess, data } = useChangeUsername();
     
@@ -31,7 +31,7 @@ const ChangeUsernameModal = ({ show, onClose }) => {
         useEffect(() => {
             if(data) {
                 toast.success("Change username successfully");
-                changeAuthUsername(data.newUsername);
+                setAuthUsername(data.newUsername);
                 onClose();
             }
         }, [isSuccess]);

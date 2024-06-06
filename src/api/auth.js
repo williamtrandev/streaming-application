@@ -95,11 +95,31 @@ const useChangeUsername = () => {
     });
 }
 
+const changePassword = async (data) => {
+    const { token, oldPassword, newPassword } = data;
+    const response = await APIClient.put("/auth/change-password", {
+        oldPassword,
+        newPassword
+    }, {
+		headers: {
+			'Authorization': `Bearer ${token}`
+		},
+	});
+    return response.data;
+}
+
+const useChangePassword = () => {
+    return useMutation({
+        mutationFn: (data) => changePassword(data)
+    });
+}
+
 export { 
     useLogin, 
     useCheckUsernameAvailable,
     useCheckEmailAvailable,
     useSendOtp,
     useRegister,
-    useChangeUsername
+    useChangeUsername,
+    useChangePassword
 };

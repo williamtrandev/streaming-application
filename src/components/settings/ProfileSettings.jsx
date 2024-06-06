@@ -13,7 +13,7 @@ const ProfileSettings = ({ username, userFullname = "", userAbout = "", canChang
 
     const saveDisable = !fullname || (fullname == currentProfile.fullname && about == currentProfile.about);
 
-    const { auth, changeAuthFullname } = useAuth();
+    const { auth, setAuthFullname } = useAuth();
     const token = auth?.accessToken;
     const { mutate, isLoading, isError, error, isSuccess, data } = useChangeProfileInfo();
 
@@ -25,7 +25,7 @@ const ProfileSettings = ({ username, userFullname = "", userAbout = "", canChang
         if (data) {
             toast.success("Change profile settings successfully");
             setCurrentProfile(data.newUserInfo);
-            changeAuthFullname(data.newUserInfo.fullname)
+            setAuthFullname(data.newUserInfo.fullname)
         }
     }, [isSuccess]);
 
@@ -37,6 +37,7 @@ const ProfileSettings = ({ username, userFullname = "", userAbout = "", canChang
     useEffect(() => {
         setFullname(userFullname);
         setAbout(userAbout);
+        setCurrentProfile({ fullname: userFullname, about: userAbout })
     }, [userFullname, userAbout]);
 
     return (
