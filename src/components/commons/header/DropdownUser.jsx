@@ -11,7 +11,7 @@ const DropdownUser = () => {
 
 	const trigger = useRef(null);
 	const dropdown = useRef(null);
-	const { logout } = useAuth();
+	const { auth, logout } = useAuth();
 	// close on click outside
 	useEffect(() => {
 		const clickHandler = ({ target }) => {
@@ -39,7 +39,9 @@ const DropdownUser = () => {
 	});
 
 	const handleLogout = () => {
-		toast.info('You have been logout');
+		toast.info('You have been logout', {
+			position: "bottom-right"
+		});
 		logout();
 	}
 
@@ -82,9 +84,9 @@ const DropdownUser = () => {
 			>
 				<div className="px-6 py-4 flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out lg:text-base truncate">
 					<span className="h-10 w-10 rounded-full">
-						<img src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="User" className="w-10 h-10 rounded-full" />
+						<img src={auth?.user?.profilePicture} alt="User" className="w-10 h-10 rounded-full" />
 					</span>
-					William Tran
+					{auth?.user?.fullname}
 				</div>
 				<ul className="flex flex-col gap-5 px-6 py-4">
 					<li>

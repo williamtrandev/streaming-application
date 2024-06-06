@@ -12,7 +12,33 @@ const useSaveStream = () => {
 	})
 }
 
+const saveNotification = async (data) => {
+	const response = await APIClient.post("/studio/notification", data);
+	return response.data;
+}
+
+const useSaveNotification = () => {
+	return useMutation({
+		mutationFn: (data) => saveNotification(data)
+	})
+}
+
+const getNotifications = async () => {
+	const response = await APIClient.get("/studio/notification");
+	return response.data;
+}
+
+const useGetNotifications = (userId) => {
+	return useQuery({
+		queryKey: ["Notifications", userId],
+		queryFn: () => getNotifications(),
+		enabled: !!userId
+	});
+}
+
 
 export {
-	useSaveStream
+	useSaveStream,
+	useSaveNotification,
+	useGetNotifications, 
 };
