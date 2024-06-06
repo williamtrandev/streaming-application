@@ -1,5 +1,7 @@
 import { Chart as ChartJS, defaults } from "chart.js/auto";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
+import { DatePicker } from 'antd';
+import { useState } from 'react';
 
 const concurrentViewers = [
 	{ "time": "00:00:02", "viewers": 150 },
@@ -40,9 +42,19 @@ const colors = [
 defaults.responsive = true;
 defaults.plugins.title.align = "start";
 defaults.plugins.title.font.size = 20;
-// const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color');
+
+const filterBtns = [
+	"Time streaming",
+	"Follower",
+	"Viewer"
+]
 
 const AnalyticsPage = () => {
+	const [activeIndex, setActiveIndex] = useState(null);
+
+    const handleClick = (index) => {
+        setActiveIndex(index);
+    };
 	return (
 		<div className="space-y-5">
 			<p className="font-bold text-theme text-2xl">Data from latest stream</p>
@@ -121,7 +133,40 @@ const AnalyticsPage = () => {
 					/>
 				</div>
 			</div>
-			<p className="!mt-10 font-bold text-theme text-2xl">Followers and Subcribers in your 10 latest stream</p>
+			<p className="!mt-10 font-bold text-theme text-2xl">Statistics in your 10 latest stream</p>
+			<div className="flex flex-col items-center justify-center w-full gap-5">
+				<DatePicker.RangePicker
+					size="large"
+					className="dark:bg-meta-4 dark:border-none dark:text-white"
+					onChange={(date, dateString) => {
+						console.log(date, dateString);
+					}}
+				/>
+				<div className="flex">
+					{filterBtns.map((filterBtn, index) => {
+						const isFirst = index === 0;
+						const isLast = index === filterBtns.length - 1;
+						const isActive = index === activeIndex;
+						return (
+							<div
+								className={`
+									p-3 cursor-pointer text-sm border-r
+									${isFirst ? 'rounded-l-lg' : ''}
+									${isLast ? 'rounded-r-lg border-r-0 ' : ''}
+									${isActive ? '!bg-purple-700 text-white' : ''}
+									bg-white text-black dark:bg-meta-4 dark:text-white dark:border-gray-600
+									hover:!bg-purple-700 hover:!text-white
+									transition duration-300 ease-in-out
+								`}
+								key={index}
+								onClick={() => handleClick(index)}
+							>
+								{filterBtn}
+							</div>
+						);
+					})}
+				</div>
+			</div>
 			<div className="w-full bg-white dark:bg-meta-4 rounded-md shadow-md space-y-3 p-5">
 				<Bar className="max-h-[70vh]"
 					data={{
@@ -147,4 +192,4 @@ const AnalyticsPage = () => {
 	)
 }
 
-export default AnalyticsPage
+export default AnalyticsPage;

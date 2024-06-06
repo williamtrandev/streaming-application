@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
+import { AutoComplete, Flex } from 'antd';
 
 const fakeMode = [
 	{ id: 1, username: "William Tran", role: "King", lastModified: "2020-01-01" },
@@ -8,8 +9,14 @@ const fakeMode = [
 	{ id: 4, username: "William Tran 4", role: "King", lastModified: "2020-01-01" },
 	{ id: 5, username: "William Tran 5", role: "King", lastModified: "2020-01-01" },
 ]
-
+const mockVal = (str, repeat = 1) => ({
+	value: str.repeat(repeat),
+  });
 const CommunityPage = () => {
+	const [options, setOptions] = useState([]);
+	const getPanelValue = (searchText) =>
+		!searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)];
+	const [value, setValue] = useState('');
 	const [mods, setMods] = useState(fakeMode);
 	const [deleteId, setDeleteId] = useState(null); 
 	const [isModalOpen, setIsModalOpen] = useState(false); 
@@ -27,20 +34,39 @@ const CommunityPage = () => {
 	const closeModal = () => {
 		setIsModalOpen(false); 
 	}
+	const handleSelect = (value, option) => {
+		setIsAdd(true);
+        setValue(value);
+    };
+	const handleAddMod = () => {
+        setIsAdd(false);
+		setValue('');
+		setMods([...mods, { id: mods.length + 1, username: value, role: "King", lastModified: "2020-01-01" }]);
+    };
 	return (
 		<div className="space-y-5">
 			<div className="hidden sm:block">
 				<div className="w-full flex justify-center items-center">
 					<div className="relative bg-white shadow-md dark:bg-meta-4 rounded-lg p-3">
-						<input
-							type="search"
-							placeholder="Type to search..."
-							className="bg-transparent pr-9 pl-4 text-black focus:outline-none dark:text-white xl:w-125"
+						<AutoComplete
+						    className="text-black focus:outline-none xl:w-125 px-3"
+							popupClassName="dark:bg-gray-800"
+							options={options}
+							placeholder="Search users..."
+							onSearch={(text) => {
+								setOptions(getPanelValue(text));
+								setValue(text);
+							}}
+							onSelect={handleSelect}
+							variant="borderless"
 						/>
-						<button className="absolute right-5 top-1/2 -translate-y-1/2 bg-purple-300 text-white 
-							rounded-full p-1">
-							<Check width={14} height={14} />
-						</button>
+						<button className={`absolute right-5 top-1/2 -translate-y-1/2 ${isAdd ? 'bg-purple-700' : 'bg-purple-300'} text-white 
+                            rounded-full p-1`} 
+							onClick={handleAddMod}
+						>
+                            <Check width={14} height={14} />
+                        </button>
+
 					</div>
 				</div>
 			</div>
@@ -66,7 +92,7 @@ const CommunityPage = () => {
 													<div className="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
 												</div>
 												<div>
-													<p className="font-semibold">William Tran</p>
+													<p className="font-semibold">{mod.username}</p>
 													<p className="text-xs text-gray-600 dark:text-gray-400">
 														Mod
 													</p>
@@ -75,11 +101,11 @@ const CommunityPage = () => {
 										</td>
 										<td className="px-4 py-3 text-xs">
 											<span className="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
-												King
+												{mod.role}
 											</span>
 										</td>
 										<td className="px-4 py-3 text-sm">
-											6/10/2020
+											{mod.lastModified}
 										</td>
 										<td className="px-4 py-3 text-sm">
 											<div className="flex space-x-2">

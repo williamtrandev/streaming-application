@@ -6,6 +6,9 @@ import { useSaveNotification, useSaveStream } from '../../api/studio';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSelector } from 'react-redux';
 import { selectSocket } from '../../redux/slices/socketSlice';
+import ChatBox from '../../components/detailStream/ChatBox';
+import VideoPreview from '../../components/studio/VideoPreview';
+import SettingStream from '../../components/studio/SettingStream';
 
 const rainbowColors = [
 	"#FF0000", "#FF6F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#8B00FF",
@@ -17,6 +20,7 @@ const getRandomRainbowColor = () => {
 	const randomIndex = Math.floor(Math.random() * rainbowColors.length);
 	return rainbowColors[randomIndex];
 };
+
 
 const StudioPage = () => {
 	const [title, setTitle] = useState("");
@@ -97,14 +101,64 @@ const StudioPage = () => {
 		}
 	}, [socket, isSuccessStream]);
 
+	const startWithCam = () => {
+		async function init() {
+			const peer = createPeer();
+			peer.addTransceiver("video", { direction: "recvonly" })
+		}
+	
+		function createPeer() {
+			const peer = new RTCPeerConnection({
+				iceServers: [
+					{
+						urls: "stun:stun.stunprotocol.org"
+					}
+				]
+			});
+			peer.ontrack = handleTrackEvent;
+			peer.onnegotiationneeded = () => handleNegotiationNeededEvent(peer);
+	
+			return peer;
+		}
+	
+		async function handleNegotiationNeededEvent(peer) {
+			try {
+				const offer = await peer.createOffer();
+				await peer.setLocalDescription(offer);
+				const payload = {
+					sdp: peer.localDescription
+				};
+				const { data } = await axiosInstance.post('/consumer', payload);
+				const desc = new RTCSessionDescription(data.sdp);
+				peer.setRemoteDescription(desc);
+			} catch (error) {
+				console.error('Error handling negotiation:', error);
+			}
+		}
+	
+		function handleTrackEvent(e) {
+			document.getElementById("video").srcObject = e.streams[0];
+		}
+		init();
+	}
 	return (
 		<>
-		<button onClick={() => setModalOpen(true)}>OPEN</button>
+			<div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)]">
+				<div className="md:grid md:grid-cols-3 md:gap-5 h-full w-full space-y-3 md:space-y-0">
+					<div className="md:col-span-2 w-full h-full md:overflow-auto flex flex-col items-center justify-center gap-5">
+						<VideoPreview />
+						<SettingStream openSettings={() => setModalOpen(true)} startWithCam={startWithCam} startWithOBS={() => {}}  />
+					</div>
+					<div className="h-full w-full overflow-auto">
+						<ChatBox />
+					</div>
+				</div>
+			</div>
 			{
 				modalOpen &&
 				<div className="fixed inset-0 flex items-center justify-center z-9999">
 					<div className="absolute inset-0 bg-black opacity-50"></div>
-					<div className="bg-white dark:bg-meta-4 rounded-lg shadow-lg p-5 z-10 max-w-4xl w-full h-80vh overflow-y-auto relative">
+					<div className="bg-gray-100 dark:bg-gray-600 rounded-lg shadow-lg p-5 z-10 max-w-4xl w-full h-80vh overflow-y-auto relative">
 						<button
 							className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
 							onClick={closeModal}

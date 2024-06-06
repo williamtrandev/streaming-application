@@ -12,6 +12,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.5",
     "@tanstack/react-query": "^5.40.0",
+    "antd": "^5.18.0",
     "axios": "^1.6.8",
     "chart.js": "^4.4.3",
     "date-fns": "^3.6.0",
