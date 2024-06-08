@@ -7,7 +7,6 @@ import RegisterModal from '../components/auth/RegisterModal';
 import UnfollowModal from '../components/detailStreamer/UnfollowModal';
 import CropperModal from '../components/settings/CroperModal';
 import ChangePasswordModal from '../components/settings/ChangePasswordModal';
-import VerifyEmailModal from '../components/auth/VerifyEmailModal';
 import ChangeUsernameModal from '../components/settings/ChangeUsernameModal';
 import { useDispatch } from 'react-redux';
 import { initializeSocket } from '../redux/slices/socketSlice';
@@ -15,6 +14,7 @@ import { useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { ModalContext } from '../contexts/ModalContext';
 import ChangeEmailModal from '../components/settings/ChangeEmailModal';
+import ForgotPasswordModal from '../components/auth/ForgotPasswordModal';
 
 const MainLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -27,7 +27,8 @@ const MainLayout = () => {
 		showCropperModal, setShowCropperModal,
 		showChangePasswordModal, setShowChangePasswordModal,
 		showChangeUsernameModal, setShowChangeUsernameModal,
-		showChangeEmailModal, setShowChangeEmailModal
+		showChangeEmailModal, setShowChangeEmailModal,
+		showForgotPasswordModal, setShowForgotPasswordModal
 	} = useContext(ModalContext);
 	const { auth } = useAuth();
 	const isLogged = auth !== null;
@@ -53,10 +54,15 @@ const MainLayout = () => {
 				isVisible={showLoginModal} 
 				onClose={() => setShowLoginModal(false)}
 				openRegisterModal={() => setShowRegisterModal(true)} 
+				openForgotPasswordModal={() => setShowForgotPasswordModal(true)}
 			/>
 			<RegisterModal 
 				isVisible={showRegisterModal} 
 				onClose={() => setShowRegisterModal(false)}
+			/>
+			<ForgotPasswordModal
+				show={showForgotPasswordModal}
+				close={() => setShowForgotPasswordModal(false)}
 			/>
 			<UnfollowModal 
 				show={showUnfollowModal} 

@@ -33,7 +33,7 @@ const SocialLinks = ({ userLinks }) => {
     }, [isSuccess]);
 
     useEffect(() => {
-        const errorMessage = error?.response?.data?.error;
+        const errorMessage = error?.response?.data?.message;
         toast.error(errorMessage);
     }, [isError]);
 

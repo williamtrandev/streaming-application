@@ -133,6 +133,48 @@ const useChangeEmail = () => {
 	});
 }
 
+const forgotUsername = async (data) => {
+	const { email } = data;
+	const response = await APIClient.post("/auth/forgot-username", {
+		email
+	});
+	return response.data;
+}
+
+const useForgotUsername = () => {
+	return useMutation({
+		mutationFn: (data) => forgotUsername(data)
+	});
+}
+
+const forgotPassword = async (data) => {
+    const { email, username } = data;
+    const response = await APIClient.post("/auth/forgot-password", {
+        email, username
+    });
+    return response.data;
+}
+
+const useForgotPassword = () => {
+    return useMutation({
+        mutationFn: (data) => forgotPassword(data)
+    });
+}
+
+const resetPassword = async (data) => {
+    const { email, password, confirmPassword, otp } = data;
+    const response = await APIClient.post("/auth/reset-password", {
+        email, password, confirmPassword, otp
+    });
+    return response.data;
+}
+
+const useResetPassword = () => {
+    return useMutation({
+        mutationFn: (data) => resetPassword(data)
+    });
+}
+
 export { 
     useLogin, 
     useCheckUsernameAvailable,
@@ -141,5 +183,8 @@ export {
     useRegister,
     useChangeUsername,
     useChangePassword,
-    useChangeEmail
+    useChangeEmail,
+    useForgotUsername,
+    useForgotPassword,
+    useResetPassword
 };

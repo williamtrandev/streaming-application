@@ -43,7 +43,7 @@ const UsernameInput = ({ value, setUsername, setIsValid }) => {
     }, [isSuccess]);
 
     useEffect(() => {
-        const errorMessage = error?.response?.data?.error;
+        const errorMessage = error?.response?.data?.message;
         toast.error(errorMessage);
     }, [isError]);
 
@@ -69,7 +69,7 @@ const UsernameInput = ({ value, setUsername, setIsValid }) => {
                 {!isValid && value != "" ? "*Username must be from 4 to 25 characters long, not contain spaces or special characters." : ""}
             </div>
             <div className="mt-1 text-sm">
-                {value == "" ? "Username must be unique. Username can be changed every 30 days." : ""}
+                {value == "" ? "Username must be unique. Username can be changed every 14 days." : ""}
             </div>
         </div>
     );

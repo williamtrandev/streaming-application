@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useLogin } from "../../api/auth";
 import { useAuth } from "../../contexts/AuthContext";
 
-const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
+const LoginModal = ({ isVisible, onClose, openRegisterModal, openForgotPasswordModal }) => {
     if (!isVisible) return null;
 
     const [showPassword, setShowPassword] = useState("password");
@@ -29,7 +29,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
 
     useEffect(() => {
         const statusCode = error?.response?.status;
-        const errorMessage = error?.response?.data?.error;
+        const errorMessage = error?.response?.data?.message;
         if (statusCode === 401) {
             toast.error(errorMessage);
         }
@@ -97,6 +97,10 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                     <div className="mb-4">
                         <button
                             className="text-sm text-blue-700 dark:text-blue-500 hover:underline"
+                            onClick={() => {
+                                onClose();
+                                openForgotPasswordModal();
+                            }}
                         >Forgot your password?</button>
                     </div>
                     <div className="mb-3">

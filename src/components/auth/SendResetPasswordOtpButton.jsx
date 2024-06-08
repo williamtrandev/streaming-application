@@ -1,9 +1,9 @@
 import { toast } from "react-toastify";
-import { useSendOtp } from "../../api/auth";
+import { useForgotPassword } from "../../api/auth";
 import { useEffect, useState } from "react";
 
-const SendOtpButton = ({ email, isValidEmail }) => {
-    const { mutate, isLoading, isError, error, isSuccess, data } = useSendOtp();
+const SendResetPasswordOtpButton = ({ email, username, isValidEmail }) => {
+    const { mutate, isLoading, isError, error, isSuccess, data } = useForgotPassword();
     const [seconds, setSeconds] = useState(0);
     const [isCounting, setIsCounting] = useState(false);
 
@@ -20,7 +20,7 @@ const SendOtpButton = ({ email, isValidEmail }) => {
     }, [isCounting, seconds]);
 
     const handleClick = () => {
-        mutate({ email });
+        mutate({ email, username });
     }
 
     useEffect(() => {
@@ -40,7 +40,7 @@ const SendOtpButton = ({ email, isValidEmail }) => {
         <button
             className={`px-2 py-1 text-white rounded-md text-xm md:text-md
                 bg-purple-600 hover:bg-purple-700 text-nowrap
-                ${!email || !isValidEmail ? "pointer-events-none bg-opacity-50" : ""}
+                ${!email || !isValidEmail || !username ? "pointer-events-none bg-opacity-50" : ""}
                 ${isCounting ? "pointer-events-none bg-purple-800" : ""}`}
             onClick={handleClick}
         >
@@ -49,4 +49,4 @@ const SendOtpButton = ({ email, isValidEmail }) => {
     );
 }
 
-export default SendOtpButton;
+export default SendResetPasswordOtpButton;

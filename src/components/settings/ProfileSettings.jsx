@@ -32,7 +32,7 @@ const ProfileSettings = ({ username, userFullname = "", userAbout = "", canChang
     }, [isSuccess]);
 
     useEffect(() => {
-        const errorMessage = error?.response?.data?.error;
+        const errorMessage = error?.response?.data?.message;
         toast.error(errorMessage);
     }, [isError]);
 

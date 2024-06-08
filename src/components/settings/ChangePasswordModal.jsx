@@ -43,7 +43,7 @@ const ChangePasswordModal = ({ show, onClose }) => {
     
         useEffect(() => {
             const statusCode = error?.response?.status;
-            const errorMessage = error?.response?.data?.error;
+            const errorMessage = error?.response?.data?.message;
             if (statusCode === 400) {
                 toast.error(errorMessage);
             }
@@ -135,7 +135,7 @@ const ChangePasswordModal = ({ show, onClose }) => {
                         </div>
                     </div>
                     <div>
-                        <div className="mb-1">Confirm Password</div>
+                        <div className="mb-1">Confirm New Password</div>
                         <div className="text-black w-full">
                             <div className="relative">
                                 <input

@@ -39,7 +39,7 @@ const ChangeUsernameModal = ({ show, onClose }) => {
     
         useEffect(() => {
             const statusCode = error?.response?.status;
-            const errorMessage = error?.response?.data?.error;
+            const errorMessage = error?.response?.data?.message;
             if (statusCode === 400) {
                 toast.error(errorMessage);
             }

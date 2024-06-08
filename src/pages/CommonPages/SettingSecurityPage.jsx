@@ -16,13 +16,6 @@ const SettingSecurityPage = () => {
 
     const { setShowChangePasswordModal, setShowChangeEmailModal } = useContext(ModalContext);
 
-    // const [email, setEmail] = useState(userData?.email);
-
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // const isValidEmail = emailRegex.test(email);
-
-    // const saveEmailDisable = email == "" || email == userData?.email || !isValidEmail;
-
     useEffect(() => {
         if (userData) {
             setAuthEmail(userData.email);
