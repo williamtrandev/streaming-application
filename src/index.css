@@ -40,3 +40,13 @@
 	opacity: 1;
 	transform: translateY(0);
 }
+
+.dark .ant-select-selection-search-input, .dark .ant-select-item, .dark .ant-picker-range *, .dark input::placeholder {
+	color: white !important;
+}
+.dark .ant-select-selection-placeholder {
+	@apply text-gray-400;
+}
+.dark .ant-select-item:hover {
+	@apply bg-gray-700;
+}

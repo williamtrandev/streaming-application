@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { ChevronRight, Pencil } from 'lucide-react';
 import TagItem from '../../components/studio/TagItem';
 import { toast } from 'react-toastify';
-import { useSaveNotification, useSaveStream } from '../../api/studio';
+import { useGetStreamToken, useSaveNotification, useSaveStream } from '../../api/studio';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSelector } from 'react-redux';
 import { selectSocket } from '../../redux/slices/socketSlice';
+import ChatBox from '../../components/detailStream/ChatBox';
+import VideoPreview from '../../components/studio/VideoPreview';
 
 const rainbowColors = [
 	"#FF0000", "#FF6F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#8B00FF",
@@ -18,6 +20,7 @@ const getRandomRainbowColor = () => {
 	return rainbowColors[randomIndex];
 };
 
+
 const StudioPage = () => {
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
@@ -25,12 +28,17 @@ const StudioPage = () => {
 	const [tagArr, setTagArr] = useState([]);
 	const [image, setImage] = useState('https://wp.technologyreview.com/wp-content/uploads/2023/11/MIT_Universe_fibnal.jpg');
 	const [modalOpen, setModalOpen] = useState(false);
+	const [streamId, setStreamId] = useState(null);
+	const [startWithCam, setStartWithCam] = useState(false);
+	const [streamToken, setStreamToken] = useState(null);
 	const { mutate: saveStream, isSuccess: isSuccessStream, data: streamData } = useSaveStream();
 	const { mutate: saveNotification, isError: isErrorNotification, isSuccess: isSuccessNotification, data: notificationData } = useSaveNotification();
+	const { mutate: getStreamToken, isError: isErrorGetToken, isSuccess: isSuccessGetToken, data: tokenData } = useGetStreamToken();
 	const { auth } = useAuth();
-	const userId = auth?.user?.userId;
+	const userId = auth?.user?._id;
 	const socket = useSelector(selectSocket);
-	
+	const [disableStreamCam, setDisableStreamCam] = useState(true);
+	const [disableStreamOBS, setDisableStreamOBS] = useState(true);
 	const openModal = () => {
 		setModalOpen(true);
 	};
@@ -89,6 +97,9 @@ const StudioPage = () => {
 
 	useEffect(() => {
 		if (socket && isSuccessStream) {
+			setDisableStreamCam(false);
+			setDisableStreamOBS(false);
+			setStreamId(streamData?.stream?._id);
 			const data = {
 				stream: streamData?.stream, 
 				userId: userId
@@ -97,14 +108,54 @@ const StudioPage = () => {
 		}
 	}, [socket, isSuccessStream]);
 
+	const handleStartWithCam = () => {
+		if(streamId && userId) {
+			setStartWithCam(true); 
+			getStreamToken({ streamId: streamId, userId: userId });
+		}
+	}
+	useEffect(() => {
+		if(tokenData) {
+			setStreamToken(tokenData.token);
+		}
+	}, [isSuccessGetToken])
 	return (
 		<>
-		<button onClick={() => setModalOpen(true)}>OPEN</button>
+			<div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)]">
+				<div className="md:grid md:grid-cols-3 md:gap-5 h-full w-full space-y-3 md:space-y-0">
+					<div className="md:col-span-2 w-full h-full md:overflow-auto flex flex-col items-center justify-center gap-5">
+						<VideoPreview startWithCam={startWithCam} token={streamToken} />
+						<div className="flex gap-3 flex-wrap">
+							<button className="rounded-lg bg-white dark:bg-meta-4 hover:!bg-purple-700 hover:!text-white p-3 shadow-md" 
+								onClick={() => setModalOpen(true)}>
+									Settings
+							</button>
+							<button className={`rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md 
+									${disableStreamCam ? 'cursor-not-allowed opacity-60 pointer-events-none' : 'hover:!bg-purple-700 hover:!text-white'}
+								`}
+								disabled={disableStreamCam}
+								onClick={handleStartWithCam}>
+									Start With Camera
+							</button>
+							<button className={`rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md 
+									${disableStreamOBS ? 'cursor-not-allowed opacity-60 pointer-events-none' : 'hover:!bg-purple-700 hover:!text-white'}
+								`}
+								disabled={disableStreamOBS}
+								onClick={() => {}}>
+									Start With OBS
+							</button>
+						</div>
+					</div>
+					<div className="h-full w-full overflow-auto">
+						<ChatBox />
+					</div>
+				</div>
+			</div>
 			{
 				modalOpen &&
 				<div className="fixed inset-0 flex items-center justify-center z-9999">
 					<div className="absolute inset-0 bg-black opacity-50"></div>
-					<div className="bg-white dark:bg-meta-4 rounded-lg shadow-lg p-5 z-10 max-w-4xl w-full h-80vh overflow-y-auto relative">
+					<div className="bg-gray-100 dark:bg-gray-600 rounded-lg shadow-lg p-5 z-10 max-w-4xl w-full h-80vh overflow-y-auto relative">
 						<button
 							className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
 							onClick={closeModal}

@@ -66,7 +66,7 @@ const ChatBox = ({ streamId, socket }) => {
 	const [msgs, setMsgs] = useState([]);
 	const messagesEndRef = useRef(null);
 	const { auth } = useAuth();
-	const userId = auth?.user?.userId;
+	const userId = auth?.user?._id;
 	const { mutate: sendMessage, isError, isSuccess, error, data } = useSendMessage();
 
 	const { data: messagesData } = useGetMessages(streamId);
