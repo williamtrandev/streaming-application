@@ -1,59 +1,47 @@
-import { useRef, useState, useEffect } from "react";
-import { X, LockKeyhole, Eye, EyeOff, Check, SquareUser, Shield } from "lucide-react";
-import { appName } from "../../constants";
+import { useEffect, useState } from "react";
+import { emailRegex } from "../../constants";
+import { Check, Eye, EyeOff, Lock, LockKeyhole, Mail, Shield, User, X } from "lucide-react";
+import ForgotUsernameButton from "./ForgotUsernameButton";
+import SendResetPasswordOtpButton from "./SendResetPasswordOtpButton";
 import { toast } from "react-toastify";
-import UsernameInput from "./UsernameInput";
-import EmailInput from "./EmailInput";
-import SendOtpButton from "./SendOtpButton";
-import { useRegister } from "../../api/auth";
-import { useAuth } from "../../contexts/AuthContext";
+import { useResetPassword } from "../../api/auth";
 
-const RegisterModal = ({ isVisible, onClose }) => {
-    if (!isVisible) return null;
+const ForgotPasswordModal = ({ show, close }) => {
+    if (!show) return null;
 
     const [showPassword, setShowPassword] = useState("password");
-    const [username, setUsername] = useState("");
-    const [fullname, setFullName] = useState("");
-    const [password, setPassword] = useState("");
+    const [showConfirmPassword, setShowConfirmPassword] = useState("password");
+
     const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [otp, setOtp] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
-    const [isValidUsername, setIsValidUsername] = useState(false);
-
-    const isValidName = fullname.length >= 4 && fullname.length <= 40;
+    const isValidEmail = emailRegex.test(email);
 
     const password8Char = password.length >= 8;
     const passwordIncludeUsername = password.toLowerCase().includes(username.toLowerCase());
     const isValidPassword = password8Char && !passwordIncludeUsername;
 
-    const [isValidEmail, setIsValidEmail] = useState(false);
+    const resetPasswordDisable = !isValidEmail || !username || !password ||
+        !isValidPassword || (password != confirmPassword) || otp.length != 6;
 
-    const signupDisabled = username == "" || !isValidUsername ||
-        fullname == "" || !isValidName ||
-        password == "" || !isValidPassword ||
-        email == "" || !isValidEmail ||
-        otp.length != 6;
+    const { mutate, isLoading, isError, error, isSuccess, data } = useResetPassword();
 
-    const { mutate, isLoading, isError, error, isSuccess, data } = useRegister();
-    const { login } = useAuth();
-
-    const handleSubmitLogin = () => {
-        mutate({ username, fullname, password, email, otp });
+    const handleResetPassword = () => {
+        mutate({ email, password, confirmPassword, otp });
     };
     useEffect(() => {
-        if(data) {
-            toast.success("Register Successfully");
-            login(data);
-            onClose();
+        if (data) {
+            toast.success(data?.message);
+            close();
         }
     }, [isSuccess]);
 
     useEffect(() => {
-        const statusCode = error?.response?.status;
         const errorMessage = error?.response?.data?.message;
-        if (statusCode === 400) {
-            toast.error(errorMessage);
-        }
+        toast.error(errorMessage);
     }, [isError]);
 
     return (
@@ -62,46 +50,58 @@ const RegisterModal = ({ isVisible, onClose }) => {
         >
             <div className="w-[500px] h-fit relative bg-white dark:bg-boxdark p-5 rounded-lg">
                 <div className="flex justify-center mb-6">
-                    <div className="text-xl font-bold">Join {appName} today</div>
+                    <div className="text-xl font-bold">Forgot Password</div>
                     <button
-                        className="text-xl place-self-end absolute top-2 right-2
-                            hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded"
-                        onClick={() => onClose()}
-                    ><X /></button>
+                        className="text-xl place-self-end absolute top-2 right-2 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded"
+                        onClick={close}
+                    >
+                        <X />
+                    </button>
                 </div>
-                <div>
-                    <div className="mb-4">
-                        <UsernameInput 
-                            value={username}
-                            setUsername={setUsername}
-                            setIsValid={setIsValidUsername}
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <div className="mb-1">Display name</div>
-                        <div id="usernameInput" className="text-black w-full">
+                <div className="space-y-4">
+                    <div>
+                        <div className="mb-1">Email</div>
+                        <div className="text-black w-full">
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 pl-2 flex items-center text-black dark:text-bodydark">
-                                    <SquareUser />
+                                    <Mail />
                                 </span>
                                 <input
                                     type="text"
                                     className="w-full pl-10 pr-3 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
                                         text-black dark:text-white"
-                                    value={fullname}
-                                    onChange={e => setFullName(e.target.value)}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="Please enter the email you used to create your account"
                                 />
                             </div>
                         </div>
-                        <div className="text-red-500 mt-1 text-sm">
-                            {!isValidName && fullname != "" ? "*Display name must be between 4 and 40 characters." : ""}
-                        </div>
-                        <div className="mt-1 text-sm">
-                            {fullname == "" ? `This is the name people will know you by on ${appName}. You can always change it later.` : ""}
+                        <div className="text-red-500 mt-1 text-sm h-auto w-auto">
+                            {(!isValidEmail && email != "") ? "*Please enter a valid email." : ""}
                         </div>
                     </div>
-                    <div className="mb-4">
-                        <div className="mb-1">Password</div>
+                    <div>
+                        <div className="mb-1">Username</div>
+                        <div id="usernameInput" className="text-black w-full">
+                            <div className="relative">
+                                <span className="absolute inset-y-0 left-0 pl-2 flex items-center text-black dark:text-bodydark">
+                                    <User />
+                                </span>
+                                <input
+                                    type="text"
+                                    className="w-full pl-10 pr-3 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
+                                        text-black dark:text-white"
+                                    value={username}
+                                    onChange={e => setUsername(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        <div className="mt-1 flex justify-end">
+                            <ForgotUsernameButton email={email} />
+                        </div>
+                    </div>
+                    <div>
+                        <div className="mb-1">New Password</div>
                         <div id="passwordInput" className="text-black w-full">
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 pl-2 flex items-center text-black dark:text-bodydark">
@@ -121,8 +121,8 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                         setShowPassword(showPassword === "password" ? "text" : "password");
                                     }}
                                 >
-                                    {showPassword == "password" && (<Eye />)}
-                                    {showPassword == "text" && (<EyeOff />)}
+                                    {showPassword === "password" && (<Eye />)}
+                                    {showPassword === "text" && (<EyeOff />)}
                                 </button>
                             </div>
                         </div>
@@ -148,14 +148,37 @@ const RegisterModal = ({ isVisible, onClose }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="mb-4">
-                        <EmailInput 
-                            value={email}
-                            setEmail={setEmail}
-                            setIsValid={setIsValidEmail}
-                        />
+                    <div>
+                        <div className="mb-1">Confirm New Password</div>
+                        <div className="text-black w-full">
+                            <div className="relative">
+                                <span className="absolute inset-y-0 left-0 pl-2 flex items-center text-black dark:text-bodydark">
+                                    <Lock />
+                                </span>
+                                <input
+                                    type={showConfirmPassword}
+                                    className="w-full bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
+                                        pr-16 pl-10 text-black dark:text-white"
+                                    value={confirmPassword}
+                                    onChange={e => setConfirmPassword(e.target.value)}
+                                />
+                                <button
+                                    className="absolute inset-y-0 right-0 px-3 flex items-center rounded-r-lg
+                                        text-black dark:text-bodydark hover:bg-slate-300 dark:hover:bg-slate-600"
+                                    onClick={() => {
+                                        setShowConfirmPassword(showConfirmPassword === "password" ? "text" : "password");
+                                    }}
+                                >
+                                    {showConfirmPassword == "password" && (<Eye />)}
+                                    {showConfirmPassword == "text" && (<EyeOff />)}
+                                </button>
+                            </div>
+                        </div>
+                        <div className="text-red-500 mt-1 text-sm">
+                            {(confirmPassword != password) && confirmPassword ? "*Passwords do not match. Please try again" : ""}
+                        </div>
                     </div>
-                    <div className="mb-8">
+                    <div>
                         <div className="mb-1">
                             Click the Send OTP button and we will send an OTP to your email to ensure the above email address is yours.
                         </div>
@@ -179,29 +202,27 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                     }}
                                 />
                             </div>
-                            <SendOtpButton 
+                            <SendResetPasswordOtpButton
                                 email={email}
                                 isValidEmail={isValidEmail}
+                                username={username}
                             />
                         </div>
                     </div>
-                    {/* <div className="mb-3 text-sm">
-                        By clicking Sign Up, you are agreeing to our <button className="text-blue-700 dark:text-blue-500 hover:underline">Terms of Service</button> and are acknowledging our <button className="text-blue-700 dark:text-blue-500 hover:underline">Privacy Notice</button> applies.
-                    </div> */}
-                    <div className="mb-3">
-                        <button
-                            className={`bg-purple-700 text-white 
-                                font-bold w-full py-1 rounded-lg hover:bg-purple-800
-                                ${signupDisabled ? "pointer-events-none opacity-50" : ""}`}
-                            onClick={handleSubmitLogin}
-                        >
-                            {isLoading ? "Signing in..." : "Sign In"}
-                        </button>
-                    </div>
+                </div>
+                <div className="mt-6">
+                    <button
+                        className={`bg-purple-700 dark:bg-purple-500 text-white 
+                                font-bold w-full py-1 rounded-lg hover:bg-purple-800 dark:hover:bg-purple-600
+                                ${resetPasswordDisable ? "pointer-events-none opacity-50" : ""}`}
+                        onClick={handleResetPassword}
+                    >
+                        {isLoading ? "On working..." : "Reset Password"}
+                    </button>
                 </div>
             </div>
         </div>
     );
 }
 
-export default RegisterModal
+export default ForgotPasswordModal;

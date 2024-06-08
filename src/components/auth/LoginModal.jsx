@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useLogin } from "../../api/auth";
 import { useAuth } from "../../contexts/AuthContext";
 
-const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
+const LoginModal = ({ isVisible, onClose, openRegisterModal, openForgotPasswordModal }) => {
     if (!isVisible) return null;
 
     const [showPassword, setShowPassword] = useState("password");
@@ -25,13 +25,13 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                 position: "bottom-right"
             });
             login(data);
-            onClose(false);
+            onClose();
         }
     }, [isSuccess]);
 
     useEffect(() => {
         const statusCode = error?.response?.status;
-        const errorMessage = error?.response?.data?.error;
+        const errorMessage = error?.response?.data?.message;
         if (statusCode === 401) {
             toast.error(errorMessage);
         }
@@ -46,7 +46,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                     <div className="text-xl font-bold">Log in to {appName}</div>
                     <button
                         className="text-xl place-self-end absolute top-2 right-2 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded"
-                        onClick={() => onClose(false)}
+                        onClick={() => onClose()}
                     >
                         <X />
                     </button>
@@ -99,6 +99,10 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                     <div className="mb-4">
                         <button
                             className="text-sm text-blue-700 dark:text-blue-500 hover:underline"
+                            onClick={() => {
+                                onClose();
+                                openForgotPasswordModal();
+                            }}
                         >Forgot your password?</button>
                     </div>
                     <div className="mb-3">
@@ -116,8 +120,8 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal }) => {
                             className="text-blue-700 dark:text-blue-500 w-full py-1 hover:text-black dark:hover:text-white
                                 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded-lg"
                             onClick={() => {
-                                onClose(false);
-                                openRegisterModal(true);
+                                onClose();
+                                openRegisterModal();
                             }}
                         >Don't have an account? Sign up</button>
                     </div>

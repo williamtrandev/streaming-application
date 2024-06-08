@@ -51,7 +51,6 @@ function App() {
           <Route path='/history' element={<HistoryPage />} />
           <Route path='/liked' element={<LikedPage />} />
           <Route path='/live/:streamId' element={<DetailStreamPage />} />
-          <Route path='/settings/profile' element={<SettingProfilePage />} />
           <Route path='/following' element={<FollowingPage />} />
           <Route path='/:id' element={<StreamerInfoTabs />}>
             <Route path='about' element={<StreamerAboutPage />} />

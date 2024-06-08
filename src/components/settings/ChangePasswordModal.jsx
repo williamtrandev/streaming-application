@@ -1,11 +1,14 @@
 import { Check, Eye, EyeOff, X } from "lucide-react";
-import { useState } from "react";
-import { fakeStreamer } from "../../constants/index"
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useChangePassword } from "../../api/auth";
+import { useAuth } from "../../contexts/AuthContext";
 
 const ChangePasswordModal = ({ show, onClose }) => {
     if (!show) return null;
 
-    const { username } = fakeStreamer;
+    const { auth } = useAuth();
+    const username = auth?.user?.username;
 
     const [showOldPassword, setShowOldPassword] = useState("password");
     const [showNewPassword, setShowNewPassword] = useState("password");
@@ -21,10 +24,30 @@ const ChangePasswordModal = ({ show, onClose }) => {
 
     const isConfirmPasswordMatch = confirmPassword === newPassword;
 
-    const isCorrectOldPassword = false;
-
     const changePasswordDisabled = oldPassword == "" || newPassword == "" || confirmPassword == "" ||
         !isValidPassword || !isConfirmPasswordMatch;
+
+        const token = auth?.accessToken;
+        const { mutate, isLoading, isError, error, isSuccess, data } = useChangePassword();
+    
+        const handleSubmit = async () => {
+            mutate({ token, oldPassword, newPassword });
+        };
+    
+        useEffect(() => {
+            if(data) {
+                toast.success("Change password successfully");
+                onClose();
+            }
+        }, [isSuccess]);
+    
+        useEffect(() => {
+            const statusCode = error?.response?.status;
+            const errorMessage = error?.response?.data?.message;
+            if (statusCode === 400) {
+                toast.error(errorMessage);
+            }
+        }, [isError]);
 
     return (
         <div className="fixed z-9999 inset-0 flex justify-center items-center
@@ -64,9 +87,6 @@ const ChangePasswordModal = ({ show, onClose }) => {
                                     {showOldPassword == "text" && (<EyeOff />)}
                                 </button>
                             </div>
-                        </div>
-                        <div className="text-red-500 mt-1 text-sm">
-                            {!isCorrectOldPassword ? "*Your current password was incorrect." : ""}
                         </div>
                     </div>
                     <div>
@@ -115,7 +135,7 @@ const ChangePasswordModal = ({ show, onClose }) => {
                         </div>
                     </div>
                     <div>
-                        <div className="mb-1">Confirm Password</div>
+                        <div className="mb-1">Confirm New Password</div>
                         <div className="text-black w-full">
                             <div className="relative">
                                 <input
@@ -151,11 +171,11 @@ const ChangePasswordModal = ({ show, onClose }) => {
                     >Cancel</button>
                     <button
                         className={`px-2 py-1 rounded-md bg-purple-600 text-white hover:bg-purple-700
-                            ${changePasswordDisabled ? "pointer-events-none opacity-50" : ""}`}
-                        onClick={() => {
-                            
-                        }}
-                    >Change Password</button>
+                            ${changePasswordDisabled || isLoading ? "pointer-events-none opacity-50" : ""}`}
+                        onClick={handleSubmit}
+                    >
+                        {isLoading ? "On working..." : "Change Password"}
+                    </button>
                 </div>
             </div>
         </div>

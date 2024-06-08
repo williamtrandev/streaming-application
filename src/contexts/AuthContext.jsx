@@ -13,8 +13,19 @@ export const AuthProvider = ({ children }) => {
 		setAuth(null);
 	};
 
+	const [authUsername, setAuthUsername] = useState("");
+	const [authFullname, setAuthFullname] = useState("");
+	const [authProfilePicture, setAuthProfilePicture] = useState("");
+
 	return (
-		<AuthContext.Provider value={{ auth, login, logout }}>
+		<AuthContext.Provider 
+			value={{ 
+				auth, login, logout,
+				authUsername, setAuthUsername,
+				authFullname, setAuthFullname,
+				authProfilePicture, setAuthProfilePicture
+			}}
+		>
 			{children}
 		</AuthContext.Provider>
 	);

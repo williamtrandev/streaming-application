@@ -3,7 +3,7 @@ import { formatNumFollowers } from "../../utils/formatNumber";
 import FollowButton from "./FollowButton";
 import FollowedButton from "./FollowedButton";
 import { Dot } from "lucide-react";
-import { ModalContext } from "../../layouts/ModalContext";
+import { ModalContext } from "../../contexts/ModalContext";
 
 const ProfileHeader = ({ streamer }) => {
 

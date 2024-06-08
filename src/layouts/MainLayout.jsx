@@ -5,15 +5,16 @@ import { Outlet } from 'react-router-dom';
 import LoginModal from '../components/auth/LoginModal';
 import RegisterModal from '../components/auth/RegisterModal';
 import UnfollowModal from '../components/detailStreamer/UnfollowModal';
-import { ModalContext, ModalProvider } from './ModalContext';
 import CropperModal from '../components/settings/CroperModal';
 import ChangePasswordModal from '../components/settings/ChangePasswordModal';
-import VerifyEmailModal from '../components/auth/VerifyEmailModal';
 import ChangeUsernameModal from '../components/settings/ChangeUsernameModal';
 import { useDispatch } from 'react-redux';
 import { initializeSocket } from '../redux/slices/socketSlice';
 import { useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { ModalContext } from '../contexts/ModalContext';
+import ChangeEmailModal from '../components/settings/ChangeEmailModal';
+import ForgotPasswordModal from '../components/auth/ForgotPasswordModal';
 
 const MainLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -23,10 +24,11 @@ const MainLayout = () => {
 	const { 
 		showUnfollowModal, unfollowName, handleCloseUnfollowModal, 
 		setFollowed, 
-		showCropperModal, setShowCropperModal, src, setPreview, setSettingProfilePicture,
+		showCropperModal, setShowCropperModal,
 		showChangePasswordModal, setShowChangePasswordModal,
-		showVerifyEmailModal, setShowVerifyEmailModal,
-		showChangeUsernameModal, setShowChangeUsernameModal
+		showChangeUsernameModal, setShowChangeUsernameModal,
+		showChangeEmailModal, setShowChangeEmailModal,
+		showForgotPasswordModal, setShowForgotPasswordModal
 	} = useContext(ModalContext);
 	
 	return (
@@ -45,16 +47,17 @@ const MainLayout = () => {
 			</div>
 			<LoginModal 
 				isVisible={showLoginModal} 
-				onClose={setShowLoginModal}
-				openRegisterModal={setShowRegisterModal} 
+				onClose={() => setShowLoginModal(false)}
+				openRegisterModal={() => setShowRegisterModal(true)} 
+				openForgotPasswordModal={() => setShowForgotPasswordModal(true)}
 			/>
 			<RegisterModal 
 				isVisible={showRegisterModal} 
 				onClose={() => setShowRegisterModal(false)}
-				showVerifyEmailModal={() => setShowVerifyEmailModal(true)}
 			/>
-			<VerifyEmailModal 
-				show={showVerifyEmailModal} close={() => setShowVerifyEmailModal(false)}
+			<ForgotPasswordModal
+				show={showForgotPasswordModal}
+				close={() => setShowForgotPasswordModal(false)}
 			/>
 			<UnfollowModal 
 				show={showUnfollowModal} 
@@ -67,9 +70,6 @@ const MainLayout = () => {
 			<CropperModal
 				show={showCropperModal}
 				onClose={() => setShowCropperModal(false)}
-				src={src}
-				setPreview={setPreview}
-				setProfilePicture={setSettingProfilePicture}
 			/>
 			<ChangePasswordModal 
 				show={showChangePasswordModal}
@@ -79,12 +79,12 @@ const MainLayout = () => {
 				show={showChangeUsernameModal}
 				onClose={() => setShowChangeUsernameModal(false)}
 			/>
+			<ChangeEmailModal 
+				show={showChangeEmailModal}
+				onClose={() => setShowChangeEmailModal(false)}
+			/>
 		</div>
 	);
 }
 
-export default () => (
-	<ModalProvider>
-		<MainLayout />
-	</ModalProvider>
-);
+export default MainLayout;

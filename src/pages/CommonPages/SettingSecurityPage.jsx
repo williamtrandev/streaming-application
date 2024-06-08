@@ -1,23 +1,26 @@
-import { useContext, useRef, useState } from "react";
-import { ModalContext } from "../../layouts/ModalContext";
+import { useContext, useEffect, useRef, useState } from "react";
 import { fakeStreamer } from "../../constants";
 import { Pencil } from "lucide-react";
+import { ModalContext } from "../../contexts/ModalContext";
+import { useAuth } from "../../contexts/AuthContext";
+import { useGetEmail } from "../../api/user";
+import SendOtpButton from "../../components/auth/SendOtpButton";
+import { useUser } from "../../contexts/UserContext";
 
 const SettingSecurityPage = () => {
-    const user = fakeStreamer;
 
-    const { setShowChangePasswordModal } = useContext(ModalContext);
+    const { auth } = useAuth();
+    const { authEmail, setAuthEmail } = useUser();
+    const userId = auth?.user?.userId;
+    const { data: userData } = useGetEmail(userId);
 
-    const [email, setEmail] = useState(user.email);
-    const emailRef = useRef(null);
-    const [emailReadOnly, setEmailReadOnly] = useState(true);
+    const { setShowChangePasswordModal, setShowChangeEmailModal } = useContext(ModalContext);
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const isValidEmail = emailRegex.test(email);
-
-    const saveEmailDisable = email == "" || email == user.email || !isValidEmail;
-
-    const { setShowVerifyEmailModal } = useContext(ModalContext);
+    useEffect(() => {
+        if (userData) {
+            setAuthEmail(userData.email);
+        }
+    }, [userData]);
 
     return (
         <div className="space-y-6">
@@ -30,48 +33,18 @@ const SettingSecurityPage = () => {
                 <div className="flex w-full gap-4 py-4 md:py-6">
                     <div className="w-[30%]">Email</div>
                     <div className="w-full relative">
-                        <input type="text"
-                            value={email}
-                            ref={emailRef}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-3 py-1 dark:text-white rounded-lg bg-slate-200 dark:bg-meta-4 
-                                    read-only:focus:outline-none read-only:bg-slate-300 read-only:dark:bg-slate-700"
-                            readOnly={emailReadOnly}
-                        />
-                        {emailReadOnly && <button
-                            className="absolute right-0 p-2 h-full hover:bg-slate-400 
-                                    dark:hover:bg-slate-500 rounded-r-lg"
-                            onClick={() => {
-                                setEmailReadOnly(false);
-                                emailRef.current.focus();
-                            }}
+                        <div
+                            className="w-full px-3 py-1 dark:text-white rounded-lg bg-slate-200 dark:bg-meta-4"
+                        >
+                            {authEmail}
+                        </div>
+                        <button
+                            className="absolute right-0 top-0 h-full p-2 rounded-r-lg dark:text-white 
+                                hover:bg-gray-500"
+                            onClick={() => setShowChangeEmailModal(true)}
                         >
                             <Pencil size={16} />
-                        </button>}
-                        {!emailReadOnly && <div className="flex flex-col md:justify-between md:flex-row">
-                            <div className="text-red-500 mt-1 text-sm h-auto w-auto">
-                                {(!isValidEmail && email != "") ? "*Please enter a valid email." : ""}
-                            </div>
-                            <div className="mt-2 flex justify-end gap-2">
-                                <button
-                                    className="px-2 py-1 rounded-md
-                                bg-slate-300 dark:bg-slate-700
-                                hover:bg-slate-400 dark:hover:bg-slate-600"
-                                    onClick={() => {
-                                        setEmail(user.email);
-                                        setEmailReadOnly(true);
-                                    }}
-                                >Cancel</button>
-                                <button
-                                    className={`px-2 py-1 rounded-md bg-purple-600 text-white hover:bg-purple-700
-                                    ${saveEmailDisable ? "pointer-events-none opacity-50" : ""}`}
-                                    onClick={() => {
-                                        setShowVerifyEmailModal(true);
-                                        setEmailReadOnly(true);
-                                    }}
-                                >Save</button>
-                            </div>
-                        </div>}
+                        </button>
                     </div>
                 </div>
                 <div className="flex w-full gap-4 py-4 md:py-6">
