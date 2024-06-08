@@ -30,12 +30,7 @@ const MainLayout = () => {
 		showChangeEmailModal, setShowChangeEmailModal,
 		showForgotPasswordModal, setShowForgotPasswordModal
 	} = useContext(ModalContext);
-	const { auth } = useAuth();
-	const isLogged = auth !== null;
-	const dispatch = useDispatch();
-	useEffect(() => {
-		dispatch(initializeSocket());
-	}, [dispatch]);
+	
 	return (
 		<div className="dark:bg-boxdark-2 dark:text-bodydark bg-[#edf2f9]">
 			<div className="flex h-screen overflow-hidden">

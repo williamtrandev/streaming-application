@@ -50,7 +50,9 @@ const DropdownUser = () => {
 	});
 
 	const handleLogout = () => {
-		toast.info('You have been logout');
+		toast.info('You have been logout', {
+			position: "bottom-right"
+		});
 		logout();
 		navigate("/");
 	}
