@@ -27,6 +27,7 @@ import { SettingProfilePage, SettingSecurityPage } from './pages/CommonPages';
 import StreamerInfoTabs from './layouts/StreamerInfoTabs';
 import ViewerSettingTabs from './layouts/ViewerSettingTabs';
 import LikedPage from './pages/ViewerPages/LikedPage';
+import SearchPage from './pages/ViewerPages/SearchPage';
 
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
           <Route path='/liked' element={<LikedPage />} />
           <Route path='/live/:streamId' element={<DetailStreamPage />} />
           <Route path='/following' element={<FollowingPage />} />
+          <Route path='/search' element={<SearchPage />} />
           <Route path='/:id' element={<StreamerInfoTabs />}>
             <Route path='about' element={<StreamerAboutPage />} />
             <Route path='streams' element={<StreamerStreamsPage />} />
