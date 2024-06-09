@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
 import { Moon, Settings, Telescope, Tv, LineChart, Podcast } from 'lucide-react';
 import DarkModeSwitcher from '../header/DarkModeSwitcher';
+import { appName } from '../../../constants';
 
 
 const SidebarStudio = ({ sidebarOpen, setSidebarOpen }) => {
@@ -60,7 +61,7 @@ const SidebarStudio = ({ sidebarOpen, setSidebarOpen }) => {
 			<div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
 				<NavLink to="/" className="flex items-center space-x-4">
 					<img src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="Logo" className='w-15 h-15 rounded-full' />
-					<p className="font-bold">Will Streaming</p>
+					<p className="font-bold">{appName}</p>
 				</NavLink>
 
 				<button

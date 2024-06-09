@@ -11,7 +11,7 @@ import { useUser } from "../../contexts/UserContext";
 const SettingProfilePage = () => {
     const { auth } = useAuth();
     const { authProfilePicture } = useUser();
-	const userId = auth?.user?.userId;
+	const userId = auth?.user?._id;
     const { data: userData } = useGetProfile(userId);
 
     const { setShowCropperModal, setSrc } = useContext(ModalContext);
