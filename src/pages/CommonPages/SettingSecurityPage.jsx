@@ -11,7 +11,7 @@ const SettingSecurityPage = () => {
 
     const { auth } = useAuth();
     const { authEmail, setAuthEmail } = useUser();
-    const userId = auth?.user?.userId;
+    const userId = auth?.user?._id;
     const { data: userData } = useGetEmail(userId);
 
     const { setShowChangePasswordModal, setShowChangeEmailModal } = useContext(ModalContext);
