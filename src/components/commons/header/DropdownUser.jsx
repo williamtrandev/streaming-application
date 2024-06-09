@@ -57,7 +57,7 @@ const DropdownUser = () => {
 		navigate("/");
 	}
 
-	const { data: userData } = useGetMiniProfile(auth?.user?.userId);
+	const { data: userData } = useGetMiniProfile(auth?.user?._id);
 	useEffect(() => {
 		if (userData) {
 			setAuthUsername(userData.username);

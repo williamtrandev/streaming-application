@@ -33,7 +33,7 @@ const UsernameInput = ({ value, setUsername, setIsValid }) => {
     }, []);
 
     useEffect(() => {
-        if (debouncedUsername) {
+        if (debouncedUsername && isValid) {
             mutate({ username: value });
         }
     }, [debouncedUsername]);
