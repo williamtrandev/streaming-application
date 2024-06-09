@@ -47,9 +47,24 @@ const useGetStreamToken = () => {
 	})
 }
 
+const getDetailStreamAndToken = async (streamId) => {
+	console.log(streamId);
+	const response = await APIClient.get(`/studio/stream/${streamId}`);
+	return response.data;
+}
+
+const useGetDetailStreamAndToken = (streamId) => {
+	return useQuery({
+		queryKey: ["DetailStream", streamId],
+		queryFn: () => getDetailStreamAndToken(streamId),
+		enabled: !!streamId
+	})
+}
+
 export {
 	useSaveStream,
 	useSaveNotification,
 	useGetNotifications, 
-	useGetStreamToken
+	useGetStreamToken,
+	useGetDetailStreamAndToken
 };
