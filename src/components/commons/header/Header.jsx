@@ -167,7 +167,7 @@ const Header = (props) => {
 						</button>
 					</div>
 				</div>}
-				{/* {isStudioPath && <div></div>} */}
+				{isStudioPath && <div></div>}
 				<div className="flex items-center gap-3 2xsm:gap-7">
 					<ul className="flex items-center gap-2 2xsm:gap-4">
 						<button className="block sm:hidden"

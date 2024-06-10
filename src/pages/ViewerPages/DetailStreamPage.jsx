@@ -12,7 +12,7 @@ const DetailStreamPage = () => {
 	const { streamId } = useParams();
 	console.log(streamId)
 	const { auth } = useAuth();
-	const userId = auth?.user?.userId;
+	const userId = auth?.user?._id;
 	const socket = useSelector(selectSocket);
 	const { data: detailStreamData, isLoading: isDetailLoading } = useGetDetailStreamAndToken(streamId);
 	useEffect(() => {
