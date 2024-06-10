@@ -47,24 +47,60 @@ const useGetStreamToken = () => {
 	})
 }
 
-const getDetailStreamAndToken = async (streamId) => {
+const getDetailStream = async (streamId) => {
 	console.log(streamId);
 	const response = await APIClient.get(`/studio/stream/${streamId}`);
 	return response.data;
 }
 
-const useGetDetailStreamAndToken = (streamId) => {
+const useGetDetailStream = (streamId) => {
 	return useQuery({
 		queryKey: ["DetailStream", streamId],
-		queryFn: () => getDetailStreamAndToken(streamId),
+		queryFn: () => getDetailStream(streamId),
 		enabled: !!streamId
 	})
 }
 
+const getAllComingStreams = async () => {
+	const response = await APIClient.get('/studio/coming-streams');
+	return response.data;
+}
+
+const useGetAllComingStreams = (userId) => {
+	return useQuery({
+		queryKey: ["ComingStreams", userId],
+		queryFn: () => getAllComingStreams()
+	})
+}
+
+const editStream = async ({ streamId, data }) => {
+	const response = await APIClient.put(`/studio/stream/${streamId}`, data);
+	return response.data;
+}
+
+const useEditStream = () => {
+	return useMutation({
+		mutationFn: ({ streamId, data }) => editStream({ streamId, data })
+	})
+}
+
+const deleteStream = async (streamId) => {
+	const response = await APIClient.delete(`/studio/stream/${streamId}`);
+	return response.data;
+}
+
+const useDeleteStream = () => {
+	return useMutation({
+		mutationFn: (streamId) => deleteStream(streamId)
+	})
+}
 export {
 	useSaveStream,
 	useSaveNotification,
 	useGetNotifications, 
 	useGetStreamToken,
-	useGetDetailStreamAndToken
+	useGetDetailStream,
+	useGetAllComingStreams,
+	useEditStream,
+	useDeleteStream
 };

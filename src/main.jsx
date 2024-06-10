@@ -11,7 +11,13 @@ import { store } from './redux/store.js';
 import { AuthProvider } from './contexts/AuthContext.jsx';
 import { ModalProvider } from './contexts/ModalContext.jsx';
 import { UserProvider } from './contexts/UserContext.jsx';
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, 
+    }
+  }
+});
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
