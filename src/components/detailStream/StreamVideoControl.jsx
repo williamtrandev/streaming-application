@@ -16,6 +16,7 @@ const StreamVideoControl = ({ streamId }) => {
 	const tracks = useTracks(Object.values(Track.Source)).filter(
 		(track) => track.participant.identity === streamId
 	);
+	console.log(tracks)
 	if (connectionState !== ConnectionState.Connected || !participant) {
 		return (
 			<div className="grid aspect-video items-center justify-center bg-black text-sm uppercase text-white">

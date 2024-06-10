@@ -3,7 +3,7 @@ import { generateStreamerToken } from '../../utils/livekit';
 import StreamerVideoControl from './StreamerVideoControl';
 import { useState, useEffect } from 'react';
 import { LiveKitRoom, ControlBar } from "@livekit/components-react";
-
+import { jwtDecode } from "jwt-decode";
 
 const StreamerVideo = ({ streamId, setIsStream }) => {
 	const [streamerToken, setStreamerToken] = useState("");
@@ -39,8 +39,6 @@ const StreamerVideo = ({ streamId, setIsStream }) => {
 	return (
 		<div className="h-[80%] w-full">
 			{streamerToken && <LiveKitRoom
-				video={true}
-				audio={true}
 				token={streamerToken}
 				serverUrl={import.meta.env.VITE_LIVEKIT_SERVER_URL}
 				data-lk-theme="default"

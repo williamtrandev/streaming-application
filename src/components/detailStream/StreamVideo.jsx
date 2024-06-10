@@ -23,6 +23,7 @@ import { jwtDecode } from "jwt-decode";
 
 import { generateViewerToken } from "../../utils/livekit";
 import StreamVideoControl from "./StreamVideoControl";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Streamer = ({ user }) => {
 	const { handleShowUnfollowModal, followed, setFollowed } = useContext(ModalContext);
@@ -102,7 +103,8 @@ const StreamDescription = ({ stream }) => {
 const StreamVideo = ({ streamData }) => {
 	const streamId = streamData?.stream?._id;
 	const [viewerToken, setViewerToken] = useState("");
-	const userId = streamData?.user?._id || 'Anonymous';
+	const { auth } = useAuth();
+	const userId = auth?.user?._id || 'Anonymous';
 	useEffect(() => {
 		if(!streamId) return;
 		const getOrCreateViewerToken = async () => {
@@ -129,7 +131,7 @@ const StreamVideo = ({ streamData }) => {
 				sessionStorage.setItem(SESSION_VIEWER_TOKEN_KEY, token);
 			}
 		};
-		void getOrCreateViewerToken();
+		getOrCreateViewerToken();
 	}, [streamId]);
 
 	return (

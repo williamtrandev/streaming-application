@@ -17,7 +17,8 @@ import {
   AnalyticsPage,
   CommunityPage,
   SettingsPage,
-  StudioPage
+  StudioPage,
+  StreamPage
 } from './pages/StreamerPages';
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeSocket, selectSocket } from './redux/slices/socketSlice';
@@ -66,6 +67,7 @@ function App() {
         </Route>
         <Route path='/studio' element={<StudioLayout />}>
           <Route path='manager' element={<StudioPage />} />
+          <Route path='stream/:streamId' element={<StreamPage />} />
           <Route path='analytics' element={<AnalyticsPage />} />
           <Route path='community' element={<CommunityPage />} />
           <Route path='settings' element={<SettingsPage />} />

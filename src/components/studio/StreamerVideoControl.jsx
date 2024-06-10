@@ -3,8 +3,8 @@ import { Track, createLocalTracks } from "livekit-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const StreamerVideoControl = ({ streamId, setIsStream }) => {
-	const [videoTrack, setVideoTrack] = useState(null);
-	const [audioTrack, setAudioTrack] = useState(null);
+	const [videoTrack, setVideoTrack] = useState();
+	const [audioTrack, setAudioTrack] = useState();
 	const [isPublishing, setIsPublishing] = useState(false);
 	const [isUnpublishing, setIsUnpublishing] = useState(false);
 	const previewVideoEl = useRef(null);
@@ -36,6 +36,8 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 
 	useEffect(() => {
 		return () => {
+			console.log("Stopping tracks:", { videoTrack, audioTrack });
+
 			videoTrack?.stop();
 			audioTrack?.stop();
 		};
@@ -44,20 +46,26 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 	const togglePublishing = useCallback(async () => {
 		if (isPublishing && localParticipant) {
 			setIsUnpublishing(true);
+
 			if (videoTrack) {
-				setVideoTrack(null);
+				console.log(localParticipant)
+				localParticipant.unpublishTrack(videoTrack);
 			}
 			if (audioTrack) {
-				setAudioTrack(null);
+				localParticipant.unpublishTrack(audioTrack);
 			}
-			setIsStream();
 
+			await createTracks();
+
+			setTimeout(() => {
+				setIsUnpublishing(false);
+			}, 2000);
 		} else if (localParticipant) {
 			if (videoTrack) {
-				localParticipant.publishTrack(videoTrack);
+				void localParticipant.publishTrack(videoTrack);
 			}
 			if (audioTrack) {
-				localParticipant.publishTrack(audioTrack);
+				void localParticipant.publishTrack(audioTrack);
 			}
 		}
 
@@ -88,14 +96,14 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 					{isPublishing ? (
 						<button
 							className="bg-red-600 hover:bg-red-700 p-2 rounded-lg"
-							onClick={() => togglePublishing()}
+							onClick={togglePublishing}
 							disabled={isUnpublishing}
 						>
 							{isUnpublishing ? "Stopping..." : "Stop stream"}
 						</button>
 					) : (
 						<button
-							onClick={() => togglePublishing()}
+							onClick={togglePublishing}
 							className="animate-pulse p-2 bg-purple-600 rounded-lg"
 						>
 							Start stream

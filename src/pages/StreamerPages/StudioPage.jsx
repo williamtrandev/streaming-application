@@ -10,6 +10,8 @@ import ChatBox from '../../components/detailStream/ChatBox';
 import { DatePicker, Modal } from 'antd';
 import moment from 'moment';
 import StreamerVideo from '../../components/studio/StreamerVideo';
+import { useNavigate } from 'react-router-dom';
+import { blobToBase64 } from '../../utils';
 
 
 const rainbowColors = [
@@ -32,14 +34,17 @@ const StudioPage = () => {
 	const [image, setImage] = useState('https://wp.technologyreview.com/wp-content/uploads/2023/11/MIT_Universe_fibnal.jpg');
 	const [modalOpen, setModalOpen] = useState(false);
 	const [streamId, setStreamId] = useState(null);
-	const { mutate: saveStream, isSuccess: isSuccessStream, data: streamData } = useSaveStream();
+	const { mutate: saveStream, isSuccess: isSuccessStream, data: streamData, isError: isErrorStream, error: errorStream } = useSaveStream();
 	const { mutate: saveNotification, isError: isErrorNotification, isSuccess: isSuccessNotification, data: notificationData } = useSaveNotification();
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
 	const socket = useSelector(selectSocket);
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [selectedTime, setSelectedTime] = useState(moment());
-	const [isStream, setIsStream] = useState(false);
+	const [modalDeleteOpen, setModalDeleteOpen] = useState(false); 
+
+	const navigate = useNavigate();
+
 	const submitTagHandler = () => {
 		if (tagArr.length >= 20) {
 			toast.error("You can only add 20 tags");
@@ -70,22 +75,19 @@ const StudioPage = () => {
 		}
 	};
 
-	const handleOk = () => {
+	const handleOk = async () => {
 		setConfirmLoading(true);
 		const tags = tagArr.map(item => item.tag);
-
+		const previewImage = await blobToBase64(image);
 		const data = {
 			userId: userId,
 			title: title,
 			description: description,
 			dateStream: selectedTime.toDate().toISOString(),
-			tags: tags
+			tags: tags,
+			previewImage: previewImage
 		}
 		saveStream(data);
-		saveNotification({
-			userId: userId,
-			content: `${auth?.user?.fullname} is streaming: ${title}`
-		});
 	};
 
 	useEffect(() => {
@@ -93,41 +95,123 @@ const StudioPage = () => {
 			setStreamId(streamData?.stream?._id);
 			setConfirmLoading(false);
 			setModalOpen(false);
-			setIsStream(true);
 			const data = {
 				stream: streamData?.stream,
 				userId: userId
 			}
+			saveNotification({
+				userId: userId,
+				content: `${auth?.user?.fullname} is streaming: ${title}`
+			});
 			socket.emit('sendNotification', data);
+
+			streamData?.stream?._id && navigate(`/studio/stream/${streamData?.stream?._id}`);
 		}
 	}, [socket, isSuccessStream]);
 
+	useEffect(() => {
+		if (isErrorStream) {
+			let errorMessage = 'Ops! Something went wrong';
+			const statusCode = errorStream?.response?.status;
+			if(statusCode === 400) {
+				errorMessage = 'Please provide all information'
+			} 
+			toast.error(errorMessage);
+			setConfirmLoading(false);
+		}
+	}, [isErrorStream])
 	return (
-		<>
-			<div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)]">
-				<div className="md:grid md:grid-cols-3 md:gap-5 h-full w-full space-y-3 md:space-y-0">
-					<div className="md:col-span-2 w-full h-full md:overflow-auto flex flex-col items-center justify-center gap-5">
-						
-						{
-							isStream ? <StreamerVideo streamId={streamId} setIsStream={() => setIsStream((prevVal) => !prevVal)} /> : 
-							<div className="flex gap-3 flex-wrap">
-								<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white"
-									onClick={() => setModalOpen(true)}>
-									Start With Camera
+		<div className="space-y-5">
+			<div className="flex gap-3 flex-wrap">
+				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white"
+					onClick={() => setModalOpen(true)}>
+					Start With Camera
+				</button>
+				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white"
+					onClick={() => { }}>
+					Start With OBS
+				</button>
+			</div>
+			<div className="w-full bg-white dark:bg-meta-4 overflow-hidden rounded-lg shadow-md">
+				<div className="w-full overflow-x-auto">
+					<table className="w-full whitespace-no-wrap">
+						<thead>
+							<tr className="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+								<th className="px-4 py-3">Stream Id</th>
+								<th className="px-4 py-3">title</th>
+								<th className="px-4 py-3">Date stream</th>
+								<th className="px-4 py-3">Edit</th>
+							</tr>
+						</thead>
+						<tbody className="divide-y dark:divide-gray-700 dark:bg-gray-800">
+							{[].map((mod, index) => {
+								return (
+									<tr key={index} className="text-gray-700 dark:text-gray-400">
+										<td className="px-4 py-3">
+											<div className="flex items-center text-sm">
+												<div className="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+													<img className="object-cover w-full h-full rounded-full" src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="" loading="lazy" />
+													<div className="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+												</div>
+												<div>
+													<p className="font-semibold">{mod.username}</p>
+													<p className="text-xs text-gray-600 dark:text-gray-400">
+														Mod
+													</p>
+												</div>
+											</div>
+										</td>
+										<td className="px-4 py-3 text-xs">
+											<span className="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
+												{mod.role}
+											</span>
+										</td>
+										<td className="px-4 py-3 text-sm">
+											{mod.lastModified}
+										</td>
+										<td className="px-4 py-3 text-sm">
+											<div className="flex space-x-2">
+												<p className="p-2 w-8 h-8 text-center rounded-full font-semibold text-orange-700 bg-orange-100 dark:text-white dark:bg-orange-600 cursor-pointer">
+													!
+												</p>
+												<p className="p-2 w-8 h-8 text-center rounded-full font-semibold text-purple-700 bg-purple-100 dark:text-white dark:bg-purple-600 cursor-pointer" onClick={() => deleteMod(mod.id)}>
+													-
+												</p>
+											</div>
+										</td>
+									</tr>
+								)
+							})}
+
+
+						</tbody>
+					</table>
+				</div>
+				{modalDeleteOpen && (
+					<div className="fixed inset-0 flex items-center justify-center z-50">
+						<div className="absolute inset-0 bg-black opacity-50"></div>
+						<div className="bg-white dark:bg-meta-4 rounded-lg shadow-lg p-4 z-10">
+							<p className="text-lg font-semibold mb-2">Confirm Delete</p>
+							<p className="text-sm mb-4">Are you sure you want to delete this user?</p>
+							<div className="flex justify-end">
+								<button
+									className="px-4 py-2 mr-2 text-sm text-white bg-purple-500 rounded hover:bg-purple-600 focus:outline-none"
+									onClick={() => {}}
+								>
+									Delete
 								</button>
-								<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white"
-									onClick={() => { }}>
-									Start With OBS
+								<button
+									className="px-4 py-2 text-sm text-gray-700 bg-gray-300 rounded hover:bg-gray-400 focus:outline-none"
+									onClick={() => {}}
+								>
+									Cancel
 								</button>
 							</div>
-						}
-						
+						</div>
 					</div>
-					<div className="h-full w-full overflow-auto">
-						<ChatBox />
-					</div>
-				</div>
+				)}
 			</div>
+			
 			<Modal 
 				className='bg-slate-100 dark:bg-slate-600 rounded-lg dark:text-slate-200'
 				centered
@@ -233,7 +317,7 @@ const StudioPage = () => {
 					</div>
 				</div>
 			</Modal>
-		</>
+		</div>
 	);
 };
 

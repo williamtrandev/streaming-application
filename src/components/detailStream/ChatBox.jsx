@@ -83,8 +83,8 @@ const ChatBox = ({ streamId, socket }) => {
 					const newMessage = {
 						content: data?.content,
 						user: {
-							fullname: 'Tấn Thành',
-							profilePicture: 'https://avatars.githubusercontent.com/u/102520170?v=4'
+							fullname: auth?.user?.fullname,
+							profilePicture: auth?.user?.profilePicture
 						},
 						createdAt: new Date(Date.now()).toISOString(),
 					};
