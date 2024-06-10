@@ -118,6 +118,34 @@ const useGetEmail = (userId) => {
 	});
 }
 
+const getStreamerProfile = async (username) => {
+	const response = await APIClient.get(`/user/channel/${username}`);
+	return response.data;
+}
+
+const useGetStreamerProfile = (username) => {
+	return useQuery({
+		queryKey: ["streamerprofile", username],
+		queryFn: () => getStreamerProfile(username),
+		enabled: !!username,
+		refetchOnWindowFocus: false
+	});
+}
+
+const getStreamerAbout = async (username) => {
+	const response = await APIClient.get(`/user/about/${username}`);
+	return response.data;
+}
+
+const useGetStreamerAbout = (username) => {
+	return useQuery({
+		queryKey: ["streamerabout", username],
+		queryFn: () => getStreamerAbout(username),
+		enabled: !!username,
+		refetchOnWindowFocus: false
+	});
+}
+
 export {
 	useGetProfile,
 	useGetMiniProfile,
@@ -125,5 +153,7 @@ export {
 	useChangeProfileBanner,
 	useChangeProfileInfo,
 	useChangeLinks,
-	useGetEmail
+	useGetEmail,
+	useGetStreamerProfile,
+	useGetStreamerAbout
 };

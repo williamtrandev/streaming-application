@@ -1,10 +1,20 @@
-import { Link } from "react-router-dom";
-import { fakeStreamer } from "../../constants";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useGetStreamerAbout } from "../../api/user";
 
 const StreamerAboutPage = () => {
+    const { username } = useParams();
 
-    const about = fakeStreamer.about;
-    const links = fakeStreamer.links;
+    const [about, setAbout] = useState(null);
+    const [links, setLinks] = useState(null);
+
+    const { data: streamerData } = useGetStreamerAbout(username);
+    useEffect(() => {
+		if (streamerData) {
+            setAbout(streamerData.about);
+            setLinks(streamerData.links);
+		}
+	}, [streamerData]);
     
     return (
         <div className="">

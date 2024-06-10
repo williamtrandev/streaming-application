@@ -54,7 +54,7 @@ function App() {
           <Route path='/live/:streamId' element={<DetailStreamPage />} />
           <Route path='/following' element={<FollowingPage />} />
           <Route path='/search' element={<SearchPage />} />
-          <Route path='/:id' element={<StreamerInfoTabs />}>
+          <Route path='/:username' element={<StreamerInfoTabs />}>
             <Route path='about' element={<StreamerAboutPage />} />
             <Route path='streams' element={<StreamerStreamsPage />} />
             <Route path='' element={<StreamerHomePage />} />

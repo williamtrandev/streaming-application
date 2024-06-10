@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useSearchChannels } from '../../api/search';
+import ChannelCard from './ChannelCard';
 
-const ChannelsCarousel = ({ streamers }) => {
+const ChannelsCarousel = ({ q }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [cardsPerSlide, setCardsPerSlide] = useState(4);
+    const [streamers, setStreamers] = useState([]);
+
+    const { data: channelsData } = useSearchChannels(q);
+	useEffect(() => {
+		if (channelsData) {
+			setStreamers(channelsData.channels);
+		}
+	}, [channelsData]);
 
     const updateCardsPerSlide = () => {
         if (window.innerWidth < 640) {
-            setCardsPerSlide(1); // màn hình nhỏ
+            setCardsPerSlide(2); // màn hình nhỏ
         } else {
             setCardsPerSlide(4); // màn hình lớn hơn
         }
@@ -37,9 +47,9 @@ const ChannelsCarousel = ({ streamers }) => {
                 {streamers.map((streamer, index) => (
                     <div
                         key={index}
-                        className="w-full md:w-1/4 px-2 flex-shrink-0"
+                        className="w-1/2 md:w-1/4 px-2 flex-shrink-0"
                     >
-                        <div>{streamer.fullname}</div>
+                        <ChannelCard streamer={streamer} />
                     </div>
                 ))}
             </div>
