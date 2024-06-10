@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useEffect, useState, useContext } from "react";
 import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
 import FollowButton from "../detailStreamer/FollowButton";
-import FollowedButton from "../detailStreamer/FollowedButton";
 import { Link } from "react-router-dom";
 import { ModalContext } from "../../contexts/ModalContext";
 import { Track } from 'livekit-client';
@@ -42,10 +41,7 @@ const Streamer = ({ user }) => {
 				</Link>
 
 				<div className="flex items-center ml-15 mt-1 md:ml-4 md:mt-0">
-					{!followed && <FollowButton onClick={() => setFollowed(true)} />}
-                    {followed && <FollowedButton
-                        onUnfollowClick={handleShowUnfollowModal}
-						streamerName={user?.fullname} />}
+					<FollowButton streamerId={user._id} streamerName={user.fullname} />
 				</div>
 			</div>
 		</div>
