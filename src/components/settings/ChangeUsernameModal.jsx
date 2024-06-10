@@ -21,12 +21,10 @@ const ChangeUsernameModal = ({ show, onClose }) => {
     const changeUsernameDisabled = username == "" || password == "" || username == authUsername;
         !isValidUsername;
 
-        const { auth } = useAuth();
-        const token = auth?.accessToken;
-        const { mutate, isLoading, isError, error, isSuccess, data } = useChangeUsername();
+        const { mutate, isPending, isError, error, isSuccess, data } = useChangeUsername();
     
         const handleSave = async () => {
-            mutate({ token, username, password });
+            mutate({ username, password });
         };
     
         useEffect(() => {
@@ -100,10 +98,10 @@ const ChangeUsernameModal = ({ show, onClose }) => {
                     >Cancel</button>
                     <button
                         className={`px-2 py-1 rounded-md bg-purple-600 text-white hover:bg-purple-700
-                            ${changeUsernameDisabled || isLoading ? "pointer-events-none opacity-50" : ""}`}
+                            ${changeUsernameDisabled || isPending ? "pointer-events-none opacity-50" : ""}`}
                         onClick={handleSave}
                     >
-                        {isLoading ? "Saving..." : "Change Username" }
+                        {isPending ? "Saving..." : "Change Username" }
                     </button>
                 </div>
             </div>

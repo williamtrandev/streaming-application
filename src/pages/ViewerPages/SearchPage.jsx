@@ -18,8 +18,6 @@ const SearchPage = () => {
         }
     }, [streamsData]);
 
-    console.log(streams);
-
     return (
         <div className="space-y-4 divide-y divide-gray-300 dark:divide-gray-600">
             <div

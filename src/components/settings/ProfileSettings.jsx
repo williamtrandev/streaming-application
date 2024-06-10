@@ -14,13 +14,11 @@ const ProfileSettings = ({ username, userFullname = "", userAbout = "", canChang
 
     const saveDisable = !fullname || (fullname == currentProfile.fullname && about == currentProfile.about);
 
-    const { auth } = useAuth();
     const { authUsername, setAuthFullname } = useUser();
-    const token = auth?.accessToken;
-    const { mutate, isLoading, isError, error, isSuccess, data } = useChangeProfileInfo();
+    const { mutate, isPending, isError, error, isSuccess, data } = useChangeProfileInfo();
 
     const handleSave = async () => {
-        mutate({ token, fullname, about });
+        mutate({ fullname, about });
     };
 
     useEffect(() => {
@@ -106,10 +104,10 @@ const ProfileSettings = ({ username, userFullname = "", userAbout = "", canChang
                 <div className="flex justify-end py-4">
                     <button
                         className={`px-3 py-1 bg-purple-600 rounded-lg text-white hover:bg-purple-700
-                                ${saveDisable || isLoading ? "pointer-events-none opacity-50" : ""}`}
+                                ${saveDisable || isPending ? "pointer-events-none opacity-50" : ""}`}
                         onClick={handleSave}
                     >
-                        {isLoading ? "Saving..." : "Save"}
+                        {isPending ? "Saving..." : "Save"}
                     </button>
                 </div>
             </div>

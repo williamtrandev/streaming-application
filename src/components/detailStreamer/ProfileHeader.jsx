@@ -3,12 +3,10 @@ import { formatNumFollowers } from "../../utils/formatNumber";
 import FollowButton from "./FollowButton";
 import FollowedButton from "./FollowedButton";
 import { Dot } from "lucide-react";
-import { ModalContext } from "../../contexts/ModalContext";
 import { useGetStreamerProfile } from "../../api/user";
 
 const ProfileHeader = ({ username }) => {
 
-    const { handleShowUnfollowModal, followed, setFollowed } = useContext(ModalContext);
     const [streamer, setStreamer] = useState(null);
 
     const { data: streamerData } = useGetStreamerProfile(username);
@@ -47,10 +45,11 @@ const ProfileHeader = ({ username }) => {
                             {formatNumFollowers(streamer?.numFollowers)} followers
                         </div>
                     </div>
-                    {!followed && <FollowButton onClick={() => setFollowed(true)} />}
+                    {/* {!followed && <FollowButton onClick={() => setFollowed(true)} />}
                     {followed && <FollowedButton
                         onUnfollowClick={handleShowUnfollowModal}
-                        streamerName={streamer?.fullname} />}
+                        streamerName={streamer?.fullname} />} */}
+                    <FollowButton streamerId={streamer?._id} streamerName={streamer?.fullname} />
                 </div>
             </div>
         </div>

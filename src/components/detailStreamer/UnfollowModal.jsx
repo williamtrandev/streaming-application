@@ -1,13 +1,38 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import { toast } from "react-toastify";
+import { useUnfollow } from "../../api/user";
+import { ModalContext } from "../../contexts/ModalContext";
 
-const UnfollowModal = ({ show, onClose, onUnfollow, streamerName }) => {
+const UnfollowModal = ({ show, onClose }) => {
     if (!show) return null;
+
+    const { setFollowed, unfollowId, unfollowName, } = useContext(ModalContext);
+
+    // Unfollow
+    const { mutate, isError, isSuccess, error, data } = useUnfollow();
+
+    const handleUnfollow = () => {
+        mutate({ streamerId: unfollowId });
+    };
+
+    useEffect(() => {
+        if (data) {
+            setFollowed(false);
+            onClose();
+        }
+    }, [isSuccess]);
+
+    useEffect(() => {
+        const errorMessage = error?.response?.data?.message;
+        toast.error(errorMessage);
+    }, [isError]);
+
     return (
         <div className="fixed z-9999 inset-0 flex justify-center items-center
         bg-black bg-opacity-75 backdrop-blur-sm">
             <div className="w-[500px] relative bg-white dark:bg-boxdark p-5 rounded-lg space-y-4">
                 <div className="text-xl">
-                    Unfollow <span className="font-bold">{streamerName}</span>?
+                    Unfollow <span className="font-bold">{unfollowName}</span>?
                 </div>
                 <div>You will no longer receive notifications or see them in your followed streamers list.</div>
                 <div className="flex justify-end gap-2">
@@ -20,7 +45,7 @@ const UnfollowModal = ({ show, onClose, onUnfollow, streamerName }) => {
                     <button
                         className="px-2 py-1 rounded-md
                             bg-red-600 text-white hover:bg-red-700 dark:hover:bg-red-500"
-                        onClick={onUnfollow}
+                        onClick={handleUnfollow}
                     >Unfollow</button>
                 </div>
             </div>

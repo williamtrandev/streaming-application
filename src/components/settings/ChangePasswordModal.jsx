@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useChangePassword } from "../../api/auth";
 import { useAuth } from "../../contexts/AuthContext";
+import { useUser } from "../../contexts/UserContext";
 
 const ChangePasswordModal = ({ show, onClose }) => {
     if (!show) return null;
 
-    const { auth } = useAuth();
-    const username = auth?.user?.username;
+    const { authUsername } = useUser();
 
     const [showOldPassword, setShowOldPassword] = useState("password");
     const [showNewPassword, setShowNewPassword] = useState("password");
@@ -19,7 +19,7 @@ const ChangePasswordModal = ({ show, onClose }) => {
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const password8Char = newPassword.length >= 8;
-    const passwordIncludeUsername = newPassword.toLowerCase().includes(username.toLowerCase());
+    const passwordIncludeUsername = newPassword.toLowerCase().includes(authUsername.toLowerCase());
     const isValidPassword = password8Char && !passwordIncludeUsername;
 
     const isConfirmPasswordMatch = confirmPassword === newPassword;
@@ -27,11 +27,10 @@ const ChangePasswordModal = ({ show, onClose }) => {
     const changePasswordDisabled = oldPassword == "" || newPassword == "" || confirmPassword == "" ||
         !isValidPassword || !isConfirmPasswordMatch;
 
-        const token = auth?.accessToken;
-        const { mutate, isLoading, isError, error, isSuccess, data } = useChangePassword();
+        const { mutate, isPending, isError, error, isSuccess, data } = useChangePassword();
     
         const handleSubmit = async () => {
-            mutate({ token, oldPassword, newPassword });
+            mutate({ oldPassword, newPassword });
         };
     
         useEffect(() => {
@@ -171,10 +170,10 @@ const ChangePasswordModal = ({ show, onClose }) => {
                     >Cancel</button>
                     <button
                         className={`px-2 py-1 rounded-md bg-purple-600 text-white hover:bg-purple-700
-                            ${changePasswordDisabled || isLoading ? "pointer-events-none opacity-50" : ""}`}
+                            ${changePasswordDisabled || isPending ? "pointer-events-none opacity-50" : ""}`}
                         onClick={handleSubmit}
                     >
-                        {isLoading ? "On working..." : "Change Password"}
+                        {isPending ? "On working..." : "Change Password"}
                     </button>
                 </div>
             </div>

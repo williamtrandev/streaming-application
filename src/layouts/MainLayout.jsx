@@ -22,8 +22,7 @@ const MainLayout = () => {
 	const [showRegisterModal, setShowRegisterModal] = useState(false);
 	
 	const { 
-		showUnfollowModal, unfollowName, handleCloseUnfollowModal, 
-		setFollowed, 
+		showUnfollowModal, handleCloseUnfollowModal, 
 		showCropperModal, setShowCropperModal,
 		showChangePasswordModal, setShowChangePasswordModal,
 		showChangeUsernameModal, setShowChangeUsernameModal,
@@ -62,11 +61,7 @@ const MainLayout = () => {
 			<UnfollowModal 
 				show={showUnfollowModal} 
 				onClose={handleCloseUnfollowModal}
-				onUnfollow={() => {
-					setFollowed(false);
-					handleCloseUnfollowModal();
-				}}
-				streamerName={unfollowName} />
+			/>
 			<CropperModal
 				show={showCropperModal}
 				onClose={() => setShowCropperModal(false)}

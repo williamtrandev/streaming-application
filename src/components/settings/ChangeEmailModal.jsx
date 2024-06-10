@@ -2,7 +2,6 @@ import { toast } from "react-toastify";
 import { useUser } from "../../contexts/UserContext";
 import { useChangeEmail } from "../../api/auth";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
 import { Shield, X } from "lucide-react";
 import EmailInput from "../auth/EmailInput";
 import SendOtpButton from "../auth/SendOtpButton";
@@ -19,12 +18,10 @@ const ChangeEmailModal = ({ show, onClose }) => {
 
     const changeEmailDisabled = email == "" || otp == "" || email == authEmail || !isValidEmail;
 
-    const { auth } = useAuth();
-    const token = auth?.accessToken;
-    const { mutate, isLoading, isError, error, isSuccess, data } = useChangeEmail();
+    const { mutate, isPending, isError, error, isSuccess, data } = useChangeEmail();
 
     const handleSave = async () => {
-        mutate({ token, email, otp });
+        mutate({ email, otp });
     };
 
     useEffect(() => {
@@ -104,10 +101,10 @@ const ChangeEmailModal = ({ show, onClose }) => {
                     >Cancel</button>
                     <button
                         className={`px-2 py-1 rounded-md bg-purple-600 text-white hover:bg-purple-700
-                            ${changeEmailDisabled || isLoading ? "pointer-events-none opacity-50" : ""}`}
+                            ${changeEmailDisabled || isPending ? "pointer-events-none opacity-50" : ""}`}
                         onClick={handleSave}
                     >
-                        {isLoading ? "Saving..." : "Change Email"}
+                        {isPending ? "Saving..." : "Change Email"}
                     </button>
                 </div>
             </div>

@@ -31,6 +31,7 @@ const StreamerAboutPage = () => {
                                 <Link
                                     to={link.link}
                                     className="text-blue-600 dark:text-blue-500 hover:underline"
+                                    target="_blank" rel="noopener noreferrer"
                                 >
                                     {link.link}
                                 </Link>

@@ -30,14 +30,9 @@ const useGetMiniProfile = (userId) => {
 }
 
 const changeProfilePicture = async (data) => {
-	const { token, profilePicture } = data;
-	const formData = new FormData();
-	formData.append('file', profilePicture);
-	const response = await APIClient.put("/user/change-profile-picture", formData, {
-		headers: {
-			'Content-Type': 'multipart/form-data',
-			'Authorization': `Bearer ${token}`
-		},
+	const { profilePicture } = data;
+	const response = await APIClient.put("/user/change-profile-picture", {
+		profilePicture
 	});
 	return response.data;
 }
@@ -49,14 +44,9 @@ const useChangeProfilePicture = () => {
 }
 
 const changeProfileBanner = async (data) => {
-	const { token, profileBanner } = data;
-	const formData = new FormData();
-	formData.append('file', profileBanner);
-	const response = await APIClient.put("/user/change-profile-banner", formData, {
-		headers: {
-			'Content-Type': 'multipart/form-data',
-			'Authorization': `Bearer ${token}`
-		},
+	const { profileBanner } = data;
+	const response = await APIClient.put("/user/change-profile-banner", {
+		profileBanner
 	});
 	return response.data;
 }
@@ -68,14 +58,10 @@ const useChangeProfileBanner = () => {
 }
 
 const changeProfileInfo = async (data) => {
-	const { token, fullname, about } = data;
+	const { fullname, about } = data;
 	const response = await APIClient.put("/user/change-profile-info", {
 		fullname,
 		about
-	}, {
-		headers: {
-			'Authorization': `Bearer ${token}`
-		},
 	});
 	return response.data;
 }
@@ -87,13 +73,9 @@ const useChangeProfileInfo = () => {
 }
 
 const changeLinks = async (data) => {
-	const { token, links } = data;
+	const { links } = data;
 	const response = await APIClient.put("/user/change-links", {
 		links
-	}, {
-		headers: {
-			'Authorization': `Bearer ${token}`
-		},
 	});
 	return response.data;
 }
@@ -146,6 +128,54 @@ const useGetStreamerAbout = (username) => {
 	});
 }
 
+const getFollow = async ({ userId, streamerId }) => {
+	const response = await APIClient.get(`/user/follow/${userId}/${streamerId}`);
+	return response.data;
+}
+
+const useGetFollow = ({ userId, streamerId }) => {
+	return useQuery({
+		queryKey: ["follow", userId, streamerId],
+		queryFn: () => getFollow({ userId, streamerId }),
+		enabled: !!userId && !!streamerId,
+		refetchOnWindowFocus: false
+	});
+}
+
+const follow = async (data) => {
+	const response = await APIClient.post("/user/follow", data);
+	return response.data;
+}
+
+const useFollow = () => {
+	return useMutation({
+		mutationFn: (data) => follow(data)
+	});
+}
+
+const toggleNotification = async (data) => {
+	const response = await APIClient.put("/user/notification", data);
+	return response.data;
+}
+
+const useToggleNotification = () => {
+	return useMutation({
+		mutationFn: (data) => toggleNotification(data)
+	});
+}
+
+const unfollow = async (data) => {
+	const { streamerId } = data;
+	const response = await APIClient.delete(`/user/unfollow/${streamerId}`);
+	return response.data;
+}
+
+const useUnfollow = () => {
+	return useMutation({
+		mutationFn: (data) => unfollow(data)
+	});
+}
+
 export {
 	useGetProfile,
 	useGetMiniProfile,
@@ -155,5 +185,9 @@ export {
 	useChangeLinks,
 	useGetEmail,
 	useGetStreamerProfile,
-	useGetStreamerAbout
+	useGetStreamerAbout,
+	useGetFollow,
+	useFollow,
+	useToggleNotification,
+	useUnfollow
 };

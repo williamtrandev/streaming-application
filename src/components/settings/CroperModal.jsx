@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { ModalContext } from "../../contexts/ModalContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUser } from "../../contexts/UserContext";
+import { blobToBase64 } from "../../utils";
 
 const CropperModal = ({ show, onClose }) => {
     if (!show) return null;
@@ -13,15 +14,13 @@ const CropperModal = ({ show, onClose }) => {
     const [scale, setScale] = useState(1.0);
     const { src } = useContext(ModalContext);
 
-    const { auth } = useAuth();
     const { setAuthProfilePicture } = useUser();
-    const token = auth?.accessToken;
-    const { mutate, isLoading, isError, error, isSuccess, data } = useChangeProfilePicture();
+    const { mutate, isPending, isError, error, isSuccess, data } = useChangeProfilePicture();
 
     const handleSave = async () => {
-        const image = cropRef.current.getImage();
-        const profilePicture = await new Promise(resolve => image.toBlob(resolve, 'image/jpg'));
-        mutate({ token, profilePicture });
+        const image = cropRef.current.getImage().toDataURL();
+        const profilePicture = await blobToBase64(image);
+        mutate({ profilePicture });
     };
 
     useEffect(() => {
@@ -85,10 +84,10 @@ const CropperModal = ({ show, onClose }) => {
                     <button
                         className={`px-2 py-1 rounded-md
                             bg-purple-600 text-white hover:bg-purple-700
-                            ${isLoading ? "pointer-events-none opacity-50" : ""}`}
+                            ${isPending ? "pointer-events-none opacity-50" : ""}`}
                         onClick={handleSave}
                     >
-                        {isLoading ? "Saving..." : "Save"}
+                        {isPending ? "Saving..." : "Save"}
                     </button>
                 </div>
             </div>

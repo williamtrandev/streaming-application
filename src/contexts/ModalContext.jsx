@@ -5,6 +5,7 @@ export const ModalContext = createContext();
 
 export const ModalProvider = ({ children }) => {
     const [showUnfollowModal, setShowUnfollowModal] = useState(false);
+    const [unfollowId, setUnfollowId] = useState("");
     const [unfollowName, setUnfollowName] = useState("");
     const [followed, setFollowed] = useState(false);
 
@@ -22,7 +23,8 @@ export const ModalProvider = ({ children }) => {
 
     const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
 
-    const handleShowUnfollowModal = (name) => {
+    const handleShowUnfollowModal = (id, name) => {
+        setUnfollowId(id);
         setUnfollowName(name);
         setShowUnfollowModal(true);
     };
@@ -30,12 +32,13 @@ export const ModalProvider = ({ children }) => {
     const handleCloseUnfollowModal = () => {
         setShowUnfollowModal(false);
         setUnfollowName("");
+        setUnfollowId("");
     };
 
     return (
         <ModalContext.Provider 
             value={{ 
-                showUnfollowModal, unfollowName, handleShowUnfollowModal, handleCloseUnfollowModal,
+                showUnfollowModal, unfollowId, unfollowName, handleShowUnfollowModal, handleCloseUnfollowModal,
                 followed, setFollowed, 
                 colorMode, setColorMode,
                 showCropperModal, setShowCropperModal, src, setSrc, 
