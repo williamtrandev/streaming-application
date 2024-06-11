@@ -94,6 +94,42 @@ const useDeleteStream = () => {
 		mutationFn: (streamId) => deleteStream(streamId)
 	})
 }
+
+const getAllMods = async () => {
+	const response = await APIClient.get('/studio/mod');
+	return response.data;
+}
+
+const useGetAllMod = (userId) => {
+	return useQuery({
+		queryKey: ["Mods", userId],
+		queryFn: () => getAllMods()
+	})
+}
+
+const addMod = async (data) => {
+	console.log(data)
+	const response = await APIClient.post("/studio/mod", data);
+	return response.data;
+}
+
+const useAddMod = () => {
+	return useMutation({
+		mutationFn: (data) => addMod(data)
+	})
+}
+
+const deleteMod = async (modId) => {
+	const response = await APIClient.delete(`/studio/mod/${modId}`);
+	return response.data;
+};
+
+const useDeleteMod = () => {
+	return useMutation({
+		mutationFn: (modId) => deleteMod(modId)
+	});
+};
+
 export {
 	useSaveStream,
 	useSaveNotification,
@@ -102,5 +138,8 @@ export {
 	useGetDetailStream,
 	useGetAllComingStreams,
 	useEditStream,
-	useDeleteStream
+	useDeleteStream,
+	useGetAllMod,
+	useAddMod,
+	useDeleteMod
 };
