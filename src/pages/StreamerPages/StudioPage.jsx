@@ -1,17 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
-import { ChevronRight, Pencil } from 'lucide-react';
+import { Bolt, ChevronRight, CircleX, Pencil } from 'lucide-react';
 import TagItem from '../../components/studio/TagItem';
 import { toast } from 'react-toastify';
-import { useSaveNotification, useSaveStream } from '../../api/studio';
+import { useGetAllComingStreams, useSaveNotification, useSaveStream } from '../../api/studio';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSelector } from 'react-redux';
 import { selectSocket } from '../../redux/slices/socketSlice';
-import ChatBox from '../../components/detailStream/ChatBox';
 import { DatePicker, Modal } from 'antd';
 import moment from 'moment';
-import StreamerVideo from '../../components/studio/StreamerVideo';
+import { Skeleton } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { blobToBase64 } from '../../utils';
+import ModalDetailStream from '../../components/studio/ModalDetailStream';
+import ModalDeleteStream from '../../components/studio/ModalDeleteStream';
 
 
 const rainbowColors = [
@@ -42,9 +43,12 @@ const StudioPage = () => {
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [selectedTime, setSelectedTime] = useState(moment());
 	const [modalDeleteOpen, setModalDeleteOpen] = useState(false); 
-
+	const { data: comingStreamsData, refetch: comingStreamsRefetch } = useGetAllComingStreams(userId);
+	const [modalEditOpen, setModalEditOpen] = useState(false);
+	const [streamIdClicked, setStreamIdClicked] = useState(null);
+	const [streamTitleClicked, setStreamTitleClicked] = useState('');
 	const navigate = useNavigate();
-
+	console.log(userId)
 	const submitTagHandler = () => {
 		if (tagArr.length >= 20) {
 			toast.error("You can only add 20 tags");
@@ -89,7 +93,17 @@ const StudioPage = () => {
 		}
 		saveStream(data);
 	};
-
+	const handleClickDetail = (streamId) => {
+		console.log("CLICKED", streamId)
+		setModalEditOpen(true);
+		setStreamIdClicked(streamId);
+	}
+	const handleClickDelete = (streamId, title) => {
+		console.log("CLICKED", streamId)
+		setModalDeleteOpen(true);
+		setStreamIdClicked(streamId);
+		setStreamTitleClicked(title);
+	}
 	useEffect(() => {
 		if (socket && isSuccessStream) {
 			setStreamId(streamData?.stream?._id);
@@ -143,75 +157,69 @@ const StudioPage = () => {
 								<th className="px-4 py-3">Edit</th>
 							</tr>
 						</thead>
-						<tbody className="divide-y dark:divide-gray-700 dark:bg-gray-800">
-							{[].map((mod, index) => {
-								return (
+						{!comingStreamsData ?
+							<tbody className="divide-y dark:divide-gray-700 dark:bg-gray-800">
+								{[...Array(5)].map((_, index) => (
 									<tr key={index} className="text-gray-700 dark:text-gray-400">
 										<td className="px-4 py-3">
 											<div className="flex items-center text-sm">
-												<div className="relative hidden w-8 h-8 mr-3 rounded-full md:block">
-													<img className="object-cover w-full h-full rounded-full" src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="" loading="lazy" />
-													<div className="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
-												</div>
-												<div>
-													<p className="font-semibold">{mod.username}</p>
-													<p className="text-xs text-gray-600 dark:text-gray-400">
-														Mod
-													</p>
-												</div>
+												<Skeleton.Input active size="small" style={{ width: 100 }} />
 											</div>
 										</td>
 										<td className="px-4 py-3 text-xs">
-											<span className="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
-												{mod.role}
-											</span>
+											<Skeleton.Input active size="small" style={{ width: 80 }} />
 										</td>
 										<td className="px-4 py-3 text-sm">
-											{mod.lastModified}
+											<Skeleton.Input active size="small" style={{ width: 100 }} />
 										</td>
 										<td className="px-4 py-3 text-sm">
 											<div className="flex space-x-2">
-												<p className="p-2 w-8 h-8 text-center rounded-full font-semibold text-orange-700 bg-orange-100 dark:text-white dark:bg-orange-600 cursor-pointer">
-													!
-												</p>
-												<p className="p-2 w-8 h-8 text-center rounded-full font-semibold text-purple-700 bg-purple-100 dark:text-white dark:bg-purple-600 cursor-pointer" onClick={() => deleteMod(mod.id)}>
-													-
-												</p>
+												<Skeleton.Button active size="small" shape="circle" style={{ width: 32, height: 32 }} />
 											</div>
 										</td>
 									</tr>
-								)
-							})}
+								))}
+							</tbody>
+							:
+							<tbody className="divide-y dark:divide-gray-700 dark:bg-gray-800">
+								{comingStreamsData?.data.map((stream, index) => {
+									return (
+										<tr key={index} className="text-gray-700 dark:text-gray-400">
+											<td className="px-4 py-3">
+												<div className="flex items-center text-sm">
+													<p className="font-semibold">{stream._id}</p>
+												</div>
+											</td>
+											<td className="px-4 py-3 text-xs">
+												<span className="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-green-200 dark:bg-green-600">
+													{stream?.title}
+												</span>
+											</td>
+											<td className="px-4 py-3 text-sm">
+												{stream?.dateStream && new Date(stream?.dateStream).toLocaleString()}
+											</td>
+											<td className="px-4 py-3 text-sm">
+												<div className="flex space-x-2">
+													<div className="p-2 w-8 h-8 flex items-center justify-center rounded-full font-semibold text-orange-700 bg-orange-100 dark:text-white dark:bg-purple-600 cursor-pointer" onClick={() => handleClickDetail(stream._id)}>
+														<Bolt />
+													</div>
+													<div className="p-2 w-8 h-8 flex items-center justify-center text-center rounded-full font-semibold text-purple-700 bg-purple-100 dark:text-white dark:bg-purple-600 cursor-pointer" onClick={() => handleClickDelete(stream._id, stream.title)}>
+														<CircleX />
+													</div>
+												</div>
+											</td>
+										</tr>
+									)
+								})}
+							</tbody>
+						}
 
-
-						</tbody>
 					</table>
 				</div>
-				{modalDeleteOpen && (
-					<div className="fixed inset-0 flex items-center justify-center z-50">
-						<div className="absolute inset-0 bg-black opacity-50"></div>
-						<div className="bg-white dark:bg-meta-4 rounded-lg shadow-lg p-4 z-10">
-							<p className="text-lg font-semibold mb-2">Confirm Delete</p>
-							<p className="text-sm mb-4">Are you sure you want to delete this user?</p>
-							<div className="flex justify-end">
-								<button
-									className="px-4 py-2 mr-2 text-sm text-white bg-purple-500 rounded hover:bg-purple-600 focus:outline-none"
-									onClick={() => {}}
-								>
-									Delete
-								</button>
-								<button
-									className="px-4 py-2 text-sm text-gray-700 bg-gray-300 rounded hover:bg-gray-400 focus:outline-none"
-									onClick={() => {}}
-								>
-									Cancel
-								</button>
-							</div>
-						</div>
-					</div>
-				)}
+				
 			</div>
-			
+			<ModalDeleteStream open={modalDeleteOpen} setOpen={setModalDeleteOpen} title={streamTitleClicked} streamId={streamIdClicked} refetch={comingStreamsRefetch}/>
+			<ModalDetailStream modalOpen={modalEditOpen} setModalOpen={setModalEditOpen} streamId={streamIdClicked} refetch={comingStreamsRefetch}/>
 			<Modal 
 				className='bg-slate-100 dark:bg-slate-600 rounded-lg dark:text-slate-200'
 				centered

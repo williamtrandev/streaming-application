@@ -57,3 +57,9 @@
 .ant-modal-content {
 	background-color: transparent !important;
 }
+.dark .ant-skeleton-element .ant-skeleton-avatar,
+.dark .ant-skeleton-element .ant-skeleton-input,
+.dark .ant-skeleton-element .ant-skeleton-button {
+	background-color: #404e67 !important;
+	color: #a0aec0 !important;
+}
