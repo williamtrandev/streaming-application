@@ -1,27 +1,16 @@
 import { Calendar, ThumbsDown, ThumbsUp, Timer, Users } from "lucide-react";
-import axios from 'axios';
 import { useEffect, useState, useContext } from "react";
 import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
 import FollowButton from "../detailStreamer/FollowButton";
 import { Link } from "react-router-dom";
 import { Track } from 'livekit-client';
 import '@livekit/components-styles';
-import {
-	ControlBar,
-	CarouselLayout,
-	LiveKitRoom,
-	ParticipantTile,
-	RoomAudioRenderer,
-	VideoConference,
-	useTracks,
-	VideoTrack,
-	TrackRefContext
-} from '@livekit/components-react';
+import { LiveKitRoom } from '@livekit/components-react';
 import { jwtDecode } from "jwt-decode";
-
 import { generateViewerToken } from "../../utils/livekit";
 import StreamVideoControl from "./StreamVideoControl";
 import { useAuth } from "../../contexts/AuthContext";
+import { v4 as uuidv4 } from 'uuid';
 
 const Streamer = ({ user }) => {
 	return (
@@ -54,8 +43,10 @@ const StreamDescription = ({ stream }) => {
 			<div className="flex justify-between">
 				<div className="space-y-1">
 					<div className="flex gap-2">
-						<Timer className="w-[1rem]" />
-						<span>09:02:20</span>
+						{/* <Timer className="w-[1rem]" />
+						<span>09:02:20</span> */}
+						<Calendar className="w-[1rem]" />
+						<span>{stream?.dateStream && new Date(stream?.dateStream).toLocaleString()}</span>
 					</div>
 					<div className="flex gap-2">
 						<Users className="w-[1rem]" />
@@ -77,13 +68,16 @@ const StreamDescription = ({ stream }) => {
 			</div>
 			<div className={isExpanded ? "flex flex-col gap-4" : ""}>
 				{isExpanded ? stream?.description : `${stream?.description?.substring(0, 200)}...`}
-				<button
-					className="px-1 rounded-lg bg-neutral-200 dark:bg-neutral-700
-						hover:bg-neutral-300 dark:hover:bg-neutral-600 w-fit text-start"
-					onClick={() => setIsExpanded(!isExpanded)}
-				>
-					{isExpanded ? "Show less" : "More"}
-				</button>
+				{
+				stream?.description?.length > 200 && 
+					<button
+						className="px-1 rounded-lg bg-neutral-200 dark:bg-neutral-700
+							hover:bg-neutral-300 dark:hover:bg-neutral-600 w-fit text-start"
+						onClick={() => setIsExpanded(!isExpanded)}
+					>
+						{isExpanded ? "Show less" : "More"}
+					</button>
+				}
 			</div>
 		</div>
 	)
@@ -94,7 +88,7 @@ const StreamVideo = ({ streamData }) => {
 	const streamId = streamData?.stream?._id;
 	const [viewerToken, setViewerToken] = useState("");
 	const { auth } = useAuth();
-	const userId = auth?.user?._id || 'Anonymous';
+	const userId = auth?.user?._id || uuidv4();
 	useEffect(() => {
 		if(!streamId) return;
 		const getOrCreateViewerToken = async () => {
@@ -133,7 +127,7 @@ const StreamVideo = ({ streamData }) => {
 				className="flex flex-1 flex-col"
 			>
 				<div className="flex h-full flex-1">
-					<div className="flex-1 flex-col container">
+					<div className="flex-1 flex-col container  rounded-lg overflow-hidden">
 						<StreamVideoControl streamId={streamId} />
 					</div>
 				</div>

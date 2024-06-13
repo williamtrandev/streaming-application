@@ -57,10 +57,10 @@ const StreamerRemote = ({ participant }) => {
 	const onVolumeChange = useCallback(
 		(e) => {
 			setMuted(e.target.value === "0");
-			setVolume(+e.target.value);
+			setVolume(e.target.value);
 			if (videoEl?.current) {
 				videoEl.current.muted = e.target.value === "0";
-				videoEl.current.volume = +e.target.value * 0.01;
+				videoEl.current.volume = e.target.value * 0.01;
 			}
 		},
 		[]

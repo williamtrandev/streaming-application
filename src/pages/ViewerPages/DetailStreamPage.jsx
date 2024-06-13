@@ -5,7 +5,7 @@ import ChatBox from '../../components/detailStream/ChatBox';
 import { useSelector } from 'react-redux';
 import { selectSocket } from '../../redux/slices/socketSlice';
 import { useAuth } from '../../contexts/AuthContext';
-import { useGetDetailStreamAndToken } from '../../api/studio';
+import { useGetDetailStream } from '../../api/studio';
 import Spinner from '../../components/commons/spinner/Spinner';
 
 const DetailStreamPage = () => {
@@ -14,7 +14,7 @@ const DetailStreamPage = () => {
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
 	const socket = useSelector(selectSocket);
-	const { data: detailStreamData, isLoading: isDetailLoading } = useGetDetailStreamAndToken(streamId);
+	const { data: detailStreamData, isLoading: isDetailLoading } = useGetDetailStream(streamId);
 	useEffect(() => {
 		if (socket) {
 			socket.emit('joinRoom', streamId, userId);

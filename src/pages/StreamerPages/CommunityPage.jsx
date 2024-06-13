@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
-import { Check } from 'lucide-react';
-import { AutoComplete, Flex } from 'antd';
+import { useState, useEffect } from 'react';
+import { Bolt, Check, CircleX } from 'lucide-react';
+import { AutoComplete, Flex, Skeleton } from 'antd';
+import useDebounce from '../../hooks/useDebouce';
+import { useSearchUsersForMod } from '../../api/search';
+import ModalDeleteMod from '../../components/community/ModalDeleteMod';
+import { useAddMod, useGetAllMod } from '../../api/studio';
+import { useAuth } from '../../contexts/AuthContext';
+import { toast } from 'react-toastify';
 
 const fakeMode = [
 	{ id: 1, username: "William Tran", role: "King", lastModified: "2020-01-01" },
@@ -9,40 +15,77 @@ const fakeMode = [
 	{ id: 4, username: "William Tran 4", role: "King", lastModified: "2020-01-01" },
 	{ id: 5, username: "William Tran 5", role: "King", lastModified: "2020-01-01" },
 ]
-const mockVal = (str, repeat = 1) => ({
-	value: str.repeat(repeat),
-  });
 const CommunityPage = () => {
+	const { auth } = useAuth();
+	const userId = auth?.user?._id;
 	const [options, setOptions] = useState([]);
-	const getPanelValue = (searchText) =>
-		!searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)];
 	const [value, setValue] = useState('');
+	const searchText = useDebounce(value, 500);
+	const { data: dataSearch, isLoading, error } = useSearchUsersForMod({ q: searchText, limit: 10, exclude: userId });
+	const [modAddId, setModAddId] = useState(null);
 	const [mods, setMods] = useState(fakeMode);
 	const [deleteId, setDeleteId] = useState(null); 
-	const [isModalOpen, setIsModalOpen] = useState(false); 
-	const deleteMod = (id) => {
-		setDeleteId(id);
-		setIsModalOpen(true);
-	};
+	const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
+	const { data: modsData, refetch: modsRefetch } = useGetAllMod(userId);
+	const { mutate: addMod, isSuccess: isAddSuccess, isError: isAddError, error: addError } = useAddMod();
+	const [modalEditOpen, setModalEditOpen] = useState(false);
+	const [userIdClicked, setUserIdClicked] = useState(null);
+	const [usernameClicked, setUsernameClicked] = useState('');
 	const [isAdd, setIsAdd] = useState(false);
-	const confirmDelete = () => {
-		const newMods = mods.filter(mod => mod.id !== deleteId); 
-		setMods(newMods);
-		setIsModalOpen(false); 
-	}
-
-	const closeModal = () => {
-		setIsModalOpen(false); 
-	}
+	console.log(modsData)
 	const handleSelect = (value, option) => {
 		setIsAdd(true);
         setValue(value);
+		setModAddId(option.id);
     };
 	const handleAddMod = () => {
         setIsAdd(false);
 		setValue('');
-		setMods([...mods, { id: mods.length + 1, username: value, role: "King", lastModified: "2020-01-01" }]);
+		addMod({ modId: modAddId });
     };
+	const handleClickDetail = (userId) => {
+		console.log("CLICKED", userId)
+		setModalEditOpen(true);
+		setUserIdClicked(userId);
+	}
+	const handleClickDelete = (userId, title) => {
+		console.log("CLICKED", userId)
+		setModalDeleteOpen(true);
+		setUserIdClicked(userId);
+		setUsernameClicked(title);
+	}
+	useEffect(() => {
+		if (searchText.length === 0) {
+			setOptions([]);
+		} else if (dataSearch && dataSearch.channels) {
+			setOptions(
+				dataSearch.channels.map(user => ({
+					id: user._id,
+					value: user.username,
+					label: (
+						<div className="flex items-center gap-4">
+							<div className="w-8 h-8 rounded-full overflow-hidden">
+								<img src={user?.profilePicture} alt="" className="w-full h-full object-cover" />
+							</div>
+							<div>
+								<strong>{user.fullname}</strong> <br />
+								<span style={{ color: 'gray' }}>{user.username}</span>
+							</div>
+						</div>
+					),
+				}))
+			);
+		}
+	}, [dataSearch, searchText]);
+	useEffect(() => {
+		if(isAddSuccess) {
+			toast.success('Add mod successfully');
+			modsRefetch();
+		}
+		if(isAddError) {
+			toast.error('Oops! Something went wrong');
+		}
+	}, [isAddSuccess, isAddError])
 	return (
 		<div className="space-y-5">
 			<div className="hidden sm:block">
@@ -52,9 +95,9 @@ const CommunityPage = () => {
 						    className="text-black focus:outline-none xl:w-125 px-3"
 							popupClassName="dark:bg-gray-800"
 							options={options}
+							value={value}
 							placeholder="Search users..."
 							onSearch={(text) => {
-								setOptions(getPanelValue(text));
 								setValue(text);
 							}}
 							onSelect={handleSelect}
@@ -81,74 +124,77 @@ const CommunityPage = () => {
 								<th className="px-4 py-3">Edit</th>
 							</tr>
 						</thead>
-						<tbody className="divide-y dark:divide-gray-700 dark:bg-gray-800">
-							{mods.map((mod, index) => {
-								return (
+						{!modsData ?
+							<tbody className="divide-y dark:divide-gray-700 dark:bg-gray-800">
+								{[...Array(5)].map((_, index) => (
 									<tr key={index} className="text-gray-700 dark:text-gray-400">
 										<td className="px-4 py-3">
 											<div className="flex items-center text-sm">
-												<div className="relative hidden w-8 h-8 mr-3 rounded-full md:block">
-													<img className="object-cover w-full h-full rounded-full" src="https://avatars.githubusercontent.com/u/102520170?v=4" alt="" loading="lazy" />
-													<div className="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
-												</div>
-												<div>
-													<p className="font-semibold">{mod.username}</p>
-													<p className="text-xs text-gray-600 dark:text-gray-400">
-														Mod
-													</p>
-												</div>
+												<Skeleton.Input active size="small" style={{ width: 100 }} />
 											</div>
 										</td>
 										<td className="px-4 py-3 text-xs">
-											<span className="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
-												{mod.role}
-											</span>
+											<Skeleton.Input active size="small" style={{ width: 80 }} />
 										</td>
 										<td className="px-4 py-3 text-sm">
-											{mod.lastModified}
+											<Skeleton.Input active size="small" style={{ width: 100 }} />
 										</td>
 										<td className="px-4 py-3 text-sm">
 											<div className="flex space-x-2">
-												<p className="p-2 w-8 h-8 text-center rounded-full font-semibold text-orange-700 bg-orange-100 dark:text-white dark:bg-orange-600 cursor-pointer">
-													!
-												</p>
-												<p className="p-2 w-8 h-8 text-center rounded-full font-semibold text-purple-700 bg-purple-100 dark:text-white dark:bg-purple-600 cursor-pointer" onClick={() => deleteMod(mod.id)}>
-													-
-												</p>
+												<Skeleton.Button active size="small" shape="circle" style={{ width: 32, height: 32 }} />
 											</div>
 										</td>
 									</tr>
-								)
-							})}
-							
-		
-						</tbody>
+								))}
+							</tbody>
+							:
+							<tbody className="divide-y dark:divide-gray-700 dark:bg-gray-800">
+								{modsData?.data.map((mod, index) => {
+									return (
+										<tr key={index} className="text-gray-700 dark:text-gray-400">
+											<td className="px-4 py-3">
+												<div className="flex items-center text-sm">
+													<div className="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+														<img className="object-cover w-full h-full rounded-full" src={mod?.user?.profilePicture} alt="" loading="lazy" />
+														<div className="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+													</div>
+													<div>
+														<p className="font-semibold">{mod?.user?.username}</p>
+														<p className="text-xs text-gray-600 dark:text-gray-400">
+															Mod
+														</p>
+													</div>
+												</div>
+											</td>
+											<td className="px-4 py-3 text-xs">
+												<span className="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
+													{mod.role}
+												</span>
+											</td>
+											<td className="px-4 py-3 text-sm">
+												{mod?.updatedAt && new Date(mod.updatedAt).toLocaleString()}
+											</td>
+											<td className="px-4 py-3 text-sm">
+												<div className="flex space-x-2">
+													<div className="p-2 w-8 h-8 flex items-center justify-center rounded-full font-semibold text-orange-700 bg-orange-100 dark:text-white dark:bg-purple-600 cursor-pointer" onClick={() => handleClickDetail(mod?.user?._id)}>
+														<Bolt />
+													</div>
+													<div className="p-2 w-8 h-8 flex items-center justify-center text-center rounded-full font-semibold text-purple-700 bg-purple-100 dark:text-white dark:bg-purple-600 cursor-pointer" onClick={() => handleClickDelete(mod?.user?._id, mod?.user?.username)}>
+														<CircleX />
+													</div>
+												</div>
+											</td>
+										</tr>
+									)
+								})}
+								
+			
+							</tbody>
+						}
 					</table>
 				</div>
-				{isModalOpen && (
-	                <div className="fixed inset-0 flex items-center justify-center z-50">
-						<div className="absolute inset-0 bg-black opacity-50"></div>
-	                    <div className="bg-white dark:bg-meta-4 rounded-lg shadow-lg p-4 z-10">
-	                        <p className="text-lg font-semibold mb-2">Confirm Delete</p>
-	                        <p className="text-sm mb-4">Are you sure you want to delete this user?</p>
-	                        <div className="flex justify-end">
-	                            <button
-	                                className="px-4 py-2 mr-2 text-sm text-white bg-purple-500 rounded hover:bg-purple-600 focus:outline-none"
-	                                onClick={confirmDelete}
-	                            >
-	                                Delete
-	                            </button>
-	                            <button
-	                                className="px-4 py-2 text-sm text-gray-700 bg-gray-300 rounded hover:bg-gray-400 focus:outline-none"
-	                                onClick={closeModal}
-	                            >
-	                                Cancel
-	                            </button>
-	                        </div>
-	                    </div>
-	                </div>
-	            )}
 			</div>
+			<ModalDeleteMod open={modalDeleteOpen} setOpen={setModalDeleteOpen} username={usernameClicked} userId={userIdClicked} refetch={modsRefetch} />
 		</div>
 	)
 }
