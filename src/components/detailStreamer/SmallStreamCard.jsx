@@ -1,20 +1,20 @@
 import { Link } from 'react-router-dom';
 import { Radio, Users } from "lucide-react";
-import { formatNumViewers } from '../../utils/formatNumber';
+import { formatDuration, formatNumViewers, formatTimeDifference } from '../../utils/formatNumber';
 const SmallStreamCard = ({
 	index,
 	stream
 }) => {
 	return (
-		<Link to={`/live/${stream.id}`}>
+		<Link to={`/live/${stream._id}`}>
 			<div className="rounded-2xl border-r-2 border-b-2 border-transparent
 				hover:border-purple-600 dark:hover:border-gray-300">
 				<div className='bg-white dark:bg-meta-4 rounded-2xl text-theme shadow-md overflow-hidden'>
 					<div className="relative">
-						<img src={stream.preview_image} alt="" className="object-contain" />
+						<img src={stream.previewImage?.url} alt="" className="object-contain" />
 						<div className="bg-slate-700 text-white px-1 rounded-md text-sm
 						absolute bottom-3 right-3 flex items-center gap-1">
-							01:02:03
+							{formatDuration(stream.duration)}
 						</div>
 					</div>
 
@@ -25,10 +25,10 @@ const SmallStreamCard = ({
 						<div className="flex justify-between">
 							<p className="w-full flex items-center gap-1 text-sm">
 								<Users size={14} className="w-4" />
-								{formatNumViewers(stream.num_viewers)}
+								{formatNumViewers(stream.numViews)}
 							</p>
 							<p className="text-sm whitespace-nowrap">
-								3 days ago
+								{formatTimeDifference(stream.dateStream)}
 							</p>
 						</div>
 					</div>

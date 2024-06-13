@@ -1,14 +1,47 @@
-import { streams } from "../../constants";
+import { useEffect, useState } from "react";
+import { useGetLikedStreams } from "../../api/stream";
 import StreamCard from "../../components/home/StreamCard";
 
 const LikedPage = () => {
+	const [likedHistories, setLikedHistories] = useState([]);
+    const [page, setPage] = useState(1);
+	const [hasMore, setHasMore] = useState(true);
+
+    const { data, refetch } = useGetLikedStreams(page);
+    useEffect(() => {
+        if (data) {
+            if (page == 1) {
+                setLikedHistories(data.histories);
+            } else {
+                setLikedHistories((prevStreams) => [...prevStreams, ...data.histories]);
+            }
+            setHasMore(data.histories.length > 0);
+        }
+    }, [data])
+
+    useEffect(() => {
+        if (hasMore && page > 1) {
+            refetch();
+        }
+    }, [page]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
+            setPage((prevPage) => prevPage + 1);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
         <div className='w-full mb-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5'>
-			{streams.map((stream, index) => (
+			{likedHistories.map((history, index) => (
 				<StreamCard
 					key={index}
 					index={index}
-					stream={stream}
+					stream={history.stream}
 				/>
 			))}
 		</div>

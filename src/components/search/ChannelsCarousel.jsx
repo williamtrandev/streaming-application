@@ -9,11 +9,11 @@ const ChannelsCarousel = ({ q }) => {
     const [streamers, setStreamers] = useState([]);
 
     const { data: channelsData } = useSearchChannels(q);
-	useEffect(() => {
-		if (channelsData) {
-			setStreamers(channelsData.channels);
-		}
-	}, [channelsData]);
+    useEffect(() => {
+        if (channelsData) {
+            setStreamers(channelsData.channels);
+        }
+    }, [channelsData]);
 
     const updateCardsPerSlide = () => {
         if (window.innerWidth < 640) {
@@ -41,40 +41,45 @@ const ChannelsCarousel = ({ q }) => {
         setCurrentIndex(newIndex);
     };
 
-    return (
-        <div className="relative w-full overflow-hidden">
-            <div className="flex transition-transform ease-out duration-500" style={{ transform: `translateX(-${currentIndex * (100 / cardsPerSlide)}%)` }}>
-                {streamers.map((streamer, index) => (
-                    <div
-                        key={index}
-                        className="w-1/2 md:w-1/4 px-2 flex-shrink-0"
-                    >
-                        <ChannelCard streamer={streamer} />
-                    </div>
-                ))}
-            </div>
+    if (streamers.length == 0) return null;
 
-            {/* Previous Button */}
-            <button
-                onClick={prevSlide}
-                className={`absolute top-1/2 left-0 transform -translate-y-1/2 p-2
+    return (
+        <div className="space-y-2 pt-2">
+            <div>Channels</div>
+            <div className="relative w-full overflow-hidden">
+                <div className="flex transition-transform ease-out duration-500" style={{ transform: `translateX(-${currentIndex * (100 / cardsPerSlide)}%)` }}>
+                    {streamers.map((streamer, index) => (
+                        <div
+                            key={index}
+                            className="w-1/2 md:w-1/4 px-2 flex-shrink-0"
+                        >
+                            <ChannelCard streamer={streamer} />
+                        </div>
+                    ))}
+                </div>
+
+                {/* Previous Button */}
+                <button
+                    onClick={prevSlide}
+                    className={`absolute top-1/2 left-0 transform -translate-y-1/2 p-2
                     bg-neutral-200 dark:bg-neutral-700 rounded-full shadow-md 
                     hover:bg-neutral-300 dark:hover:bg-neutral-600 
                     ${currentIndex === 0 ? "hidden" : ""}`}
-            >
-                <ChevronLeft />
-            </button>
+                >
+                    <ChevronLeft />
+                </button>
 
-            {/* Next Button */}
-            <button
-                onClick={nextSlide}
-                className={`absolute top-1/2 right-0 transform -translate-y-1/2 p-2
+                {/* Next Button */}
+                <button
+                    onClick={nextSlide}
+                    className={`absolute top-1/2 right-0 transform -translate-y-1/2 p-2
                     bg-neutral-200 dark:bg-neutral-700 rounded-full shadow-md 
                     hover:bg-neutral-300 dark:hover:bg-neutral-600
                     ${currentIndex >= streamers.length - cardsPerSlide ? "hidden" : ""}`}
-            >
-                <ChevronRight />
-            </button>
+                >
+                    <ChevronRight />
+                </button>
+            </div>
         </div>
     );
 };

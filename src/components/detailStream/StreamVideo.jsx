@@ -4,7 +4,6 @@ import { useEffect, useState, useContext } from "react";
 import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
 import FollowButton from "../detailStreamer/FollowButton";
 import { Link } from "react-router-dom";
-import { ModalContext } from "../../contexts/ModalContext";
 import { Track } from 'livekit-client';
 import '@livekit/components-styles';
 import {
@@ -25,7 +24,6 @@ import StreamVideoControl from "./StreamVideoControl";
 import { useAuth } from "../../contexts/AuthContext";
 
 const Streamer = ({ user }) => {
-	const { handleShowUnfollowModal, followed, setFollowed } = useContext(ModalContext);
 	return (
 		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
 			<div className="w-full md:flex md:justify-between">
@@ -59,10 +57,6 @@ const StreamDescription = ({ stream }) => {
 						<Timer className="w-[1rem]" />
 						<span>09:02:20</span>
 					</div>
-					{/* <div className="flex gap-2">
-						<Calendar className="w-[1rem]" />
-						<span>25/05/2024</span>
-					</div> */}
 					<div className="flex gap-2">
 						<Users className="w-[1rem]" />
 						<span>{formatNumViewers(stream?.numViewers)}</span>

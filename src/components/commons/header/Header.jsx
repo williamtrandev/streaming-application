@@ -34,13 +34,15 @@ const Header = (props) => {
 
 	// SEARCH
 	const handleSearchKeyPress = (e) => {
-		if (e.key === 'Enter' && searchKey) {
+		if (e.key === 'Enter') {
 			handleSearch();
 		}
 	};
 
 	const handleSearch = () => {
-		navigate(`/search?q=${encodeURIComponent(searchKey.trim())}`);
+		if (searchKey) {
+			navigate(`/search?q=${encodeURIComponent(searchKey.trim())}`);
+		}
 	};
 
 	return (
