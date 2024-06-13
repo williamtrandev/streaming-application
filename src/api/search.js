@@ -2,7 +2,7 @@ import APIClient from "../utils/APIClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 const searchChannels = async (key) => {
-	const response = await APIClient.get(`/search/user?key=${encodeURIComponent(key)}`);
+	const response = await APIClient.get(`/search/channel?key=${encodeURIComponent(key)}`);
 	return response.data;
 }
 
