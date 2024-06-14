@@ -7,6 +7,15 @@ export const UserProvider = ({ children }) => {
 	const [authFullname, setAuthFullname] = useState("");
 	const [authProfilePicture, setAuthProfilePicture] = useState("");
     const [authEmail, setAuthEmail] = useState("");
+	const [followedChannels, setFollowedChannels] = useState([]);
+
+	const logoutUser = () => {
+		setAuthUsername("");
+		setAuthFullname("");
+		setAuthProfilePicture("");
+		setAuthEmail("");
+		setFollowedChannels("");
+	};
 
 	return (
 		<UserContext.Provider 
@@ -14,7 +23,9 @@ export const UserProvider = ({ children }) => {
 				authUsername, setAuthUsername,
 				authFullname, setAuthFullname,
 				authProfilePicture, setAuthProfilePicture,
-                authEmail, setAuthEmail
+                authEmail, setAuthEmail,
+				followedChannels, setFollowedChannels,
+				logoutUser
 			}}
 		>
 			{children}

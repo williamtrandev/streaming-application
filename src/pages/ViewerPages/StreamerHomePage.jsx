@@ -20,6 +20,11 @@ const StreamerHomePage = () => {
     }, [data]);
     return (
         <div className="w-full divide-y divide-gray-300 dark:divide-gray-600">
+            {(!currentStream && mostViewedStreams.length === 0 && mostLikedStreams.length === 0) && <div
+                className="text-xl"
+            >
+                This channel has not saved any streams yet
+            </div>}
             {currentStream && <div className="pb-4">
                 <div className="hidden md:block">
                     <HorizontalStreamCard stream={currentStream} />
@@ -28,18 +33,18 @@ const StreamerHomePage = () => {
                     <StreamCard stream={currentStream} />
                 </div>
             </div>}
-            <div className="py-4">
+            {mostViewedStreams.length > 0 && <div className="py-4">
                 <div className="font-bold text-xl">Most viewed streams</div>
                 <div className="mt-4">
                     <Carousel streams={mostViewedStreams} />
                 </div>
-            </div>
-            <div className="py-4">
+            </div>}
+            {mostLikedStreams.length > 0 && <div className="py-4">
                 <div className="font-bold text-xl">Most liked streams</div>
                 <div className="mt-4">
                     <Carousel streams={mostLikedStreams} />
                 </div>
-            </div>
+            </div>}
         </div>
     );
 }

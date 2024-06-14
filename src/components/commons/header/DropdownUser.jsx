@@ -21,7 +21,8 @@ const DropdownUser = () => {
 		authProfilePicture,
 		setAuthUsername,
 		setAuthFullname,
-		setAuthProfilePicture
+		setAuthProfilePicture,
+		logoutUser
 	} = useUser();
 	// close on click outside
 	useEffect(() => {
@@ -54,6 +55,7 @@ const DropdownUser = () => {
 			position: "bottom-right"
 		});
 		logout();
+		logoutUser();
 		navigate("/");
 	}
 

@@ -17,7 +17,10 @@ const StreamerAboutPage = () => {
 	}, [streamerData]);
     
     return (
-        <div className="">
+        <div>
+            {(!about && !links) && <div>
+                This channel has no bio.
+            </div>}
             <div className="whitespace-pre-wrap">
                 {about}
             </div>

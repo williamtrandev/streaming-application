@@ -43,8 +43,23 @@ const useGetLikedStreams = (page) => {
 	});
 }
 
+const getFollowingStreams = async (page) => {
+	const response = await APIClient.get(`/stream/following/${page}`);
+	return response.data;
+}
+
+const useGetFollowingStreams = (page) => {
+	return useQuery({
+		queryKey: ["following", page],
+		queryFn: () => getFollowingStreams(page),
+		enabled: !!page,
+		refetchOnWindowFocus: false
+	});
+}
+
 export {
     useGetSavedStreams,
 	useGetHomeStreams,
-	useGetLikedStreams
+	useGetLikedStreams,
+	useGetFollowingStreams
 };

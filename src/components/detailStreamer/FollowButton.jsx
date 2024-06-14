@@ -80,7 +80,7 @@ const FollowButton = ({ streamerId, streamerName }) => {
 
     return (
         <div>
-            {!followed && <div>
+            {(!followed && auth) && <div>
                 <button
                     onClick={handleFollow}
                     className="flex space-x-2 items-center text-white bg-blue-700 

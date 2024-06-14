@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import Sidebar from '../components/commons/sidebar/Sidebar';
 import Header from '../components/commons/header/Header';
 import { Outlet } from 'react-router-dom';
@@ -8,17 +8,13 @@ import { useDispatch } from 'react-redux';
 import { initializeSocket } from '../redux/slices/socketSlice';
 import { useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { ModalContext } from '../contexts/ModalContext';
 import ForgotPasswordModal from '../components/auth/ForgotPasswordModal';
 
 const MainLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [showRegisterModal, setShowRegisterModal] = useState(false);
-	
-	const { 
-		showForgotPasswordModal, setShowForgotPasswordModal
-	} = useContext(ModalContext);
+	const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
 	
 	return (
 		<div className="dark:bg-boxdark-2 dark:text-bodydark bg-[#edf2f9]">

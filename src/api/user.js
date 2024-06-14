@@ -176,6 +176,20 @@ const useUnfollow = () => {
 	});
 }
 
+const getFollowedChannels = async (userId) => {
+	const response = await APIClient.get(`/user/followed-channels/${userId}`);
+	return response.data;
+}
+
+const useGetFollowedChannels = (userId) => {
+	return useQuery({
+		queryKey: ["follow", userId],
+		queryFn: () => getFollowedChannels(userId),
+		enabled: !!userId,
+		refetchOnWindowFocus: false
+	});
+}
+
 export {
 	useGetProfile,
 	useGetMiniProfile,
@@ -189,5 +203,6 @@ export {
 	useGetFollow,
 	useFollow,
 	useToggleNotification,
-	useUnfollow
+	useUnfollow,
+	useGetFollowedChannels
 };
