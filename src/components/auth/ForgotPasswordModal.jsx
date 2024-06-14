@@ -5,6 +5,7 @@ import ForgotUsernameButton from "./ForgotUsernameButton";
 import SendResetPasswordOtpButton from "./SendResetPasswordOtpButton";
 import { toast } from "react-toastify";
 import { useResetPassword } from "../../api/auth";
+import { Button, Modal } from "antd";
 
 const ForgotPasswordModal = ({ show, close }) => {
     if (!show) return null;
@@ -27,7 +28,7 @@ const ForgotPasswordModal = ({ show, close }) => {
     const resetPasswordDisable = !isValidEmail || !username || !password ||
         !isValidPassword || (password != confirmPassword) || otp.length != 6;
 
-    const { mutate, isLoading, isError, error, isSuccess, data } = useResetPassword();
+    const { mutate, isPending, isError, error, isSuccess, data } = useResetPassword();
 
     const handleResetPassword = () => {
         mutate({ email, password, confirmPassword, otp });
@@ -45,18 +46,17 @@ const ForgotPasswordModal = ({ show, close }) => {
     }, [isError]);
 
     return (
-        <div className="fixed z-9999 inset-0 flex justify-center
-            bg-black bg-opacity-75 backdrop-blur-sm overflow-auto py-2"
+        <Modal
+            open={show}
+            onCancel={close}
+            closeIcon={<X className="dark:text-slate-200" />}
+            className="bg-slate-100 dark:bg-slate-800 rounded-lg dark:text-slate-200 pb-0"
+            footer={null}
+            centered
         >
-            <div className="w-[500px] h-fit relative bg-white dark:bg-boxdark p-5 rounded-lg">
+            <div>
                 <div className="flex justify-center mb-6">
                     <div className="text-xl font-bold">Forgot Password</div>
-                    <button
-                        className="text-xl place-self-end absolute top-2 right-2 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded"
-                        onClick={close}
-                    >
-                        <X />
-                    </button>
                 </div>
                 <div className="space-y-4">
                     <div>
@@ -211,17 +211,18 @@ const ForgotPasswordModal = ({ show, close }) => {
                     </div>
                 </div>
                 <div className="mt-6">
-                    <button
-                        className={`bg-purple-700 dark:bg-purple-500 text-white 
-                                font-bold w-full py-1 rounded-lg hover:bg-purple-800 dark:hover:bg-purple-600
-                                ${resetPasswordDisable ? "pointer-events-none opacity-50" : ""}`}
+                    <Button
+                        type="primary"
+                        className="w-full bg-purple-600 hover:!bg-purple-700"
                         onClick={handleResetPassword}
+                        loading={isPending}
+                        disabled={resetPasswordDisable}
                     >
-                        {isLoading ? "On working..." : "Reset Password"}
-                    </button>
+                        Reset password
+                    </Button>
                 </div>
             </div>
-        </div>
+        </Modal>
     );
 }
 

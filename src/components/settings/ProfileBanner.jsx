@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { useChangeProfileBanner } from "../../api/user";
 import { useAuth } from "../../contexts/AuthContext";
 import { blobToBase64 } from "../../utils";
+import { Button } from "antd";
 
 const ProfileBanner = ({ profileBanner }) => {
     const [previewBanner, setPreviewBanner] = useState(null);
@@ -26,8 +27,6 @@ const ProfileBanner = ({ profileBanner }) => {
         const errorMessage = error?.response?.data?.message;
         toast.error(errorMessage);
     }, [isError]);
-
-    // console.log(isPending);
 
     return (
         <div className="space-y-2">
@@ -54,14 +53,24 @@ const ProfileBanner = ({ profileBanner }) => {
                         />
                         Change profile banner
                     </label>
-                    {newProfileBanner && <button 
+                    {/* {newProfileBanner && <button 
                         className={`cursor-pointer px-3 py-2 text-white rounded-lg w-fit
                             bg-purple-600 hover:bg-purple-700
                             ${isPending ? "pointer-events-none opacity-50" : ""}`}
                         onClick={handleSave}
                     >
                         {isPending ? "Saving..." : "Save banner"}
-                    </button>}
+                    </button>} */}
+                    {newProfileBanner && (
+                        <Button
+                            type="primary"
+                            className="bg-purple-600 hover:!bg-purple-800"
+                            onClick={handleSave}
+                            loading={isPending}                        
+                        >
+                            Save
+                        </Button>
+                    )}
                     <p className="text-center md:text-start">File format: JPG, JPEG, PNG (recommended 5x1 ratio, max 10MB)</p>
                 </div>
             </div>

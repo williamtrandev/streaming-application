@@ -7,14 +7,18 @@ import EmailInput from "./EmailInput";
 import SendOtpButton from "./SendOtpButton";
 import { useRegister } from "../../api/auth";
 import { useAuth } from "../../contexts/AuthContext";
+import { Button, Modal } from "antd";
 
 const RegisterModal = ({ isVisible, onClose }) => {
     if (!isVisible) return null;
 
     const [showPassword, setShowPassword] = useState("password");
+    const [showConfirmPassword, setShowConfirmPassword] = useState("password");
+
     const [username, setUsername] = useState("");
     const [fullname, setFullName] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
 
@@ -32,19 +36,25 @@ const RegisterModal = ({ isVisible, onClose }) => {
         fullname == "" || !isValidName ||
         password == "" || !isValidPassword ||
         email == "" || !isValidEmail ||
-        otp.length != 6;
+        otp.length != 6 || (password != confirmPassword);
 
-    const { mutate, isLoading, isError, error, isSuccess, data } = useRegister();
+    const { mutate, isPending, isError, error, isSuccess, data } = useRegister();
     const { login } = useAuth();
 
     const handleSubmitLogin = () => {
         mutate({ username, fullname, password, email, otp });
     };
     useEffect(() => {
-        if(data) {
+        if (data) {
             toast.success("Register Successfully");
             login(data);
             onClose();
+            setUsername("");
+            setFullName("");
+            setPassword("");
+            setEmail("");
+            setOtp("");
+            setConfirmPassword("");
         }
     }, [isSuccess]);
 
@@ -57,21 +67,23 @@ const RegisterModal = ({ isVisible, onClose }) => {
     }, [isError]);
 
     return (
-        <div className="fixed z-9999 inset-0 flex justify-center
-            bg-black bg-opacity-75 backdrop-blur-sm overflow-auto py-2"
+        <Modal
+            open={isVisible}
+            onCancel={onClose}
+            closeIcon={<X className="dark:text-slate-200" />}
+            // okButtonProps={{ className: 'bg-purple-600 hover:!bg-purple-700', disabled: changeEmailDisabled }}
+            // cancelButtonProps={{ className: 'border-purple-600 hover:!border-purple-700 hover:!text-purple-700' }}
+            className="bg-slate-100 dark:bg-slate-800 rounded-lg dark:text-slate-200 pb-0"
+            footer={null}
+            centered
         >
-            <div className="w-[500px] h-fit relative bg-white dark:bg-boxdark p-5 rounded-lg">
+            <div>
                 <div className="flex justify-center mb-6">
                     <div className="text-xl font-bold">Join {appName} today</div>
-                    <button
-                        className="text-xl place-self-end absolute top-2 right-2
-                            hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded"
-                        onClick={() => onClose()}
-                    ><X /></button>
                 </div>
                 <div>
                     <div className="mb-4">
-                        <UsernameInput 
+                        <UsernameInput
                             value={username}
                             setUsername={setUsername}
                             setIsValid={setIsValidUsername}
@@ -149,7 +161,34 @@ const RegisterModal = ({ isVisible, onClose }) => {
                         </div>
                     </div>
                     <div className="mb-4">
-                        <EmailInput 
+                        <div className="mb-1">Confirm Password</div>
+                        <div className="text-black w-full">
+                            <div className="relative">
+                                <input
+                                    type={showConfirmPassword}
+                                    className="w-full bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
+                                        pr-16 pl-4 text-black dark:text-white"
+                                    value={confirmPassword}
+                                    onChange={e => setConfirmPassword(e.target.value)}
+                                />
+                                <button
+                                    className="absolute inset-y-0 right-0 px-3 flex items-center rounded-r-lg
+                                        text-black dark:text-bodydark hover:bg-slate-300 dark:hover:bg-slate-600"
+                                    onClick={() => {
+                                        setShowConfirmPassword(showConfirmPassword === "password" ? "text" : "password");
+                                    }}
+                                >
+                                    {showConfirmPassword == "password" && (<Eye />)}
+                                    {showConfirmPassword == "text" && (<EyeOff />)}
+                                </button>
+                            </div>
+                        </div>
+                        <div className="text-red-500 mt-1 text-sm">
+                            {(password != confirmPassword) && confirmPassword != "" ? "*Passwords do not match. Please try again" : ""}
+                        </div>
+                    </div>
+                    <div className="mb-4">
+                        <EmailInput
                             value={email}
                             setEmail={setEmail}
                             setIsValid={setIsValidEmail}
@@ -179,7 +218,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                     }}
                                 />
                             </div>
-                            <SendOtpButton 
+                            <SendOtpButton
                                 email={email}
                                 isValidEmail={isValidEmail}
                             />
@@ -189,18 +228,19 @@ const RegisterModal = ({ isVisible, onClose }) => {
                         By clicking Sign Up, you are agreeing to our <button className="text-blue-700 dark:text-blue-500 hover:underline">Terms of Service</button> and are acknowledging our <button className="text-blue-700 dark:text-blue-500 hover:underline">Privacy Notice</button> applies.
                     </div> */}
                     <div className="mb-3">
-                        <button
-                            className={`bg-purple-700 text-white 
-                                font-bold w-full py-1 rounded-lg hover:bg-purple-800
-                                ${signupDisabled ? "pointer-events-none opacity-50" : ""}`}
+                        <Button
+                            type="primary"
+                            className="w-full bg-purple-600 hover:!bg-purple-700"
+                            disabled={signupDisabled}
                             onClick={handleSubmitLogin}
+                            loading={isPending}
                         >
-                            {isLoading ? "Signing in..." : "Sign In"}
-                        </button>
+                            {isPending ? "Signing up..." : "Sign Up"}
+                        </Button>
                     </div>
                 </div>
             </div>
-        </div>
+        </Modal>
     );
 }
 

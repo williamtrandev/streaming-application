@@ -38,10 +38,9 @@ const SendResetPasswordOtpButton = ({ email, username, isValidEmail }) => {
 
     return (
         <button
-            className={`px-2 py-1 text-white rounded-md text-xm md:text-md
-                bg-purple-600 hover:bg-purple-700 text-nowrap
-                ${!email || !isValidEmail || !username ? "pointer-events-none bg-opacity-50" : ""}
-                ${isCounting ? "pointer-events-none bg-purple-800" : ""}`}
+        className={`px-2 py-1 text-white rounded-md text-xm md:text-md
+            bg-purple-600 hover:bg-purple-700 text-nowrap
+            ${!email || !isValidEmail || isCounting ? "pointer-events-none bg-slate-600" : ""}`}
             onClick={handleClick}
         >
             {isCounting ? `${seconds}s` : "Send OTP"}

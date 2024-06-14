@@ -4,16 +4,11 @@ import Header from '../components/commons/header/Header';
 import { Outlet } from 'react-router-dom';
 import LoginModal from '../components/auth/LoginModal';
 import RegisterModal from '../components/auth/RegisterModal';
-import UnfollowModal from '../components/detailStreamer/UnfollowModal';
-import CropperModal from '../components/settings/CroperModal';
-import ChangePasswordModal from '../components/settings/ChangePasswordModal';
-import ChangeUsernameModal from '../components/settings/ChangeUsernameModal';
 import { useDispatch } from 'react-redux';
 import { initializeSocket } from '../redux/slices/socketSlice';
 import { useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { ModalContext } from '../contexts/ModalContext';
-import ChangeEmailModal from '../components/settings/ChangeEmailModal';
 import ForgotPasswordModal from '../components/auth/ForgotPasswordModal';
 
 const MainLayout = () => {
@@ -22,11 +17,6 @@ const MainLayout = () => {
 	const [showRegisterModal, setShowRegisterModal] = useState(false);
 	
 	const { 
-		showUnfollowModal, handleCloseUnfollowModal, 
-		showCropperModal, setShowCropperModal,
-		showChangePasswordModal, setShowChangePasswordModal,
-		showChangeUsernameModal, setShowChangeUsernameModal,
-		showChangeEmailModal, setShowChangeEmailModal,
 		showForgotPasswordModal, setShowForgotPasswordModal
 	} = useContext(ModalContext);
 	
@@ -57,26 +47,6 @@ const MainLayout = () => {
 			<ForgotPasswordModal
 				show={showForgotPasswordModal}
 				close={() => setShowForgotPasswordModal(false)}
-			/>
-			<UnfollowModal 
-				show={showUnfollowModal} 
-				onClose={handleCloseUnfollowModal}
-			/>
-			<CropperModal
-				show={showCropperModal}
-				onClose={() => setShowCropperModal(false)}
-			/>
-			<ChangePasswordModal 
-				show={showChangePasswordModal}
-				onClose={() => setShowChangePasswordModal(false)}
-			/>
-			<ChangeUsernameModal
-				show={showChangeUsernameModal}
-				onClose={() => setShowChangeUsernameModal(false)}
-			/>
-			<ChangeEmailModal 
-				show={showChangeEmailModal}
-				onClose={() => setShowChangeEmailModal(false)}
 			/>
 		</div>
 	);

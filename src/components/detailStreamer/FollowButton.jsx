@@ -1,25 +1,26 @@
-import { UserPlus, Bell, BellOff, ChevronDown, UserMinus } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
-import { ModalContext } from "../../contexts/ModalContext";
+import { UserPlus, Bell, BellOff, ChevronDown, UserMinus, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useFollow, useGetFollow, useToggleNotification, useUnfollow } from "../../api/user";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
+import { Button, Modal } from "antd";
 
 const FollowButton = ({ streamerId, streamerName }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [notification, setNotification] = useState(true);
+    const [showUnfollowModal, setShowUnfollowModal] = useState(false);
 
-    const { handleShowUnfollowModal, followed, setFollowed } = useContext(ModalContext);
+    const [followed, setFollowed] = useState(false);
 
     const { auth } = useAuth();
     const userId = auth?.user?._id;
     const { data: followData } = useGetFollow({ userId, streamerId });
     useEffect(() => {
-		if (followData) {
+        if (followData) {
             setFollowed(followData.follow != null);
             setNotification(followData.follow?.receiveNotification);
-		}
-	}, [followData]);
+        }
+    }, [followData]);
 
     // Follow
     const followMutation = useFollow();
@@ -57,6 +58,25 @@ const FollowButton = ({ streamerId, streamerName }) => {
         const errorMessage = toggleNotificationMutation.error?.response?.data?.message;
         toast.error(errorMessage);
     }, [toggleNotificationMutation.isError]);
+
+    // Unfollow
+    const unfollowMutation = useUnfollow();
+
+    const handleUnfollow = () => {
+        unfollowMutation.mutate({ streamerId });
+    };
+
+    useEffect(() => {
+        if (unfollowMutation.data) {
+            setFollowed(false);
+            setShowUnfollowModal(false);
+        }
+    }, [unfollowMutation.isSuccess]);
+
+    useEffect(() => {
+        const errorMessage = unfollowMutation.error?.response?.data?.message;
+        toast.error(errorMessage);
+    }, [unfollowMutation.isError]);
 
     return (
         <div>
@@ -101,7 +121,8 @@ const FollowButton = ({ streamerId, streamerName }) => {
                     </button>
                     <button
                         onClick={() => {
-                            handleShowUnfollowModal(streamerId, streamerName);
+                            // handleShowUnfollowModal(streamerId, streamerName);
+                            setShowUnfollowModal(true);
                             setDropdownOpen(false);
                         }}
                         className="flex gap-2 items-center p-4
@@ -111,6 +132,35 @@ const FollowButton = ({ streamerId, streamerName }) => {
                     </button>
                 </div>
             </div>}
+            <Modal
+                open={showUnfollowModal}
+                centered
+                onCancel={() => setShowUnfollowModal(false)}
+                onClose={() => setShowUnfollowModal(false)}
+                closeIcon={<X className="dark:text-slate-200" />}
+                className="bg-slate-100 dark:bg-slate-700 rounded-lg dark:text-slate-200 pb-0"
+                footer={[
+                    <Button
+                        key={1}
+                        className="!bg-slate-300 dark:!bg-slate-600 !border-none !text-black dark:!text-white
+                            hover:!bg-slate-400 dark:hover:!bg-slate-500"
+                        onClick={() => setShowUnfollowModal(false)}
+                    >Cancel</Button>,
+                    <Button
+                        key={2}
+                        type="primary" 
+                        danger
+                        onClick={handleUnfollow}
+                    >Unfollow</Button>
+                ]}
+            >
+                <div className="space-y-2">
+                    <div className="text-xl">
+                        Unfollow <span className="font-bold">{streamerName}</span>?
+                    </div>
+                    <div>You will no longer receive notifications or see them in your followed streamers list.</div>
+                </div>
+            </Modal>
         </div>
     );
 }
