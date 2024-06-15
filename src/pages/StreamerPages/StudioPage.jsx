@@ -306,12 +306,9 @@ const StudioPage = () => {
 									className="dark:bg-meta-4 dark:border-none w-full px-4 py-2"
 									showTime={{ format: 'HH:mm' }}
 									format="YYYY-MM-DD HH:mm"
-									onChange={(value, dateString) => {
-										console.log('Selected Time: ', value);
-										console.log('Formatted Selected Time: ', dateString);
-										setSelectedTime(value);
-									}}
-									onOk={(value) => console.log('onOk: ', value)}
+									value={selectedTime}
+									onChange={(value) => setSelectedTime(value)}
+									onOk={(value) => setSelectedTime(value)}
 								/>
 							</div>
 							<div className="space-y-3">
