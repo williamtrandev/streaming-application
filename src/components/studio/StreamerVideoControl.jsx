@@ -75,6 +75,7 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 				localParticipant.publishTrack(audioTrack);
 			}
 			startStream(streamId);
+			setIsPublishing(true);
 		}
 	}, [audioTrack, isPublishing, localParticipant, videoTrack, egressId]);
 
