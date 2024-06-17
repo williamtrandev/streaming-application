@@ -16,7 +16,6 @@ import {
 import {
   AnalyticsPage,
   CommunityPage,
-  SettingsPage,
   StudioPage,
   StreamPage
 } from './pages/StreamerPages';
@@ -70,7 +69,6 @@ function App() {
           <Route path='stream/:streamId' element={<StreamPage />} />
           <Route path='analytics' element={<AnalyticsPage />} />
           <Route path='community' element={<CommunityPage />} />
-          <Route path='settings' element={<SettingsPage />} />
         </Route>
       </Routes>
       <ToastContainer />

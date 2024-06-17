@@ -1,15 +1,20 @@
 import { useLocalParticipant } from "@livekit/components-react";
 import { Track, createLocalTracks } from "livekit-client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useStartStream } from "../../api/studio";
+import { toast } from "react-toastify";
+import ModalEndStream from "./ModalEndStream";
 
 const StreamerVideoControl = ({ streamId, setIsStream }) => {
 	const [videoTrack, setVideoTrack] = useState();
 	const [audioTrack, setAudioTrack] = useState();
 	const [isPublishing, setIsPublishing] = useState(false);
 	const [isUnpublishing, setIsUnpublishing] = useState(false);
+	const [egressId, setEgressId] = useState(null);
 	const previewVideoEl = useRef(null);
-
 	const { localParticipant } = useLocalParticipant();
+	const { mutate: startStream, isSuccess: isStartStreamSuccess, isError: isStartStreamError, data: startStreamData } = useStartStream();
+	const [open, setOpen] = useState(false);
 
 	const createTracks = async () => {
 		const tracks = await createLocalTracks({ audio: true, video: true });
@@ -37,43 +42,44 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 	useEffect(() => {
 		return () => {
 			console.log("Stopping tracks:", { videoTrack, audioTrack });
-
 			videoTrack?.stop();
 			audioTrack?.stop();
 		};
 	}, [videoTrack, audioTrack]);
 
+	useEffect(() => {
+		if (isStartStreamSuccess) {
+			console.log(startStreamData)
+			if (startStreamData && startStreamData.egressId) {
+				setEgressId(startStreamData.egressId);
+			} else {
+				toast.error("Couldn't recording");
+			}
+		}	
+		if(isStartStreamError) {
+			toast.error("Starting recording failed");
+		}
+	}, [isStartStreamSuccess, isStartStreamError]) 
+
 	const togglePublishing = useCallback(async () => {
 		if (isPublishing && localParticipant) {
-			setIsUnpublishing(true);
-
-			if (videoTrack) {
-				console.log(localParticipant)
-				localParticipant.unpublishTrack(videoTrack);
-			}
-			if (audioTrack) {
-				localParticipant.unpublishTrack(audioTrack);
-			}
-
-			await createTracks();
-
-			setTimeout(() => {
-				setIsUnpublishing(false);
-			}, 2000);
+			console.log(egressId);
+			if (egressId) {
+				setOpen(true);
+			} 
 		} else if (localParticipant) {
 			if (videoTrack) {
-				void localParticipant.publishTrack(videoTrack);
+				localParticipant.publishTrack(videoTrack);
 			}
 			if (audioTrack) {
-				void localParticipant.publishTrack(audioTrack);
+				localParticipant.publishTrack(audioTrack);
 			}
+			startStream(streamId);
 		}
-
-		setIsPublishing((prev) => !prev);
-	}, [audioTrack, isPublishing, localParticipant, videoTrack]);
+	}, [audioTrack, isPublishing, localParticipant, videoTrack, egressId]);
 
 	return (
-		<div className="flex flex-col gap-4 px-4 py-2 max-h-[80vh] bg-meta-4 rounded-lg">
+		<div className="flex flex-col justify-center gap-4 px-4 py-2 h-full bg-meta-4 rounded-lg">
 			<div className="flex items-center justify-between">
 				<div className="flex gap-[5px] text-lg font-bold">
 					{isPublishing && !isUnpublishing ? (
@@ -114,6 +120,7 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 			<div className="aspect-video rounded-lg overflow-hidden">
 				<video ref={previewVideoEl} width="100%" height="100%" />
 			</div>
+			<ModalEndStream open={open} setOpen={setOpen} streamId={streamId} egressId={egressId} />
 		</div>
 	)
 }
