@@ -42,7 +42,7 @@ const ModalDetailStream = ({ modalOpen, setModalOpen, streamId, refetch }) => {
 				randomColor: rainbowColors[index % rainbowColors.length] 
 			}));
 			setTagArr(formattedTags);
-			setImage(streamInfo?.previewImage?.url);
+			setImage(streamInfo?.previewImage);
 			setSelectedTime(moment(streamInfo?.dateStream));
 			setRerun(streamInfo?.rerun);
 		}

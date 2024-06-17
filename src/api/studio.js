@@ -144,6 +144,29 @@ const useGetServerUrlAndStreamKey = (username, streamId) => {
 	})
 }
 
+const startStream = async (streamId) => {
+	const response = await APIClient.put(`/studio/stream/${streamId}/start`);
+	return response.data;
+}
+
+const useStartStream = () => {
+	return useMutation({
+		mutationFn: (streamId) => startStream(streamId)
+	});
+}
+
+const endStream = async ({ streamId, egressId }) => {
+	const response = await APIClient.put(`/studio/stream/${streamId}/end/${egressId}`);
+	return response.data;
+}
+
+const useEndStream = () => {
+	return useMutation({
+		mutationFn: ({ streamId, egressId }) => endStream({ streamId, egressId })
+	});
+
+}
+
 export {
 	useSaveStream,
 	useSaveNotification,
@@ -156,5 +179,7 @@ export {
 	useGetAllMod,
 	useAddMod,
 	useDeleteMod,
-	useGetServerUrlAndStreamKey
+	useGetServerUrlAndStreamKey,
+	useStartStream,
+	useEndStream
 };
