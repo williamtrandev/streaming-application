@@ -1,15 +1,15 @@
 import { useEffect, useState, useRef } from 'react';
-import { Bolt, ChevronRight, CircleX, Pencil } from 'lucide-react';
+import { Bolt, ChevronRight, CircleX, Pencil, Podcast } from 'lucide-react';
 import TagItem from '../../components/studio/TagItem';
 import { toast } from 'react-toastify';
 import { useGetAllComingStreams, useSaveNotification, useSaveStream } from '../../api/studio';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSelector } from 'react-redux';
 import { selectSocket } from '../../redux/slices/socketSlice';
-import { DatePicker, Modal } from 'antd';
+import { DatePicker, Modal, Tooltip } from 'antd';
 import moment from 'moment';
 import { Skeleton } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { blobToBase64 } from '../../utils';
 import ModalDetailStream from '../../components/studio/ModalDetailStream';
 import ModalDeleteStream from '../../components/studio/ModalDeleteStream';
@@ -151,10 +151,9 @@ const StudioPage = () => {
 					<table className="w-full whitespace-no-wrap">
 						<thead>
 							<tr className="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-								<th className="px-4 py-3">Stream Id</th>
 								<th className="px-4 py-3">title</th>
 								<th className="px-4 py-3">Date stream</th>
-								<th className="px-4 py-3">Edit</th>
+								<th className="px-4 py-3">Action</th>
 							</tr>
 						</thead>
 						{!comingStreamsData ?
@@ -185,14 +184,9 @@ const StudioPage = () => {
 								{comingStreamsData?.data.map((stream, index) => {
 									return (
 										<tr key={index} className="text-gray-700 dark:text-gray-400">
-											<td className="px-4 py-3">
-												<div className="flex items-center text-sm">
-													<p className="font-semibold">{stream._id}</p>
-												</div>
-											</td>
 											<td className="px-4 py-3 text-xs">
-												<span className="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-green-200 dark:bg-green-600">
-													{stream?.title}
+												<span className="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:text-blue-200 dark:bg-blue-600">
+													{stream?.title.length > 100 ? stream.title.substring(0, 100) + '...' : stream.title}
 												</span>
 											</td>
 											<td className="px-4 py-3 text-sm">
@@ -200,12 +194,21 @@ const StudioPage = () => {
 											</td>
 											<td className="px-4 py-3 text-sm">
 												<div className="flex space-x-2">
-													<div className="p-2 w-8 h-8 flex items-center justify-center rounded-full font-semibold text-orange-700 bg-orange-100 dark:text-white dark:bg-purple-600 cursor-pointer" onClick={() => handleClickDetail(stream._id)}>
-														<Bolt />
+													<div className="p-2 w-8 h-8 flex items-center justify-center rounded-full font-semibold text-orange-700 bg-orange-100 dark:text-white dark:bg-orange-600 cursor-pointer" onClick={() => handleClickDetail(stream._id)}>
+														<Tooltip title="Edit" color={'orange'}>
+															<Bolt />
+														</Tooltip>
 													</div>
 													<div className="p-2 w-8 h-8 flex items-center justify-center text-center rounded-full font-semibold text-purple-700 bg-purple-100 dark:text-white dark:bg-purple-600 cursor-pointer" onClick={() => handleClickDelete(stream._id, stream.title)}>
-														<CircleX />
+														<Tooltip title="Delete" color={'purple'}>
+															<CircleX />
+														</Tooltip>
 													</div>
+													<Link className="p-2 w-8 h-8 flex items-center justify-center text-center rounded-full font-semibold text-green-700 bg-green-100 dark:text-white dark:bg-green-600 cursor-pointer" to={`/studio/stream/${stream._id}`}>
+														<Tooltip title="Go to stream page" color={'green'}>
+															<Podcast />
+														</Tooltip>
+													</Link>
 												</div>
 											</td>
 										</tr>
