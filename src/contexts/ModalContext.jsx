@@ -7,13 +7,10 @@ export const ModalProvider = ({ children }) => {
 
     const [colorMode, setColorMode] = useSwitchMode();
 
-    const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
-
     return (
         <ModalContext.Provider 
             value={{ 
                 colorMode, setColorMode,
-                showForgotPasswordModal, setShowForgotPasswordModal
             }}
         >
             {children}

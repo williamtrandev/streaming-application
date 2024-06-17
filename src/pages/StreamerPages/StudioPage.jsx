@@ -138,11 +138,17 @@ const StudioPage = () => {
 		<div className="space-y-5">
 			<div className="flex gap-3 flex-wrap">
 				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white"
-					onClick={() => setModalOpen(true)}>
+					onClick={() => {
+						sessionStorage.setItem("streamWithObs", false);
+						setModalOpen(true);
+					}}>
 					Start With Camera
 				</button>
 				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white"
-					onClick={() => { }}>
+					onClick={() => {
+						sessionStorage.setItem("streamWithObs", true);
+						setModalOpen(true);
+					}}>
 					Start With OBS
 				</button>
 			</div>

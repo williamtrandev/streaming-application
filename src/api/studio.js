@@ -130,6 +130,20 @@ const useDeleteMod = () => {
 	});
 };
 
+const getServerUrlAndStreamKey = async (username, streamId) => {
+	const response = await APIClient.get(`/studio/stream-key/${username}/${streamId}`);
+	return response.data;
+}
+
+const useGetServerUrlAndStreamKey = (username, streamId) => {
+	return useQuery({
+		queryKey: ["getstreamkey", username, streamId],
+		queryFn: () => getServerUrlAndStreamKey(username, streamId),
+		enabled: !!username && !!streamId,
+		refetchOnWindowFocus: false
+	})
+}
+
 export {
 	useSaveStream,
 	useSaveNotification,
@@ -141,5 +155,6 @@ export {
 	useDeleteStream,
 	useGetAllMod,
 	useAddMod,
-	useDeleteMod
+	useDeleteMod,
+	useGetServerUrlAndStreamKey
 };
