@@ -164,7 +164,28 @@ const useEndStream = () => {
 	return useMutation({
 		mutationFn: ({ streamId, egressId }) => endStream({ streamId, egressId })
 	});
+}
 
+const generateStreamerToken = async (data) => {
+	const response = await APIClient.post("/studio/streamer-token", data);
+	return response.data;
+}
+
+const useGenerateStreamerToken = () => {
+	return useMutation({
+		mutationFn: (data) => generateStreamerToken(data)
+	})
+}
+
+const generateViewerToken = async (data) => {
+	const response = await APIClient.post("/studio/viewer-token", data);
+	return response.data;
+}
+
+const useGenerateViewerToken = () => {
+	return useMutation({
+		mutationFn: (data) => generateViewerToken(data)
+	})
 }
 
 export {
@@ -181,5 +202,7 @@ export {
 	useDeleteMod,
 	useGetServerUrlAndStreamKey,
 	useStartStream,
-	useEndStream
+	useEndStream,
+	useGenerateStreamerToken,
+	useGenerateViewerToken
 };

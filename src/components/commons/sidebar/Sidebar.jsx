@@ -25,17 +25,21 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 	const userId = auth?.user?._id
 	const { followedChannels, setFollowedChannels } = useUser();
 	const [followedShow, setFollowedShow] = useState([]);
+	const [showAllFollow, setShowAllFollow] = useState(false);
 	const { data: followedData } = useGetFollowedChannels(userId);
 	useEffect(() => {
 		if (followedData) {
 			setFollowedChannels(followedData.followedChannels);
-			if (followedData.followedChannels.length <= 5) {
-				setFollowedShow(followedData.followedChannels);
-			} else {
-				setFollowedShow(followedData.followedChannels.slice(0, 5));
-			}
 		}
-	}, [followedData])
+	}, [followedData]);
+
+	useEffect(() => {
+		if (showAllFollow) {
+			setFollowedShow(followedChannels);
+		} else {
+			setFollowedShow(followedChannels.slice(0, 5));
+		}
+	}, [followedChannels, showAllFollow]);
 
 	useEffect(() => {
 		const clickHandler = ({ target }) => {
@@ -255,7 +259,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 										}
 									>
 										<div className="relative flex">
-											<img src={followedChannel.streamer.profilePicture.url} alt="" className='w-6 h-6 rounded-full' />
+											<img src={followedChannel.streamer.profilePicture} alt="" className='w-6 h-6 rounded-full' />
 											{followedChannel.streamer.isLive &&
 												<span className="absolute -bottom-0.5 right-0 z-1 h-2 w-2 rounded-full bg-meta-1 inline">
 													<span className="absolute -z-1 inline-flex h-full w-full animate-ping rounded-full bg-meta-1 opacity-75"></span>
@@ -266,18 +270,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 									</NavLink>
 								</li>
 							))}
-							{(followedShow.length === 5) && <button
+							{(!showAllFollow && followedChannels.length > 5) && <button
 								className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium 
 									dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white`}
-								onClick={() => setFollowedShow(followedChannels)}
+								onClick={() => setShowAllFollow(true)}
 							>
 								<ChevronDown />
 								<span>More</span>
 							</button>}
-							{(followedShow.length > 5) && <button
+							{showAllFollow && <button
 								className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium 
 									dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white`}
-								onClick={() => setFollowedShow(followedChannels.slice(0, 5))}
+								onClick={() => setShowAllFollow(false)}
 							>
 								<ChevronUp />
 								<span>Show less</span>

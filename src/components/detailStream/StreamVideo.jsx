@@ -7,10 +7,10 @@ import { Track } from 'livekit-client';
 import '@livekit/components-styles';
 import { LiveKitRoom } from '@livekit/components-react';
 import { jwtDecode } from "jwt-decode";
-import { generateViewerToken } from "../../utils/livekit";
 import StreamVideoControl from "./StreamVideoControl";
 import { useAuth } from "../../contexts/AuthContext";
 import { v4 as uuidv4 } from 'uuid';
+import { useGenerateViewerToken } from "../../api/studio";
 
 const Streamer = ({ user }) => {
 	return (
@@ -89,8 +89,9 @@ const StreamVideo = ({ streamData }) => {
 	const [viewerToken, setViewerToken] = useState("");
 	const { auth } = useAuth();
 	const userId = auth?.user?._id || uuidv4();
+	const { mutate, isSuccess, data } = useGenerateViewerToken();
 	useEffect(() => {
-		if(!streamId) return;
+		if (!streamId) return;
 		const getOrCreateViewerToken = async () => {
 			const SESSION_VIEWER_TOKEN_KEY = `${streamId}-viewer-token`;
 			const sessionToken = sessionStorage.getItem(SESSION_VIEWER_TOKEN_KEY);
@@ -102,21 +103,31 @@ const StreamVideo = ({ streamData }) => {
 					const expiry = new Date(payload.exp * 1000);
 					if (expiry < new Date()) {
 						sessionStorage.removeItem(SESSION_VIEWER_TOKEN_KEY);
-						const token = await generateViewerToken(streamId, userId);
-						setViewerToken(token);
-						sessionStorage.setItem(SESSION_VIEWER_TOKEN_KEY, token);
+						// const token = await generateViewerToken(streamId, userId);
+						// setViewerToken(token);
+						// sessionStorage.setItem(SESSION_VIEWER_TOKEN_KEY, token);
+						mutate({ streamId });
 						return;
 					}
 				}
 				setViewerToken(sessionToken);
 			} else {
-				const token = await generateViewerToken(streamId, userId);
-				setViewerToken(token);
-				sessionStorage.setItem(SESSION_VIEWER_TOKEN_KEY, token);
+				mutate({ streamId });
+				// const token = await generateViewerToken(streamId, userId);
+				// setViewerToken(token);
+				// sessionStorage.setItem(SESSION_VIEWER_TOKEN_KEY, token);
 			}
 		};
 		getOrCreateViewerToken();
 	}, [streamId]);
+
+	useEffect(() => {
+		if (data) {
+			const SESSION_VIEWER_TOKEN_KEY = `${streamId}-viewer-token`;
+			setViewerToken(data.token);
+			sessionStorage.setItem(SESSION_VIEWER_TOKEN_KEY, data.token);
+		}
+	}, [isSuccess]);
 
 	return (
 		<div className="w-full flex flex-col items-center space-y-3">
