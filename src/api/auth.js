@@ -77,15 +77,11 @@ const useRegister = () => {
 }
 
 const changeUsername = async (data) => {
-    const { token, username, password } = data;
+    const { username, password } = data;
     const response = await APIClient.put("/auth/change-username", {
         username,
         password
-    }, {
-		headers: {
-			'Authorization': `Bearer ${token}`
-		},
-	});
+    });
     return response.data;
 }
 
@@ -96,15 +92,11 @@ const useChangeUsername = () => {
 }
 
 const changePassword = async (data) => {
-    const { token, oldPassword, newPassword } = data;
+    const { oldPassword, newPassword } = data;
     const response = await APIClient.put("/auth/change-password", {
         oldPassword,
         newPassword
-    }, {
-		headers: {
-			'Authorization': `Bearer ${token}`
-		},
-	});
+    });
     return response.data;
 }
 
@@ -115,14 +107,10 @@ const useChangePassword = () => {
 }
 
 const changeEmail = async (data) => {
-	const { token, email, otp } = data;
+	const { email, otp } = data;
 	const response = await APIClient.put("/auth/change-email", {
 		email,
         otp
-	}, {
-		headers: {
-			'Authorization': `Bearer ${token}`
-		},
 	});
 	return response.data;
 }

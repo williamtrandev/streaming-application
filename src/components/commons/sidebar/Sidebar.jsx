@@ -1,74 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
-import { ChevronDown, ChevronUp, History, Moon, Podcast, Telescope, ThumbsUp, Tv } from 'lucide-react';
+import { ChevronDown, ChevronUp, History, Moon, Podcast, ThumbsUp, Tv } from 'lucide-react';
 import DarkModeSwitcher from '../header/DarkModeSwitcher';
 import { appName } from '../../../constants';
+import { useGetFollowedChannels } from '../../../api/user';
+import { useAuth } from '../../../contexts/AuthContext';
+import { useUser } from '../../../contexts/UserContext';
 
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
-	const followers = [
-		{
-			name: 'WilliamTran',
-			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
-			id: 1,
-			isLive: true,
-		},
-		{
-			name: 'Thanh Chan',
-			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
-			id: 2,
-			isLive: true,
-		},
-		{
-			name: 'Thanh Tran Tan Thanh Thanh',
-			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
-			id: 3,
-			isLive: false,
-		},
-		{
-			name: 'Thanh Tran Tan Thanh Thanh',
-			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
-			id: 4,
-			isLive: false,
-		},
-		{
-			name: 'Thanh Tran Tan Thanh Thanh',
-			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
-			id: 5,
-			isLive: false,
-		},
-		{
-			name: 'Thanh Tran Tan Thanh Thanh',
-			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
-			id: 6,
-			isLive: false,
-		},
-		{
-			name: 'Thanh Tran Tan Thanh Thanh',
-			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
-			id: 7,
-			isLive: false,
-		},
-		{
-			name: 'Thanh Tran Tan Thanh Thanh',
-			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
-			id: 8,
-			isLive: false,
-		},
-		{
-			name: 'Thanh Tran Tan Thanh Thanh',
-			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
-			id: 9,
-			isLive: false,
-		},
-		{
-			name: 'Thanh Tran Tan Thanh Thanh',
-			avatar: 'https://avatars.githubusercontent.com/u/102520170?v=4',
-			id: 10,
-			isLive: false,
-		},
-	]
 	const location = useLocation();
 	const { pathname } = location;
 
@@ -80,7 +21,21 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 		storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
 	);
 
-	const [followedShow, setFollowedShow] = useState(followers.slice(0, 5));
+	const { auth } = useAuth();
+	const userId = auth?.user?._id
+	const { followedChannels, setFollowedChannels } = useUser();
+	const [followedShow, setFollowedShow] = useState([]);
+	const { data: followedData } = useGetFollowedChannels(userId);
+	useEffect(() => {
+		if (followedData) {
+			setFollowedChannels(followedData.followedChannels);
+			if (followedData.followedChannels.length <= 5) {
+				setFollowedShow(followedData.followedChannels);
+			} else {
+				setFollowedShow(followedData.followedChannels.slice(0, 5));
+			}
+		}
+	}, [followedData])
 
 	useEffect(() => {
 		const clickHandler = ({ target }) => {
@@ -282,7 +237,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 								}}
 							</SidebarLinkGroup> */}
 						</ul>
-						<ul className="mb-6 flex flex-col gap-2">
+						{(followedChannels.length > 0) && <ul className="mb-6 flex flex-col gap-2">
 							<li>
 								<div
 									className="group relative flex items-center gap-4 rounded-lg px-6 pt-3 font-medium dark:text-bodydark1 ease-in-out"
@@ -290,46 +245,44 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 									Followed channels
 								</div>
 							</li>
-							{followedShow.map((follower, index) => (
+							{followedShow.map((followedChannel, index) => (
 								<li key={index}>
 									<NavLink
-										to={`/${follower.id}`}
+										to={`/${followedChannel.streamer.username}`}
 										className={({ isActive }) =>
 											'group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ' +
 											(isActive && 'bg-purple-600 dark:bg-meta-4 text-white')
 										}
 									>
 										<div className="relative flex">
-											<img src={follower.avatar} alt="" className='w-6 h-6 rounded-full' />
-											{follower.isLive &&
+											<img src={followedChannel.streamer.profilePicture.url} alt="" className='w-6 h-6 rounded-full' />
+											{followedChannel.streamer.isLive &&
 												<span className="absolute -bottom-0.5 right-0 z-1 h-2 w-2 rounded-full bg-meta-1 inline">
 													<span className="absolute -z-1 inline-flex h-full w-full animate-ping rounded-full bg-meta-1 opacity-75"></span>
 												</span>
 											}
 										</div>
-										<p className='truncate flex-1'>{follower.name}</p>
+										<p className='truncate flex-1'>{followedChannel.streamer.fullname}</p>
 									</NavLink>
 								</li>
 							))}
-							<button
+							{(followedShow.length === 5) && <button
 								className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium 
-									dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white
-									${followedShow.length === 5 ? "" : "hidden"}`}
-								onClick={() => setFollowedShow(followers)}
+									dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white`}
+								onClick={() => setFollowedShow(followedChannels)}
 							>
 								<ChevronDown />
 								<span>More</span>
-							</button>
-							<button
+							</button>}
+							{(followedShow.length > 5) && <button
 								className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium 
-									dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white
-									${followedShow.length === 5 ? "hidden" : ""}`}
-								onClick={() => setFollowedShow(followers.slice(0, 5))}
+									dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white`}
+								onClick={() => setFollowedShow(followedChannels.slice(0, 5))}
 							>
 								<ChevronUp />
 								<span>Show less</span>
-							</button>
-						</ul>
+							</button>}
+						</ul>}
 						<ul className="md:hidden">
 							<li className="group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium">
 								<Moon />

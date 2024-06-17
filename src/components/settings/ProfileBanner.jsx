@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useChangeProfileBanner } from "../../api/user";
 import { useAuth } from "../../contexts/AuthContext";
+import { blobToBase64 } from "../../utils";
+import { Button } from "antd";
 
 const ProfileBanner = ({ profileBanner }) => {
     const [previewBanner, setPreviewBanner] = useState(null);
     const [newProfileBanner, setNewProfileBanner] = useState(null);
 
-    const { auth } = useAuth();
-    const token = auth?.accessToken;
-    const { mutate, isLoading, isError, error, isSuccess, data } = useChangeProfileBanner();
+    const { mutate, isPending, isError, error, isSuccess, data } = useChangeProfileBanner();
 
     const handleSave = async () => {
-        mutate({ token, profileBanner: newProfileBanner });
+        const profileBanner = await blobToBase64(previewBanner);
+        mutate({ profileBanner });
     };
 
     useEffect(() => {
@@ -45,21 +46,31 @@ const ProfileBanner = ({ profileBanner }) => {
                         className="cursor-pointer px-3 py-2 text-white rounded-lg w-fit
                             bg-purple-600 hover:bg-purple-700">
                         <input type="file" id="pb_input" className="sr-only"
-                            onChange={async (e) => {
+                            onChange={(e) => {
                                 setPreviewBanner(URL.createObjectURL(e.target.files[0]));
                                 setNewProfileBanner(e.target.files[0]);
                             }}
                         />
                         Change profile banner
                     </label>
-                    {newProfileBanner && <button 
+                    {/* {newProfileBanner && <button 
                         className={`cursor-pointer px-3 py-2 text-white rounded-lg w-fit
                             bg-purple-600 hover:bg-purple-700
-                            ${isLoading ? "pointer-events-none opacity-50" : ""}`}
+                            ${isPending ? "pointer-events-none opacity-50" : ""}`}
                         onClick={handleSave}
                     >
-                        {isLoading ? "Saving..." : "Save banner"}
-                    </button>}
+                        {isPending ? "Saving..." : "Save banner"}
+                    </button>} */}
+                    {newProfileBanner && (
+                        <Button
+                            type="primary"
+                            className="bg-purple-600 hover:!bg-purple-800"
+                            onClick={handleSave}
+                            loading={isPending}                        
+                        >
+                            Save
+                        </Button>
+                    )}
                     <p className="text-center md:text-start">File format: JPG, JPEG, PNG (recommended 5x1 ratio, max 10MB)</p>
                 </div>
             </div>

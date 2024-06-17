@@ -17,12 +17,10 @@ const SocialLinks = ({ userLinks }) => {
         }
     }, [userLinks]);
 
-    const { auth } = useAuth();
-    const token = auth?.accessToken;
-    const { mutate, isLoading, isError, error, isSuccess, data } = useChangeLinks();
+    const { mutate, isPending, isError, error, isSuccess, data } = useChangeLinks();
 
     const handleSave = async () => {
-        mutate({ token, links });
+        mutate({ links });
     };
 
     useEffect(() => {
@@ -123,10 +121,10 @@ const SocialLinks = ({ userLinks }) => {
                 {!saveDisable && <div className="flex justify-end py-4">
                     <button
                         className={`px-3 py-1 bg-purple-600 rounded-lg text-white hover:bg-purple-700
-                                ${isLoading ? "pointer-events-none opacity-50" : ""}`}
+                                ${isPending ? "pointer-events-none opacity-50" : ""}`}
                         onClick={handleSave}
                     >
-                        {isLoading ? "Saving..." : "Save"}
+                        {isPending ? "Saving..." : "Save"}
                     </button>
                 </div>}
             </div>

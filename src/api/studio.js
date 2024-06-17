@@ -130,6 +130,20 @@ const useDeleteMod = () => {
 	});
 };
 
+const getServerUrlAndStreamKey = async (username, streamId) => {
+	const response = await APIClient.get(`/studio/stream-key/${username}/${streamId}`);
+	return response.data;
+}
+
+const useGetServerUrlAndStreamKey = (username, streamId) => {
+	return useQuery({
+		queryKey: ["getstreamkey", username, streamId],
+		queryFn: () => getServerUrlAndStreamKey(username, streamId),
+		enabled: !!username && !!streamId,
+		refetchOnWindowFocus: false
+	})
+}
+
 const startStream = async (streamId) => {
 	const response = await APIClient.put(`/studio/stream/${streamId}/start`);
 	return response.data;
@@ -150,6 +164,7 @@ const useEndStream = () => {
 	return useMutation({
 		mutationFn: ({ streamId, egressId }) => endStream({ streamId, egressId })
 	});
+
 }
 
 export {
@@ -164,6 +179,7 @@ export {
 	useGetAllMod,
 	useAddMod,
 	useDeleteMod,
+	useGetServerUrlAndStreamKey,
 	useStartStream,
 	useEndStream
 };

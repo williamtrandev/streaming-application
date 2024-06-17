@@ -2,9 +2,8 @@ import { Calendar, ThumbsDown, ThumbsUp, Timer, Users } from "lucide-react";
 import { useEffect, useState, useContext } from "react";
 import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
 import FollowButton from "../detailStreamer/FollowButton";
-import FollowedButton from "../detailStreamer/FollowedButton";
 import { Link } from "react-router-dom";
-import { ModalContext } from "../../contexts/ModalContext";
+import { Track } from 'livekit-client';
 import '@livekit/components-styles';
 import { LiveKitRoom } from '@livekit/components-react';
 import { jwtDecode } from "jwt-decode";
@@ -14,7 +13,6 @@ import { useAuth } from "../../contexts/AuthContext";
 import { v4 as uuidv4 } from 'uuid';
 
 const Streamer = ({ user }) => {
-	const { handleShowUnfollowModal, followed, setFollowed } = useContext(ModalContext);
 	return (
 		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
 			<div className="w-full md:flex md:justify-between">
@@ -30,10 +28,7 @@ const Streamer = ({ user }) => {
 				</Link>
 
 				<div className="flex items-center ml-15 mt-1 md:ml-4 md:mt-0">
-					{!followed && <FollowButton onClick={() => setFollowed(true)} />}
-                    {followed && <FollowedButton
-                        onUnfollowClick={handleShowUnfollowModal}
-						streamerName={user?.fullname} />}
+					<FollowButton streamerId={user._id} streamerName={user.fullname} />
 				</div>
 			</div>
 		</div>
@@ -48,6 +43,8 @@ const StreamDescription = ({ stream }) => {
 			<div className="flex justify-between">
 				<div className="space-y-1">
 					<div className="flex gap-2">
+						{/* <Timer className="w-[1rem]" />
+						<span>09:02:20</span> */}
 						<Calendar className="w-[1rem]" />
 						<span>{stream?.dateStream && new Date(stream?.dateStream).toLocaleString()}</span>
 					</div>
