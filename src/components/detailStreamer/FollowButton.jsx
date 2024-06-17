@@ -4,13 +4,15 @@ import { useFollow, useGetFollow, useToggleNotification, useUnfollow } from "../
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
 import { Button, Modal } from "antd";
+import { useUser } from "../../contexts/UserContext";
 
 const FollowButton = ({ streamerId, streamerName }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [notification, setNotification] = useState(true);
     const [showUnfollowModal, setShowUnfollowModal] = useState(false);
-
     const [followed, setFollowed] = useState(false);
+
+    const { followedChannels, setFollowedChannels } = useUser();
 
     const { auth } = useAuth();
     const userId = auth?.user?._id;
@@ -33,6 +35,7 @@ const FollowButton = ({ streamerId, streamerName }) => {
         if (followMutation.data) {
             setFollowed(true);
             setNotification(followMutation.data.receiveNotification);
+            setFollowedChannels([followMutation.data.follow, ...followedChannels]);
         }
     }, [followMutation.isSuccess]);
 
@@ -70,6 +73,7 @@ const FollowButton = ({ streamerId, streamerName }) => {
         if (unfollowMutation.data) {
             setFollowed(false);
             setShowUnfollowModal(false);
+            setFollowedChannels(followedChannels.filter(channel => channel.streamer._id != streamerId));
         }
     }, [unfollowMutation.isSuccess]);
 
@@ -80,6 +84,7 @@ const FollowButton = ({ streamerId, streamerName }) => {
 
     return (
         <div>
+            {/* {(!followed && auth && userId != streamerId) && <div> */}
             {(!followed && auth) && <div>
                 <button
                     onClick={handleFollow}
@@ -90,7 +95,8 @@ const FollowButton = ({ streamerId, streamerName }) => {
                     <span className="text-sm md:text-lg">Follow</span>
                 </button>
             </div>}
-            {followed && <div className="relative">
+            {/* {(followed && userId != streamerId) && <div className="relative"> */}
+            {(followed) && <div className="relative">
                 <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     className="flex space-x-2 items-center text-white bg-purple-700 
