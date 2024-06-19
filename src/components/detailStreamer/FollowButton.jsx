@@ -84,8 +84,8 @@ const FollowButton = ({ streamerId, streamerName }) => {
 
     return (
         <div>
-            {/* {(!followed && auth && userId != streamerId) && <div> */}
-            {(!followed && auth) && <div>
+            {(!followed && auth && userId != streamerId) && <div>
+            {/* {(!followed && auth) && <div> */}
                 <button
                     onClick={handleFollow}
                     className="flex space-x-2 items-center text-white bg-blue-700 
@@ -95,8 +95,8 @@ const FollowButton = ({ streamerId, streamerName }) => {
                     <span className="text-sm md:text-lg">Follow</span>
                 </button>
             </div>}
-            {/* {(followed && userId != streamerId) && <div className="relative"> */}
-            {(followed) && <div className="relative">
+            {(followed && userId != streamerId) && <div className="relative">
+            {/* {(followed) && <div className="relative"> */}
                 <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     className="flex space-x-2 items-center text-white bg-purple-700 
