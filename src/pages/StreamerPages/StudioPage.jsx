@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
-import { Bolt, ChevronRight, CircleX, Pencil, Podcast } from 'lucide-react';
+import { Bolt, ChevronRight, CircleX, Pencil, Podcast, X } from 'lucide-react';
 import TagItem from '../../components/studio/TagItem';
 import { toast } from 'react-toastify';
 import { useGetAllComingStreams, useSaveNotification, useSaveStream } from '../../api/studio';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSelector } from 'react-redux';
 import { selectSocket } from '../../redux/slices/socketSlice';
-import { DatePicker, Modal, Tooltip } from 'antd';
+import { Button, DatePicker, Modal, Tooltip } from 'antd';
 import moment from 'moment';
 import { Skeleton } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
@@ -47,6 +47,7 @@ const StudioPage = () => {
 	const [modalEditOpen, setModalEditOpen] = useState(false);
 	const [streamIdClicked, setStreamIdClicked] = useState(null);
 	const [streamTitleClicked, setStreamTitleClicked] = useState('');
+	const [modalChooseStreamSourceOpen, setModalChooseStreamSourceOpen] = useState(false);
 	const navigate = useNavigate();
 	console.log(userId)
 	const submitTagHandler = () => {
@@ -101,6 +102,11 @@ const StudioPage = () => {
 	const handleClickDelete = (streamId, title) => {
 		console.log("CLICKED", streamId)
 		setModalDeleteOpen(true);
+		setStreamIdClicked(streamId);
+		setStreamTitleClicked(title);
+	}
+	const handleClickGoToStreamPage = (streamId, title) => {
+		setModalChooseStreamSourceOpen(true);
 		setStreamIdClicked(streamId);
 		setStreamTitleClicked(title);
 	}
@@ -210,11 +216,11 @@ const StudioPage = () => {
 															<CircleX />
 														</Tooltip>
 													</div>
-													<Link className="p-2 w-8 h-8 flex items-center justify-center text-center rounded-full font-semibold text-green-700 bg-green-100 dark:text-white dark:bg-green-600 cursor-pointer" to={`/studio/stream/${stream._id}`}>
+													<div className="p-2 w-8 h-8 flex items-center justify-center text-center rounded-full font-semibold text-green-700 bg-green-100 dark:text-white dark:bg-green-600 cursor-pointer" onClick={() => handleClickGoToStreamPage(stream._id, stream.title)}>
 														<Tooltip title="Go to stream page" color={'green'}>
 															<Podcast />
 														</Tooltip>
-													</Link>
+													</div>
 												</div>
 											</td>
 										</tr>
@@ -328,6 +334,44 @@ const StudioPage = () => {
 								</div>
 							</div>
 						</div>
+					</div>
+				</div>
+			</Modal>
+			<Modal 
+				className='bg-slate-100 dark:bg-slate-700 rounded-lg dark:text-slate-200'
+				centered
+				open={modalChooseStreamSourceOpen}
+				closeIcon={<X className="text-gray-600 dark:text-gray-300" />}
+				onCancel={() => setModalChooseStreamSourceOpen(false)}
+				footer={null}
+				width={400}
+			>
+				<div className="space-y-3">
+					<div className="text-lg">
+						Stream: <span className="italic">{streamTitleClicked}</span>
+					</div>
+					<div>Choose your stream's source</div>
+					<div className="flex gap-4">
+						<Button
+							type="primary"
+							className="uppercase bg-purple-600 hover:!bg-purple-800 text-white w-1/2"
+							onClick={() => {
+								sessionStorage.setItem("streamWithObs", false);
+								navigate(`/studio/stream/${streamIdClicked}`);
+							}}
+						>
+							Camera
+						</Button>
+						<Button
+							type="primary"
+							className="uppercase bg-purple-600 hover:!bg-purple-800 text-white w-1/2"
+							onClick={() => {
+								sessionStorage.setItem("streamWithObs", true);
+								navigate(`/studio/stream/${streamIdClicked}`);
+							}}
+						>
+							Obs
+						</Button>
 					</div>
 				</div>
 			</Modal>
