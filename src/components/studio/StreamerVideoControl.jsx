@@ -52,21 +52,21 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 			console.log(startStreamData)
 			if (startStreamData && startStreamData.egressId) {
 				setEgressId(startStreamData.egressId);
-			} else {
-				toast.error("Couldn't recording");
-			}
+			} 
 		}	
 		if(isStartStreamError) {
-			toast.error("Starting recording failed");
+			toast.error("Starting streaming failed");
 		}
 	}, [isStartStreamSuccess, isStartStreamError]) 
 
 	const togglePublishing = useCallback(async () => {
 		if (isPublishing && localParticipant) {
 			console.log(egressId);
-			if (egressId) {
-				setOpen(true);
-			} 
+			// if (egressId) {
+			// 	setOpen(true);
+			// } 
+			setOpen(true);
+
 		} else if (localParticipant) {
 			if (videoTrack) {
 				localParticipant.publishTrack(videoTrack);
