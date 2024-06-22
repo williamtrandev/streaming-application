@@ -3,8 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { useGetStreamerAbout } from "../../api/user";
 
 const StreamerAboutPage = () => {
-    const { username } = useParams();
-
+    let { username } = useParams();
+    username = username.replace("@", "");
     const [about, setAbout] = useState(null);
     const [links, setLinks] = useState(null);
 

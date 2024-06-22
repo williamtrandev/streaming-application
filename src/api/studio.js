@@ -188,6 +188,19 @@ const useGenerateViewerToken = () => {
 	})
 }
 
+const deleteSavedStreams = async (data) => {
+	const response = await APIClient.delete("/studio/stream", {
+		data
+	});
+	return response.data;
+}
+
+const useDeleteSavedStreams = () => {
+	return useMutation({
+		mutationFn: (data) => deleteSavedStreams(data)
+	})
+}
+
 export {
 	useSaveStream,
 	useSaveNotification,
@@ -204,5 +217,6 @@ export {
 	useStartStream,
 	useEndStream,
 	useGenerateStreamerToken,
-	useGenerateViewerToken
+	useGenerateViewerToken,
+	useDeleteSavedStreams
 };

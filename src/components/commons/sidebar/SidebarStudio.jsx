@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
-import { Moon, Settings, Telescope, Tv, LineChart, Podcast } from 'lucide-react';
+import { Moon, Settings, Telescope, Tv, LineChart, Podcast, FileVideo } from 'lucide-react';
 import DarkModeSwitcher from '../header/DarkModeSwitcher';
 import { appName } from '../../../constants';
 
@@ -128,6 +128,18 @@ const SidebarStudio = ({ sidebarOpen, setSidebarOpen }) => {
 								>
 									<Telescope className='w-5' />
 									<p className='text-base'>Community</p>
+								</NavLink>
+							</li>
+							<li>
+								<NavLink
+									to="saved"
+									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/studio/saved' ||
+										pathname.includes('saved')) &&
+										'bg-purple-600 dark:bg-meta-4 text-white'
+										}`}
+								>
+									<FileVideo className='w-5' />
+									<p className='text-base'>Saved Streams</p>
 								</NavLink>
 							</li>
 							<li className="md:hidden group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium">

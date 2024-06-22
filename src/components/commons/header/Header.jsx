@@ -9,7 +9,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 
 const Header = (props) => {
 	const location = useLocation();
-	const isStudioPath = location.pathname.includes('studio');
+	const isStudioPath = location.pathname.split("/")[1] === "studio";
 	const [isSearchVisible, setIsSearchVisible] = useState(false);
 	const searchRef = useRef(null);
 	const { auth } = useAuth();

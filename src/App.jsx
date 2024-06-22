@@ -28,6 +28,7 @@ import StreamerInfoTabs from './layouts/StreamerInfoTabs';
 import ViewerSettingTabs from './layouts/ViewerSettingTabs';
 import LikedPage from './pages/ViewerPages/LikedPage';
 import SearchPage from './pages/ViewerPages/SearchPage';
+import SavedStreamsPage from './pages/StreamerPages/SavedStreamsPage';
 
 
 function App() {
@@ -69,6 +70,7 @@ function App() {
           <Route path='stream/:streamId' element={<StreamPage />} />
           <Route path='analytics' element={<AnalyticsPage />} />
           <Route path='community' element={<CommunityPage />} />
+          <Route path='saved' element={<SavedStreamsPage />} />
         </Route>
       </Routes>
       <ToastContainer />

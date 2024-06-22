@@ -56,9 +56,31 @@ const useSearchUsersForMod = ({ q, limit, exclude }) => {
 	});
 }
 
+const searchSavedStreams = async (key, page, date, numViews, numViewsLive) => {
+	const response = await APIClient.get(
+		`/search/saved-streams?
+		key=${encodeURIComponent(key)}
+		&page=${page}
+		&date=${date}
+		&numViews=${numViews}
+		&numViewsLive=${numViewsLive}`
+	);
+	return response.data;
+}
+
+const useSearchSavedStreams = (key, page, date, numViews, numViewsLive) => {
+	return useQuery({
+		queryKey: ["savedstreamsstreamer", key, page, date, numViews, numViewsLive],
+		queryFn: () => searchSavedStreams(key, page, date, numViews, numViewsLive),
+		enabled: !!page,
+		refetchOnWindowFocus: false
+	});
+}
+
 export {
 	useSearchChannels,
     useSearchStreams,
 	useSearchHistory,
-	useSearchUsersForMod
+	useSearchUsersForMod,
+	useSearchSavedStreams
 };

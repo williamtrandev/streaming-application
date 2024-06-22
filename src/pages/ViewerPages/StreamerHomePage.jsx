@@ -6,7 +6,8 @@ import { useGetHomeStreams } from "../../api/stream";
 import { useParams } from "react-router-dom";
 
 const StreamerHomePage = () => {
-    const { username } = useParams();
+    let { username } = useParams();
+    username = username.replace("@", "");
 	const [currentStream, setCurrentStream] = useState(null);
     const [mostViewedStreams, setMostViewedStreams] = useState([]);
     const [mostLikedStreams, setMostLikedStreams] = useState([]);

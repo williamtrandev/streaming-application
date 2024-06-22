@@ -252,7 +252,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 							{followedShow.map((followedChannel, index) => (
 								<li key={index}>
 									<NavLink
-										to={`/${followedChannel.streamer.username}`}
+										to={`/@${followedChannel.streamer.username}`}
 										className={({ isActive }) =>
 											'group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ' +
 											(isActive && 'bg-purple-600 dark:bg-meta-4 text-white')
