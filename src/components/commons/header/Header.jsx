@@ -2,18 +2,16 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DropdownNotification from '../header/DropdownNotification';
 import DarkModeSwitcher from './DarkModeSwitcher';
 import DropdownUser from '../header/DropdownUser';
-import LogoIcon from '../../../assets/lightmode.jpg';
 import { LogIn, Search } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
-
+import { logo } from '../../../assets';
 const Header = (props) => {
 	const location = useLocation();
 	const isStudioPath = location.pathname.includes('studio');
 	const [isSearchVisible, setIsSearchVisible] = useState(false);
 	const searchRef = useRef(null);
 	const { auth } = useAuth();
-	// const logged = true;
 	const logged = auth != null;
 
 	const navigate = useNavigate();
@@ -44,7 +42,6 @@ const Header = (props) => {
 			navigate(`/search?q=${encodeURIComponent(searchKey.trim())}`);
 		}
 	};
-
 	return (
 		<header className="sticky top-0 z-999 flex w-full h-20 bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
 			<div className="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
@@ -86,7 +83,7 @@ const Header = (props) => {
 					</button>
 
 					<Link className="block flex-shrink-0 lg:hidden" to="/">
-						<img src={auth?.user?.profilePicture} alt="Logo" className='w-10 h-10 rounded-full' />
+						<img src={logo} alt="Logo" className='w-10 h-10 rounded-full' />
 					</Link>
 				</div>
 				{!isStudioPath &&

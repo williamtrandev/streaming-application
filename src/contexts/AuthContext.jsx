@@ -1,5 +1,6 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useEffect, useContext } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
+import { authEventEmitter } from './authEventEmitter';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -12,6 +13,16 @@ export const AuthProvider = ({ children }) => {
 	const logout = () => {
 		setAuth(null);
 	};
+	useEffect(() => {
+		const handleLogout = () => {
+			logout();
+		};
+		authEventEmitter.on('logout', handleLogout);
+
+		return () => {
+			authEventEmitter.off('logout', handleLogout);
+		};
+	}, []);
 
 	return (
 		<AuthContext.Provider 

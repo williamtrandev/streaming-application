@@ -30,7 +30,7 @@ const StreamPage = () => {
 					{streamWithObs == 'false' && <StreamerVideo streamId={streamId} />} 
 				</div>
 				<div className="h-full w-full overflow-auto">
-					<ChatBox streamId={streamId} socket={socket} />
+					<ChatBox streamId={streamId} socket={socket} isStreamer={true} />
 				</div>
 			</div>
 		</div>
