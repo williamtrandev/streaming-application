@@ -5,12 +5,14 @@ import FollowButton from "../detailStreamer/FollowButton";
 import { Link } from "react-router-dom";
 import { Track } from 'livekit-client';
 import '@livekit/components-styles';
-import { LiveKitRoom } from '@livekit/components-react';
+import { LiveKitRoom, useParticipants } from '@livekit/components-react';
 import { jwtDecode } from "jwt-decode";
 import StreamVideoControl from "./StreamVideoControl";
 import { useAuth } from "../../contexts/AuthContext";
 import { v4 as uuidv4 } from 'uuid';
 import { useGenerateViewerToken } from "../../api/studio";
+import { useSelector } from "react-redux";
+import { selectSocket } from "../../redux/slices/socketSlice";
 
 const Streamer = ({ user }) => {
 	return (
@@ -35,7 +37,7 @@ const Streamer = ({ user }) => {
 	);
 }
 
-const StreamDescription = ({ stream }) => {
+const StreamDescription = ({ stream, numViewers }) => {
 	const [isExpanded, setIsExpanded] = useState(false);
 	return (
 		<div className="w-full items-center space-y-3 bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
@@ -50,7 +52,13 @@ const StreamDescription = ({ stream }) => {
 					</div>
 					<div className="flex gap-2">
 						<Users className="w-[1rem]" />
-						<span>{formatNumViewers(stream?.numViewers)}</span>
+						<span>
+							{formatNumViewers(
+							stream?.isFinished
+								? stream.numViewers || 0
+								: (numViewers || 0)
+							)}
+						</span>
 					</div>
 				</div>
 				<div className="flex divide-x-2 divide-white dark:divide-boxdark mb-4 text-xs md:text-base">
@@ -87,8 +95,10 @@ const StreamDescription = ({ stream }) => {
 const StreamVideo = ({ streamData }) => {
 	const streamId = streamData?.stream?._id;
 	const [viewerToken, setViewerToken] = useState("");
+	const [numViewers, setNumViewers] = useState(0);
 	const { auth } = useAuth();
 	const userId = auth?.user?._id || uuidv4();
+	const socket = useSelector(selectSocket);
 	const { mutate, isSuccess, data } = useGenerateViewerToken();
 	useEffect(() => {
 		if (!streamId) return;
@@ -129,6 +139,19 @@ const StreamVideo = ({ streamData }) => {
 		}
 	}, [isSuccess]);
 
+	useEffect(() => {
+		socket.emit('joinRoom', streamId);
+		socket.on('updateViewers', (data) => {
+			if (data.streamId === streamId) {
+				console.log(data)
+				setNumViewers(data.viewers);
+			}
+		});
+
+		return () => {
+			socket.emit('leaveStream', streamId);
+		};
+	}, [streamId]);
 	return (
 		<div className="w-full flex flex-col items-center space-y-3">
 			<Streamer user={streamData?.stream?.user} />
@@ -138,12 +161,12 @@ const StreamVideo = ({ streamData }) => {
 				className="flex flex-1 flex-col"
 			>
 				<div className="flex h-full flex-1">
-					<div className="flex-1 flex-col container  rounded-lg overflow-hidden">
-						<StreamVideoControl streamId={streamId} />
+					<div className="flex-1 flex-col container rounded-lg overflow-hidden">
+						<StreamVideoControl streamId={streamId} setNumViewers={setNumViewers} />
 					</div>
 				</div>
 			</LiveKitRoom>
-			<StreamDescription stream={streamData?.stream} />
+			<StreamDescription stream={streamData?.stream} numViewers={numViewers} />
 		</div>
 	)
 }

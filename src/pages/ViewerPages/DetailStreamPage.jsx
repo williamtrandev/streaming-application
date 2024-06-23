@@ -58,7 +58,6 @@ const DetailStreamPage = () => {
 				</div>
 			</div>
 		</div>
-
 	)
 }
 
