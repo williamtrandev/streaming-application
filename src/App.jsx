@@ -29,6 +29,7 @@ import ViewerSettingTabs from './layouts/ViewerSettingTabs';
 import LikedPage from './pages/ViewerPages/LikedPage';
 import SearchPage from './pages/ViewerPages/SearchPage';
 import SavedStreamsPage from './pages/StreamerPages/SavedStreamsPage';
+import NotFoundPage from './pages/CommonPages/NotFoundPage';
 
 
 function App() {
@@ -64,6 +65,7 @@ function App() {
             <Route path='profile' element={<SettingProfilePage />} />
             <Route path='security' element={<SettingSecurityPage />} />
           </Route>
+          <Route path='*' element={<NotFoundPage />} />
         </Route>
         <Route path='/studio' element={<StudioLayout />}>
           <Route path='manager' element={<StudioPage />} />

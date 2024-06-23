@@ -57,9 +57,24 @@ const useGetFollowingStreams = (page) => {
 	});
 }
 
+const getNumLikesAndDislikes = async (streamId) => {
+	const response = await APIClient.get(`/stream/likes-dislikes/${streamId}`);
+	return response.data;
+}
+
+const useGetNumLikesAndDislikes = (streamId) => {
+	return useQuery({
+		queryKey: ["LikesAndDislikes", streamId],
+		queryFn: () => getNumLikesAndDislikes(streamId),
+		enabled: !!streamId,
+		refetchInterval: 60000
+	});
+}
+
 export {
     useGetSavedStreams,
 	useGetHomeStreams,
 	useGetLikedStreams,
-	useGetFollowingStreams
+	useGetFollowingStreams,
+	useGetNumLikesAndDislikes
 };

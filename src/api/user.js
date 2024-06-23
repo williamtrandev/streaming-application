@@ -186,7 +186,8 @@ const useGetFollowedChannels = (userId) => {
 		queryKey: ["follow", userId],
 		queryFn: () => getFollowedChannels(userId),
 		enabled: !!userId,
-		refetchOnWindowFocus: false
+		// refetchInterval: 60000
+		// refetchOnWindowFocus: false
 	});
 }
 

@@ -7,7 +7,6 @@ import { selectSocket } from '../../redux/slices/socketSlice';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGetDetailStream } from '../../api/studio';
 import Spinner from '../../components/commons/spinner/Spinner';
-import { useWriteHistory } from '../../api/history';
 
 const DetailStreamPage = () => {
 	const { streamId } = useParams();
@@ -21,13 +20,6 @@ const DetailStreamPage = () => {
 			socket.emit('joinRoom', streamId, userId);
 		}
 	}, [socket]);
-
-	const { mutate: writeHistory } = useWriteHistory();
-	useEffect(() => {
-		if (detailStreamData) {
-			writeHistory({ streamId });
-		}
-	}, [detailStreamData]);
 
 	if (isDetailLoading) {
 		return (

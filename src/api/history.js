@@ -12,6 +12,18 @@ const useWriteHistory = () => {
 	})
 }
 
+const likeStream = async (data) => {
+	const response = await APIClient.put("/history/like", data);
+	return response.data;
+}
+
+const useLikeStream = () => {
+	return useMutation({
+		mutationFn: (data) => likeStream(data)
+	})
+}
+
 export {
-	useWriteHistory
+	useWriteHistory,
+	useLikeStream
 };
