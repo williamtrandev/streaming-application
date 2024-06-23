@@ -14,6 +14,7 @@ import { UserProvider } from './contexts/UserContext.jsx';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      retry: false,
       refetchOnWindowFocus: false, 
     }
   }
