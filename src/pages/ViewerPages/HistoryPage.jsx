@@ -1,5 +1,4 @@
 import StreamCard from "../../components/home/StreamCard";
-import HorizontalStreamCard from "../../components/detailStreamer/HorizontalStreamCard"
 import { History, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchHistory } from "../../api/search";
@@ -48,12 +47,17 @@ const HistoryPage = () => {
 
 	return (
 		<div>
+			{histories.length == 0 && <div className="h-full flex flex-col items-center justify-center gap-4">
+				<History size={64} />
+				<span className="text-lg">You haven't watched any streams yet.</span>
+			</div>}
+
 			{!auth && <div className="h-full flex flex-col items-center justify-center gap-4">
 				<History size={64} />
 				<span className="text-lg">You can only view your history when you are logged in.</span>
 			</div>}
 
-			{auth && <div className="space-y-4">
+			{(auth && histories.length > 0 ) && <div className="space-y-4">
 				<div className="grid grid-cols-3 py-3 sticky z-99 top-18 bg-[#edf2f9] dark:bg-boxdark-2">
 					<div className="text-2xl font-bold col-span-2">Watch history</div>
 					<div className="relative h-fit w-full">
