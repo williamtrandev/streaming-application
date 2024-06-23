@@ -3,65 +3,8 @@ import MessageInput from './MessageInput';
 import Message from './Message';
 import { useSendMessage, useGetMessages } from '../../api/chat';
 import { useAuth } from '../../contexts/AuthContext';
-// const messages = [
-// 	{
-// 		message: "Hey there! How's everything going on your end?"
-// 	},
-// 	{
-// 		message: "Just wanted to say hi and see how you're doing!"
-// 	},
-// 	{
-// 		message: "Hope your day is filled with joy and productivity!"
-// 	},
-// 	{
-// 		message: "Sending positive vibes your way! Keep shining!"
-// 	},
-// 	{
-// 		message: "Remember to take breaks and recharge when you need to!"
-// 	},
-// 	{
-// 		message: "You're awesome, just thought you should know!"
-// 	},
-// 	{
-// 		message: "Don't forget to celebrate even the smallest victories!"
-// 	},
-// 	{
-// 		message: "Life's too short not to smile. 😊"
-// 	},
-// 	{
-// 		message: "You're capable of amazing things. Keep pushing forward!"
-// 	},
-// 	{
-// 		message: "Sending virtual high-fives your way! 🙌"
-// 	}
-// ];
 
-// function generateRandomMessage() {
-// 	const randomMessageIndex = Math.floor(Math.random() * messages.length);
-// 	const randomMessage = messages[randomMessageIndex].message;
-// 	const names = ['An', 'Bình', 'Châu', 'Duy', 'Hải', 'Linh', 'Thành', 'Luân', 'Tiên', 'Thủy'];
-// 	const randomIndex = Math.floor(Math.random() * names.length);
-// 	const randomDisplayName = names[randomIndex];
-// 	const currentTimestamp = Math.floor(Date.now() / 1000);
-
-// 	const oneWeekAgoTimestamp = currentTimestamp - (7 * 24 * 60 * 60); 
-// 	const rangeInSeconds = currentTimestamp - oneWeekAgoTimestamp;
-
-// 	const randomSeconds = Math.floor(Math.random() * rangeInSeconds);
-// 	const randomCreatedAt = oneWeekAgoTimestamp + randomSeconds;
-// 	const randomPhotoURL = "https://source.unsplash.com/random"; 
-
-// 	return {
-// 		message: randomMessage,
-// 		displayName: randomDisplayName,
-// 		createdAt: randomCreatedAt,
-// 		photoURL: randomPhotoURL
-// 	};
-// }
-
-// const randomMessages = Array.from({ length: 10 }, () => generateRandomMessage());
-
-const ChatBox = ({ streamId, socket }) => {
+const ChatBox = ({ streamId, socket, isStreamer=false }) => {
 
 	const [msgs, setMsgs] = useState([]);
 	const messagesEndRef = useRef(null);
@@ -82,14 +25,13 @@ const ChatBox = ({ streamId, socket }) => {
 				setMsgs((prevMsgs) => {
 					const newMessage = {
 						content: data?.content,
-						user: {
-							fullname: auth?.user?.fullname,
-							profilePicture: auth?.user?.profilePicture
-						},
+						user: data?.user,
 						createdAt: new Date(Date.now()).toISOString(),
+						isStreamer: data?.isStreamer
 					};
 					return [...prevMsgs, newMessage];
 				});
+				console.log(msgs)
 			});
 
 			return () => {
@@ -98,14 +40,25 @@ const ChatBox = ({ streamId, socket }) => {
 		}
 	}, [socket]);
 	const handleMessageSubmit = async (msg) => {
-		const msgSend = {
+		const baseMsg = {
 			streamId: streamId,
-			userId: userId,
 			content: msg,
-			duration: '0'
+			duration: '0',
+			isStreamer: isStreamer,
+		}
+		const msgSend = {
+			userId: userId, 
+			...baseMsg
+		}
+		const msgSendSocket = {
+			...baseMsg,
+			user: {
+				fullname: auth?.user?.fullname,
+				profilePicture: auth?.user?.profilePicture
+			},
 		}
 		sendMessage(msgSend);
-		socket.emit("sendMessage", msgSend);
+		socket.emit("sendMessage", msgSendSocket);
 	};
 	useEffect(() => {
 		scrollToBottom();

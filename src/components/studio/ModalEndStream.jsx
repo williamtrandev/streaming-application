@@ -9,11 +9,9 @@ const ModalEndStream = ({ open, setOpen, streamId, egressId }) => {
 	const { mutate: endStream, isError: isEndError, isSuccess: isEndSuccess } = useEndStream();
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const handleOk = async () => {
-		if(egressId) {
-			setConfirmLoading(true);
-			endStream({ streamId, egressId });
-			navigate(`/studio/manager`);
-		}
+		setConfirmLoading(true);
+		endStream({ streamId, egressId });
+		navigate(`/studio/manager`);
 	}
 	useEffect(() => {
 		if (isEndError) {

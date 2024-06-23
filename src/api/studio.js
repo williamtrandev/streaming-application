@@ -201,6 +201,20 @@ const useDeleteSavedStreams = () => {
 	})
 }
 
+const getStreamRecord = async (streamId) => {
+	console.log("RECORD", streamId)
+	const response = await APIClient.get(`/studio/record/${streamId}.mp4`);
+	return response.data;
+}
+
+const useGetStreamRecord = (streamId) => {
+	return useQuery({
+		queryKey: ["record", streamId],
+		queryFn: () => getStreamRecord(streamId),
+		enabled: !!streamId
+	})
+}
+
 export {
 	useSaveStream,
 	useSaveNotification,
@@ -218,5 +232,6 @@ export {
 	useEndStream,
 	useGenerateStreamerToken,
 	useGenerateViewerToken,
-	useDeleteSavedStreams
+	useDeleteSavedStreams,
+	useGetStreamRecord
 };

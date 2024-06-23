@@ -7,6 +7,7 @@ import { selectSocket } from '../../redux/slices/socketSlice';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGetDetailStream } from '../../api/studio';
 import Spinner from '../../components/commons/spinner/Spinner';
+import RecordStreamVideo from '../../components/detailStream/RecordStreamVideo';
 
 const DetailStreamPage = () => {
 	const { streamId } = useParams();
@@ -33,7 +34,23 @@ const DetailStreamPage = () => {
 			<div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)]">
 				<div className="md:grid md:grid-cols-3 md:gap-2 h-full w-full space-y-3 md:space-y-0">
 					<div className="md:col-span-2 w-full h-full md:overflow-auto">
-						<StreamVideo streamData={detailStreamData}/>
+						{detailStreamData ? (
+							detailStreamData.stream.finished ? (
+								detailStreamData.stream.rerun ? (
+									<RecordStreamVideo streamData={detailStreamData} />
+								) : (
+									<div className="flex justify-center items-center h-full">
+										<p>This stream has ended.</p>
+									</div>
+								)
+							) : (
+								<StreamVideo streamData={detailStreamData} />
+							)
+						) : (
+							<div className="flex justify-center items-center h-full">
+								<p>No stream data available.</p>
+							</div>
+						)}
 					</div>
 					<div className="h-full w-full overflow-auto">
 						<ChatBox streamId={streamId} socket={socket} />

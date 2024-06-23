@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { selectSocket } from '../../redux/slices/socketSlice';
 import { Button, DatePicker, Modal, Tooltip } from 'antd';
 import moment from 'moment';
-import { Skeleton } from 'antd';
+import { Skeleton, Checkbox } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { blobToBase64 } from '../../utils';
 import ModalDetailStream from '../../components/studio/ModalDetailStream';
@@ -33,6 +33,7 @@ const StudioPage = () => {
 	const [tagValue, setTagValue] = useState("");
 	const [tagArr, setTagArr] = useState([]);
 	const [image, setImage] = useState('https://wp.technologyreview.com/wp-content/uploads/2023/11/MIT_Universe_fibnal.jpg');
+	const [rerun, setRerun] = useState(false); 
 	const [modalOpen, setModalOpen] = useState(false);
 	const [streamId, setStreamId] = useState(null);
 	const { mutate: saveStream, isSuccess: isSuccessStream, data: streamData, isError: isErrorStream, error: errorStream } = useSaveStream();
@@ -90,7 +91,8 @@ const StudioPage = () => {
 			description: description,
 			dateStream: selectedTime.toDate().toISOString(),
 			tags: tags,
-			previewImage: previewImage
+			previewImage: previewImage,
+			rerun: rerun
 		}
 		saveStream(data);
 	};
@@ -329,7 +331,7 @@ const StudioPage = () => {
 							<div className="space-y-3">
 								<h5 className="font-bold text-lg">Rerun</h5>
 								<div className="flex space-x-5">
-									<input type="checkbox" />
+									<Checkbox checked={rerun} onChange={(e) => { setRerun(e.target.checked) }} />
 									<span className="text-base">Let viewers know your stream was previously recorded. Failure to label Reruns leads to viewer confusion which damages trust.</span>
 								</div>
 							</div>
