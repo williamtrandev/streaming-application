@@ -4,13 +4,14 @@ import ProfileHeader from "../components/detailStreamer/ProfileHeader";
 
 const StreamerInfoTabs = () => {
 	const { username } = useParams();
+	const username1 = username.replace("@", "");
 	const location = useLocation();
 	const { pathname } = location;
 
 	return (
 		<div>
 			<div className="mb-3">
-				<ProfileHeader username={username} />
+				<ProfileHeader username={username1} />
 			</div>
 
 			<div className="w-full">

@@ -46,6 +46,10 @@ const LikedPage = () => {
 
     return (
         <div>
+            {likedHistories.length == 0 && <div className="h-full flex flex-col items-center justify-center gap-4">
+                <ThumbsUp size={64} />
+                <span className="text-lg">You haven't liked any streams yet.</span>
+            </div>}
             {!auth && <div className="h-full flex flex-col items-center justify-center gap-4">
                 <ThumbsUp size={64} />
                 <span className="text-lg">You can only view streams you liked when you are logged in.</span>

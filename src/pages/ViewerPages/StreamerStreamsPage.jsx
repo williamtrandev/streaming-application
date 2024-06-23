@@ -5,7 +5,8 @@ import { useGetSavedStreams } from "../../api/stream";
 import { useParams } from "react-router-dom";
 
 const StreamerStreamsPage = () => {
-    const { username } = useParams();
+    let { username } = useParams();
+    username = username.replace("@", "");
     const [savedStreams, setSavedStreams] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);

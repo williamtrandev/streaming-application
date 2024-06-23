@@ -1,4 +1,3 @@
-import { streams } from "../../constants";
 import StreamCard from "../../components/home/StreamCard";
 import { useGetFollowingStreams } from "../../api/stream";
 import { useEffect, useState } from "react";
@@ -47,6 +46,10 @@ const FollowingPage = () => {
 
 	return (
         <div>
+            {followingStreams.length == 0 && <div className="h-full flex flex-col items-center justify-center gap-4">
+                <Podcast size={64} />
+                <span className="text-lg">You haven't followed any channels yet.</span>
+            </div>}
             {!auth && <div className="h-full flex flex-col items-center justify-center gap-4">
                 <Podcast size={64} />
                 <span className="text-lg">You can only view your following channels's streams when you are logged in.</span>

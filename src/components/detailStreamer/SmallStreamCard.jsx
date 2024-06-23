@@ -7,11 +7,11 @@ const SmallStreamCard = ({
 }) => {
 	return (
 		<Link to={`/live/${stream._id}`}>
-			<div className="rounded-2xl border-r-2 border-b-2 border-transparent
-				hover:border-purple-600 dark:hover:border-gray-300">
+			<div className="rounded-2xl border-2 border-transparent
+				shadow-md transform transition-transform duration-300 hover:scale-105 hover:border-purple-500">
 				<div className='bg-white dark:bg-meta-4 rounded-2xl text-theme shadow-md overflow-hidden'>
-					<div className="relative">
-						<img src={stream.previewImage?.url} alt="" className="object-contain" />
+					<div className="relative aspect-video">
+						<img src={stream.previewImage} alt="" className="object-cover aspect-video" />
 						<div className="bg-slate-700 text-white px-1 rounded-md text-sm
 						absolute bottom-3 right-3 flex items-center gap-1">
 							{formatDuration(stream.duration)}

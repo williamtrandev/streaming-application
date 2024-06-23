@@ -188,6 +188,19 @@ const useGenerateViewerToken = () => {
 	})
 }
 
+const deleteSavedStreams = async (data) => {
+	const response = await APIClient.delete("/studio/stream", {
+		data
+	});
+	return response.data;
+}
+
+const useDeleteSavedStreams = () => {
+	return useMutation({
+		mutationFn: (data) => deleteSavedStreams(data)
+	})
+}
+
 const getStreamRecord = async (streamId) => {
 	console.log("RECORD", streamId)
 	const response = await APIClient.get(`/studio/record/${streamId}.mp4`);
@@ -219,5 +232,6 @@ export {
 	useEndStream,
 	useGenerateStreamerToken,
 	useGenerateViewerToken,
+	useDeleteSavedStreams,
 	useGetStreamRecord
 };

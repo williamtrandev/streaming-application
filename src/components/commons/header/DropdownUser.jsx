@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import UserOne from '../../../assets/lightmode.jpg';
 import { useAuth } from '../../../contexts/AuthContext';
-import { Video } from 'lucide-react';
+import { Home, Video } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useGetMiniProfile } from '../../../api/user';
 import { useUser } from '../../../contexts/UserContext';
@@ -11,6 +11,8 @@ import { useUser } from '../../../contexts/UserContext';
 const DropdownUser = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const navigate = useNavigate();
+	const location = useLocation();
+	const isStudioPath = location.pathname.split("/")[1] === "studio";
 
 	const trigger = useRef(null);
 	const dropdown = useRef(null);
@@ -114,7 +116,7 @@ const DropdownUser = () => {
 				<ul className="flex flex-col gap-5 px-6 py-4">
 					<li>
 						<Link
-							to={`/${authUsername}`}
+							to={`/@${authUsername}`}
 							className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
 						>
 							<svg
@@ -134,10 +136,19 @@ const DropdownUser = () => {
 									fill=""
 								/>
 							</svg>
-							My Channel
+							Your Channel
 						</Link>
 					</li>
-					<li>
+					{isStudioPath && <li>
+						<Link
+							to="/"
+							className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+						>
+							<Home />
+							Back to Duo Streaming
+						</Link>
+					</li>}
+					{!isStudioPath && <li>
 						<Link
 							to="/studio/manager"
 							className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
@@ -145,7 +156,7 @@ const DropdownUser = () => {
 							<Video />
 							Studio
 						</Link>
-					</li>
+					</li>}
 					<li>
 						<Link
 							to="/settings/profile"
