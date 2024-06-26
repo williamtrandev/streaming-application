@@ -215,6 +215,19 @@ const useGetStreamRecord = (streamId) => {
 	})
 }
 
+const getStats = async ({ statsType, fromDate, toDate }) => {
+	const response = await APIClient.get(`/studio/stats?statsType=${statsType}&fromDate=${fromDate}&toDate=${toDate}`);
+	return response.data;
+}
+
+const useGetStats = ({ statsType, fromDate, toDate }) => {
+	return useQuery({
+		queryKey: ["stats", { statsType, fromDate, toDate }],
+		queryFn: () => getStats({ statsType, fromDate, toDate }),
+		enabled: !!statsType
+	})
+}
+
 export {
 	useSaveStream,
 	useSaveNotification,
@@ -233,5 +246,6 @@ export {
 	useGenerateStreamerToken,
 	useGenerateViewerToken,
 	useDeleteSavedStreams,
-	useGetStreamRecord
+	useGetStreamRecord,
+	useGetStats
 };

@@ -19,4 +19,16 @@ async function blobToBase64(blobUrl) {
 	}
 }
 
-export { blobToBase64 };
+const formatDataChart = (value, type) => {
+	switch (type) {
+		case 'time_streaming':
+			const h = Math.floor(value / 3600);
+			const m = Math.floor((value % 3600) / 60);
+			const s = value % 60;
+			return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+		case 'number':
+		default:
+			return value;
+	}
+};
+export { blobToBase64, formatDataChart };
