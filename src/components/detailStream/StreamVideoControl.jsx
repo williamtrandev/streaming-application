@@ -1,11 +1,12 @@
 import {
 	StartAudio,
 	useConnectionState,
+	useParticipants,
 	useRemoteParticipant,
 	useTracks,
 } from "@livekit/components-react";
 import { ConnectionState, Track } from "livekit-client";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { connectionStateMapping } from "../../utils/livekit";
 import { Maximize, Minimize, Volume2, VolumeX } from "lucide-react";
 import { Tooltip } from "antd";
@@ -16,7 +17,6 @@ const StreamVideoControl = ({ streamId }) => {
 	const tracks = useTracks(Object.values(Track.Source)).filter(
 		(track) => track.participant.identity === streamId
 	);
-	console.log(tracks)
 	if (connectionState !== ConnectionState.Connected || !participant) {
 		return (
 			<div className="grid aspect-video items-center justify-center bg-black text-sm uppercase text-white">
@@ -89,7 +89,7 @@ const StreamerRemote = ({ participant }) => {
 			<div className="absolute top-0 h-full w-full opacity-0 hover:opacity-100 hover:transition-all">
 				<div className="absolute bottom-0 flex h-14 w-full items-center justify-between bg-gradient-to-t from-neutral-900 px-4">
 					<div className="flex items-center gap-2">
-						<Tooltip title={muted ? "UnMute":"Mute"} color={'purple'}>
+						<Tooltip title={muted ? "UnMute" : "Mute"} color={'purple'}>
 							<div className="text-white" onClick={onToggleMute}>
 								{muted ? (
 									<VolumeX className="h-6 w-6 hover:scale-110 hover:transition-all" />
@@ -107,13 +107,13 @@ const StreamerRemote = ({ participant }) => {
 					</div>
 					<div className="flex items-center justify-center gap-4">
 						<Tooltip title={isFullScreen ? "Exit fullscreen" : "Enter fullscreen"} color={'purple'}>
-						<div className="text-white" onClick={onFullScreen}>
-							{isFullScreen ? (
-								<Minimize className="h-5 w-5 hover:scale-110 hover:transition-all" />
-							) : (
-								<Maximize className="h-5 w-5 hover:scale-110 hover:transition-all" />
-							)}
-						</div>
+							<div className="text-white" onClick={onFullScreen}>
+								{isFullScreen ? (
+									<Minimize className="h-5 w-5 hover:scale-110 hover:transition-all" />
+								) : (
+									<Maximize className="h-5 w-5 hover:scale-110 hover:transition-all" />
+								)}
+							</div>
 						</Tooltip>
 					</div>
 				</div>
