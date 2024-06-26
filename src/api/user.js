@@ -183,9 +183,9 @@ const getFollowedChannels = async (userId) => {
 
 const useGetFollowedChannels = (userId) => {
 	return useQuery({
-		queryKey: ["follow", userId],
+		queryKey: ["FollowedChannels", userId],
 		queryFn: () => getFollowedChannels(userId),
-		enabled: !!userId,
+		enabled: !!userId
 		// refetchInterval: 60000
 		// refetchOnWindowFocus: false
 	});

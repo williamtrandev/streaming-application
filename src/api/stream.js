@@ -71,10 +71,24 @@ const useGetNumLikesAndDislikes = (streamId) => {
 	});
 }
 
+const getHomePageStreams = async (userId) => {
+	const response = await APIClient.get(`/stream/home?userId=${userId}`);
+	return response.data;
+}
+
+const useGetHomePageStreams = (userId) => {
+	return useQuery({
+		queryKey: ["HomePage", userId],
+		queryFn: () => getHomePageStreams(userId),
+		refetchOnWindowFocus: false
+	});
+}
+
 export {
     useGetSavedStreams,
 	useGetHomeStreams,
 	useGetLikedStreams,
 	useGetFollowingStreams,
-	useGetNumLikesAndDislikes
+	useGetNumLikesAndDislikes,
+	useGetHomePageStreams
 };

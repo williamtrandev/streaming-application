@@ -140,6 +140,11 @@ const StreamDescription = ({ stream }) => {
 					</button>
 				</div>
 			</div>
+			<div className="flex gap-3">
+				{stream?.tags.map((tag, index) => (
+					<div className="px-3 py-1 rounded-r-full rounded-l-full bg-neutral-300 dark:bg-neutral-700">{tag}</div>
+				))}
+			</div>
 			<div className={isExpanded ? "flex flex-col gap-4" : ""}>
 				{isExpanded ? stream?.description : `${stream?.description?.substring(0, 200)}...`}
 				{
