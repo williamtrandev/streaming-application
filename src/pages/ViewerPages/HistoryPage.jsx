@@ -5,13 +5,14 @@ import { useSearchHistory } from "../../api/search";
 import { useAuth } from "../../contexts/AuthContext";
 const HistoryPage = () => {
 	const { auth } = useAuth();
+	const userId = auth?.user?._id;
 	const [historySearch, setHistorySearch] = useState("");
 	const [histories, setHistories] = useState([]);
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(true);
 	const [q, setQ] = useState("");
 
-	const { data: historyData, refetch } = useSearchHistory({ key: q, page });
+	const { data: historyData, refetch } = useSearchHistory({ userId, key: q, page });
 	useEffect(() => {
 		if (historyData) {
 			if (page == 1) {
@@ -47,7 +48,7 @@ const HistoryPage = () => {
 
 	return (
 		<div>
-			{histories.length == 0 && <div className="h-full flex flex-col items-center justify-center gap-4">
+			{(histories.length == 0 && auth) && <div className="h-full flex flex-col items-center justify-center gap-4">
 				<History size={64} />
 				<span className="text-lg">You haven't watched any streams yet.</span>
 			</div>}

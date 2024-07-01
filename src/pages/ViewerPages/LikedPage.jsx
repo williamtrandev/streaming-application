@@ -6,11 +6,12 @@ import { ThumbsUp } from "lucide-react";
 
 const LikedPage = () => {
     const { auth } = useAuth();
+    const userId = auth?.user?._id
     const [likedHistories, setLikedHistories] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
-    const { data, refetch } = useGetLikedStreams(page);
+    const { data, refetch } = useGetLikedStreams(userId, page);
     useEffect(() => {
         if (data) {
             if (page == 1) {
@@ -46,7 +47,7 @@ const LikedPage = () => {
 
     return (
         <div>
-            {likedHistories.length == 0 && <div className="h-full flex flex-col items-center justify-center gap-4">
+            {(likedHistories.length == 0 && auth) && <div className="h-full flex flex-col items-center justify-center gap-4">
                 <ThumbsUp size={64} />
                 <span className="text-lg">You haven't liked any streams yet.</span>
             </div>}

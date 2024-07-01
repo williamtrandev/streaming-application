@@ -28,7 +28,7 @@ const SmallStreamCard = ({
 								{formatNumViewers(stream.numViews)}
 							</p>
 							<p className="text-sm whitespace-nowrap">
-								{formatTimeDifference(stream.dateStream)}
+								{formatTimeDifference(stream.startAt)}
 							</p>
 						</div>
 					</div>

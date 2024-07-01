@@ -4,6 +4,7 @@ import { useChangeProfileBanner } from "../../api/user";
 import { useAuth } from "../../contexts/AuthContext";
 import { blobToBase64 } from "../../utils";
 import { Button } from "antd";
+import { darkmode } from "../../assets";
 
 const ProfileBanner = ({ profileBanner }) => {
     const [previewBanner, setPreviewBanner] = useState(null);
@@ -35,7 +36,7 @@ const ProfileBanner = ({ profileBanner }) => {
                     bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
                 <div className="z-20 h-16 md:h-50 overflow-hidden">
                     <img
-                        src={previewBanner || profileBanner}
+                        src={previewBanner || profileBanner || darkmode}
                         alt="profile banner"
                         className="object-cover object-center aspect-[5/1] w-full"
                     />

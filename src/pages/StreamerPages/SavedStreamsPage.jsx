@@ -162,7 +162,7 @@ const SavedStreamsPage = () => {
     return (
         <div className="space-y-2">
             <div className="text-lg font-bold">Saved Streams Manager</div>
-            <div className="sticky top-18 z-999">
+            <div className="sticky top-18 z-99">
                 <div className="relative">
                     <button className="absolute left-0 h-full px-2">
                         <Search />
