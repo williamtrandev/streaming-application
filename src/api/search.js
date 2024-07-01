@@ -29,16 +29,16 @@ const useSearchStreams = ({ key, page }) => {
 	});
 }
 
-const searchHistory = async ({ key, page }) => {
-	const response = await APIClient.get(`/search/history?key=${encodeURIComponent(key)}&page=${page}`);
+const searchHistory = async ({ userId, key, page }) => {
+	const response = await APIClient.get(`/search/history/${userId}?key=${encodeURIComponent(key)}&page=${page}`);
 	return response.data;
 }
 
-const useSearchHistory = ({ key, page }) => {
+const useSearchHistory = ({ userId, key, page }) => {
 	return useQuery({
-		queryKey: ["history", key, page],
-		queryFn: () => searchHistory({ key, page }),
-		enabled: !!page,
+		queryKey: ["history", userId, key, page],
+		queryFn: () => searchHistory({ userId, key, page }),
+		enabled: !!userId && !!page,
 		refetchOnWindowFocus: false
 	});
 }

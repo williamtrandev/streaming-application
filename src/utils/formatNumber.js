@@ -40,10 +40,11 @@ export const formatNumViewers = (num) => {
 	}
 }
 
-export const formatDuration = (seconds) => {
-    const hours = Math.floor(seconds / 3600).toString().padStart(2, '0');
-    const minutes = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
-    const secs = (seconds % 60).toString().padStart(2, '0');
+export const formatDuration = (milliseconds) => {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+    const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+    const secs = (totalSeconds % 60).toString().padStart(2, '0');
 
     return `${hours}:${minutes}:${secs}`;
 }

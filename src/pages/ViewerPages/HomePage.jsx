@@ -9,7 +9,7 @@ const HomePage = () => {
 	const [randomStreams, setRandomStreams] = useState([]);
 	const [recommendStreams, setRecommendStreams] = useState([]);
 	const { auth } = useAuth();
-	const userId = auth?.user?._id
+	const userId = auth ? auth.user._id : "";
 	const { data } = useGetHomePageStreams(userId);
 	useEffect(() => {
 		if (data) {

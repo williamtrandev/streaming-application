@@ -24,36 +24,34 @@ const useGetHomeStreams = (username) => {
 	return useQuery({
 		queryKey: ["homestreams", username],
 		queryFn: () => getHomeStreams(username),
-		enabled: !!username,
-		// refetchOnWindowFocus: false
+		enabled: !!username
 	});
 }
 
-const getLikedStreams = async (page) => {
-	const response = await APIClient.get(`/stream/liked/${page}`);
+const getLikedStreams = async (userId, page) => {
+	const response = await APIClient.get(`/stream/liked/${userId}/${page}`);
 	return response.data;
 }
 
-const useGetLikedStreams = (page) => {
+const useGetLikedStreams = (userId, page) => {
 	return useQuery({
-		queryKey: ["liked", page],
-		queryFn: () => getLikedStreams(page),
-		enabled: !!page,
+		queryKey: ["liked", userId, page],
+		queryFn: () => getLikedStreams(userId, page),
+		enabled: !!userId && !!page,
 		refetchOnWindowFocus: false
 	});
 }
 
-const getFollowingStreams = async (page) => {
-	const response = await APIClient.get(`/stream/following/${page}`);
+const getFollowingStreams = async (userId, page) => {
+	const response = await APIClient.get(`/stream/following/${userId}/${page}`);
 	return response.data;
 }
 
-const useGetFollowingStreams = (page) => {
+const useGetFollowingStreams = (userId, page) => {
 	return useQuery({
-		queryKey: ["following", page],
-		queryFn: () => getFollowingStreams(page),
-		enabled: !!page,
-		refetchOnWindowFocus: false
+		queryKey: ["following", userId, page],
+		queryFn: () => getFollowingStreams(userId, page),
+		enabled: !!userId && !!page
 	});
 }
 
