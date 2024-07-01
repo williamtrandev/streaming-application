@@ -14,7 +14,7 @@ export const UserProvider = ({ children }) => {
 		setAuthFullname("");
 		setAuthProfilePicture("");
 		setAuthEmail("");
-		setFollowedChannels("");
+		setFollowedChannels([]);
 	};
 
 	return (

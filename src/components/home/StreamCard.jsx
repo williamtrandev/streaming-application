@@ -12,14 +12,18 @@ const StreamCard = ({
 				<div className='bg-white dark:bg-meta-4 rounded-2xl text-theme shadow-md overflow-hidden'>
 					<div className="relative aspect-video overflow-hidden">
 						<img src={stream?.previewImage} alt="" className="object-cover aspect-video" />
-						{stream.duration == 0 && <div className="bg-red-600 text-white px-1 rounded-md text-sm
+						{(stream.started && !stream.finished) && <div className="bg-red-600 text-white px-1 rounded-md text-sm
 								absolute bottom-3 right-3 flex items-center gap-1">
 							<Radio size={16} />
 							LIVE
 						</div>}
-						{stream.duration > 0 && <div className="bg-slate-700 text-white px-1 rounded-md text-sm
+						{stream.finished && <div className="bg-slate-700 text-white px-1 rounded-md text-sm
 								absolute bottom-3 right-3 flex items-center gap-1">
 							{formatDuration(stream.duration)}
+						</div>}
+						{!stream.started && <div className="bg-slate-700 text-white px-1 rounded-md text-sm
+								absolute bottom-3 right-3 flex items-center gap-1">
+							Up coming
 						</div>}
 					</div>
 
@@ -43,7 +47,7 @@ const StreamCard = ({
 							{formatNumViewers(stream?.numViews)}
 						</p>
 						<p className="text-end">
-							{formatTimeDifference(stream?.dateStream)}
+							{formatTimeDifference(stream?.startAt)}
 						</p>
 					</div>
 				</div>

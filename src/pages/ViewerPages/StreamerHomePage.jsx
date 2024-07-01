@@ -24,7 +24,7 @@ const StreamerHomePage = () => {
             {(!currentStream && mostViewedStreams.length === 0 && mostLikedStreams.length === 0) && <div
                 className="text-xl"
             >
-                This channel has not saved any streams yet
+                Look like this channel is not very famous
             </div>}
             {currentStream && <div className="pb-4">
                 <div className="hidden md:block">

@@ -5,12 +5,12 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Podcast } from "lucide-react";
 const FollowingPage = () => {
     const { auth } = useAuth();
-
+    const userId = auth?.user?._id;
 	const [followingStreams, setFollowingStreams] = useState([]);
     const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(true);
 
-    const { data, refetch } = useGetFollowingStreams(page);
+    const { data, refetch } = useGetFollowingStreams(userId, page);
     useEffect(() => {
         if (data) {
             if (page == 1) {
@@ -46,7 +46,7 @@ const FollowingPage = () => {
 
 	return (
         <div>
-            {followingStreams.length == 0 && <div className="h-full flex flex-col items-center justify-center gap-4">
+            {(followingStreams.length == 0 && auth) && <div className="h-full flex flex-col items-center justify-center gap-4">
                 <Podcast size={64} />
                 <span className="text-lg">You haven't followed any channels yet.</span>
             </div>}
