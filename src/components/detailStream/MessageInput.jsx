@@ -3,7 +3,7 @@ import { Laugh, SendHorizonal } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-const MessageInput = ({ onMessageSubmit }) => {
+const MessageInput = ({ onMessageSubmit, isBanned=false }) => {
 	const { conversationId } = useParams();
 	const [inputText, setInputText] = useState("");
 	const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -25,10 +25,10 @@ const MessageInput = ({ onMessageSubmit }) => {
 		}
 	};
 	return (
-		<div className="w-full h-10 self-end py-3 px-5 flex gap-2 justify-center items-center bg-gray-100 dark:bg-meta-4 rounded-lg">
-			
+		<div className="w-full h-10 self-end py-3 px-5 flex gap-2 justify-center items-center bg-gray-100 dark:bg-meta-4 rounded-lg">	
 			<span className="relative w-full">
-				<div className="flex space-x-4">
+				{isBanned ? <div className="cursor-not-allowed text-purple-700">You've been banned from the chat</div>
+				: <div className="flex space-x-4">
 					<input
 						className="w-full bg-transparent text-black focus:outline-none dark:text-white"
 						placeholder="Type a message..."
@@ -47,7 +47,7 @@ const MessageInput = ({ onMessageSubmit }) => {
 						<SendHorizonal className={`w-5 ${inputText !== '' ? 'text-purple-600 cursor-pointer' : 'text-secondary'}`} onClick={submitMessage} />
 
 					</span>
-				</div>
+				</div>}
 			</span>
 		</div>
 	);

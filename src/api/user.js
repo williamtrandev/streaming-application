@@ -191,6 +191,32 @@ const useGetFollowedChannels = (userId) => {
 	});
 }
 
+const checkMod = async (streamerId) => {
+	const response = await APIClient.get(`/user/check-mod/${streamerId}`);
+	return response.data;
+}
+
+const useIsMod = ({ userId, streamerId }) => {
+	return useQuery({
+		queryKey: ["ismod", userId, streamerId],
+		queryFn: () => checkMod(streamerId),
+		enabled: !!streamerId,
+	});
+}
+
+const checkBanned = async ({ streamId, typeBanned }) => {
+	const response = await APIClient.get(`/user/check-banned/${streamId}?typeBanned=${typeBanned}`);
+	return response.data;
+}
+
+const useIsBanned = ({ userId, streamId, typeBanned }) => {
+	return useQuery({
+		queryKey: ["isbanned", userId, streamId, typeBanned],
+		queryFn: () => checkBanned({ streamId, typeBanned }),
+		enabled: !!streamId,
+	});
+}
+
 export {
 	useGetProfile,
 	useGetMiniProfile,
@@ -205,5 +231,7 @@ export {
 	useFollow,
 	useToggleNotification,
 	useUnfollow,
-	useGetFollowedChannels
+	useGetFollowedChannels,
+	useIsMod,
+	useIsBanned
 };
