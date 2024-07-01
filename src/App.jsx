@@ -43,7 +43,7 @@ function App() {
 
   useEffect(() => {
     if (isLogged && socket) {
-      socket.emit('logged', auth?.user?.userId);
+      socket.emit('logged', auth?.user?._id);
     }
   }, [isLogged, socket]);
   return (

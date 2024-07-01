@@ -228,6 +228,16 @@ const useGetStats = ({ statsType, fromDate, toDate }) => {
 	})
 }
 
+const banViewer = async (data) => {
+	const response = await APIClient.post("/studio/ban-viewer", data);
+	return response.data;
+}
+
+const useBanViewer = () => {
+	return useMutation({
+		mutationFn: (data) => banViewer(data)
+	})
+}
 export {
 	useSaveStream,
 	useSaveNotification,
@@ -247,5 +257,6 @@ export {
 	useGenerateViewerToken,
 	useDeleteSavedStreams,
 	useGetStreamRecord,
-	useGetStats
+	useGetStats,
+	useBanViewer
 };

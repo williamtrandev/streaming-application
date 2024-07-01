@@ -31,4 +31,11 @@ const formatDataChart = (value, type) => {
 			return value;
 	}
 };
-export { blobToBase64, formatDataChart };
+
+const formatRole = (value) => {
+	const parts = value.split('_');
+	const formattedParts = parts.map(part => part[0].toUpperCase() + part.slice(1).toLowerCase());
+	return formattedParts.join(' ');
+};
+
+export { blobToBase64, formatDataChart, formatRole };
