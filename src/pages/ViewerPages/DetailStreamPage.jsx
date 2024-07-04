@@ -71,7 +71,12 @@ const DetailStreamPage = () => {
 						)}
 					</div>
 					<div className="h-full w-full overflow-auto">
-						<ChatBox streamId={streamId} socket={socket} streamerId={detailStreamData.stream.user._id}/>
+						<ChatBox 
+							streamId={streamId} 
+							socket={socket} 
+							streamerId={detailStreamData.stream.user._id}
+							isFinished={detailStreamData.stream.finished}
+						/>
 					</div>
 				</div>
 			</div>

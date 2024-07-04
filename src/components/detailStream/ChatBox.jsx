@@ -5,7 +5,7 @@ import { useSendMessage, useGetMessages } from '../../api/chat';
 import { useAuth } from '../../contexts/AuthContext';
 import { useIsBanned, useIsMod } from '../../api/user';
 
-const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null }) => {
+const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null, isFinished=false }) => {
 	const [isBanned, setIsBanned] = useState(false);
 	const [msgs, setMsgs] = useState([]);
 	const messagesEndRef = useRef(null);
@@ -23,7 +23,7 @@ const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null }) => {
 	}, [messagesData]);
 	useEffect(() => {
 		if (socket) {
-			socket.on('newMessage', (data) => {
+			const handleNewMessage = (data) => {
 				console.log(data);
 				setMsgs((prevMsgs) => {
 					const newMessage = {
@@ -35,12 +35,15 @@ const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null }) => {
 					return [...prevMsgs, newMessage];
 				});
 				console.log(msgs)
-			});
-			socket.on('clientBannedChat', () => {
+			}
+			const handleBanChat = () => {
 				setIsBanned(true);
-			})
+			}
+			socket.on('newMessage', handleNewMessage);
+			socket.on('clientBannedChat', handleBanChat)
 			return () => {
-				socket.off('newMessage');
+				socket.off('newMessage', handleNewMessage);
+				socket.off('clientBannedChat', handleBanChat);
 			};
 		}
 	}, [socket]);
@@ -63,6 +66,7 @@ const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null }) => {
 		const msgSendSocket = {
 			...baseMsg,
 			user: {
+				_id: userId,
 				fullname: auth?.user?.fullname,
 				profilePictureS3: auth?.user?.profilePictureS3
 			},
@@ -86,7 +90,7 @@ const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null }) => {
 						<div key={index}>
 							<div className="flex items-center justify-start">
 								<div className="break-words p-2 text-sm">
-									<Message msg={message} isMod={isMod} streamId={streamId} />
+									<Message msg={message} isMod={isMod || isStreamer} streamId={streamId} />
 								</div>
 							</div>
 						</div>
@@ -94,7 +98,7 @@ const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null }) => {
 				})}
 				<div ref={messagesEndRef}></div>
 			</div>
-			{userId && 
+			{userId && !isFinished &&
 				<div className="px-3">
 					<MessageInput onMessageSubmit={handleMessageSubmit} isBanned={isBanned} />
 				</div>

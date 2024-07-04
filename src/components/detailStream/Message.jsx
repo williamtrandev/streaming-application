@@ -17,6 +17,7 @@ function formatDate(date) {
 }
 const Message = ({msg, isMod=false, streamId}) => {
 	const { content, user, createdAt, isStreamer } = msg;
+	console.log(msg)
 	const [open, setOpen] = useState(false);
 	return (
 		<>
