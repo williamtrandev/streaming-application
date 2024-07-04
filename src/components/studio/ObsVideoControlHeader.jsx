@@ -3,7 +3,6 @@ import { selectSocket } from "../../redux/slices/socketSlice";
 import { useEffect, useRef, useState } from "react";
 import { Users } from "lucide-react";
 import { formatNumViewers } from "../../utils/formatNumber";
-import OBSWebSocket from "obs-websocket-js";
 import { useEndStream, useStartStream } from "../../api/studio";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";

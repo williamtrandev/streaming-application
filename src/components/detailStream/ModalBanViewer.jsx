@@ -3,10 +3,14 @@ import { Modal, Button } from 'antd';
 import { useBanViewer } from '../../api/studio';
 import { useSelector } from 'react-redux';
 import { selectSocket } from '../../redux/slices/socketSlice';
+import { useGetBanPermissions } from '../../api/user';
 
 const ModalBanViewer = ({ open, setOpen, username, userId, streamId }) => {
 	const [confirmLoading, setConfirmLoading] = useState(false);
+	const [isChat, setIsChat] = useState(true);
+	const [isWatch, setIsWatch] = useState(true);
 	const { mutate: banWatch, isSuccess: isBanSuccess, isError: isBanError } = useBanViewer();
+	const { data: banPermissions, isSuccess: isGetPermissionSuccess } = useGetBanPermissions({ userId: userId, streamId: streamId});
 	const socket = useSelector(selectSocket);
 	const handleBanChat = async () => {
 		setOpen(false);
@@ -18,6 +22,7 @@ const ModalBanViewer = ({ open, setOpen, username, userId, streamId }) => {
 		console.log(socket)
 		socket.emit('bannedChat', userId, streamId);
 		banWatch(data);
+		setIsChat(false);
 	}
 	const handleBanWatch = async () => {
 		setOpen(false);
@@ -26,10 +31,17 @@ const ModalBanViewer = ({ open, setOpen, username, userId, streamId }) => {
 			streamId: streamId,
 			typeBanned: 'watch'
 		}
-		console.log(socket)
 		socket.emit('banned', userId, streamId);
 		banWatch(data);
+		setIsWatch(false);
 	}
+	useEffect(() => {
+		if (isGetPermissionSuccess && banPermissions) {
+			const permissions = banPermissions.permissions;
+			setIsWatch(permissions.includes('watch'));
+			setIsChat(permissions.includes('chat'));
+		}
+	}, [isGetPermissionSuccess]);
 	return (
 		<Modal
 			className='bg-slate-100 dark:bg-slate-600 rounded-lg dark:text-slate-200'
@@ -43,8 +55,12 @@ const ModalBanViewer = ({ open, setOpen, username, userId, streamId }) => {
 			onCancel={() => setOpen(false)}
 			footer={(_, { OkBtn, CancelBtn }) => (
 				<>
-					<Button className='bg-orange-500 hover:!bg-orange-600 !text-white' onClick={handleBanWatch}>Watch</Button>
-					<OkBtn />
+					{isWatch && 
+						<Button className='bg-orange-500 hover:!bg-orange-600 !text-white' onClick={handleBanWatch}>Watch</Button>
+					}
+					{isChat &&
+						<OkBtn />
+					}
 					<CancelBtn />
 				</>
 			)}

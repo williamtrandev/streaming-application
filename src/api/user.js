@@ -217,6 +217,20 @@ const useIsBanned = ({ userId, streamId, typeBanned }) => {
 	});
 }
 
+const getBanPermissions = async ({ userId, streamId }) => {
+	const response = await APIClient.get(`/user/${userId}/stream/${streamId}/ban-permissions`);
+	return response.data;
+}
+
+const useGetBanPermissions = ({ userId, streamId }) => {
+	return useQuery({
+		queryKey: ["banpermission", userId, streamId],
+		gcTime: 0,
+		queryFn: () => getBanPermissions({ userId, streamId }),
+		enabled: !!userId && !!streamId,
+	});
+}
+
 export {
 	useGetProfile,
 	useGetMiniProfile,
@@ -233,5 +247,6 @@ export {
 	useUnfollow,
 	useGetFollowedChannels,
 	useIsMod,
-	useIsBanned
+	useIsBanned,
+	useGetBanPermissions
 };
