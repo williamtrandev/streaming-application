@@ -238,6 +238,18 @@ const useBanViewer = () => {
 		mutationFn: (data) => banViewer(data)
 	})
 }
+
+const unbanViewer = async (data) => {
+	const response = await APIClient.post("/studio/unban-viewer", data);
+	return response.data;
+}
+
+const useUnbanViewer = () => {
+	return useMutation({
+		mutationFn: (data) => unbanViewer(data)
+	})
+}
+
 export {
 	useSaveStream,
 	useSaveNotification,
@@ -258,5 +270,6 @@ export {
 	useDeleteSavedStreams,
 	useGetStreamRecord,
 	useGetStats,
-	useBanViewer
+	useBanViewer,
+	useUnbanViewer
 };

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Modal, Button } from 'antd';
-import { useBanViewer } from '../../api/studio';
+import { useBanViewer, useUnbanViewer } from '../../api/studio';
 import { useSelector } from 'react-redux';
 import { selectSocket } from '../../redux/slices/socketSlice';
 import { useGetBanPermissions } from '../../api/user';
@@ -9,7 +9,8 @@ const ModalBanViewer = ({ open, setOpen, username, userId, streamId }) => {
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [isChat, setIsChat] = useState(true);
 	const [isWatch, setIsWatch] = useState(true);
-	const { mutate: banWatch, isSuccess: isBanSuccess, isError: isBanError } = useBanViewer();
+	const { mutate: banViewer, isSuccess: isBanSuccess, isError: isBanError } = useBanViewer();
+	const { mutate: unbanViewer, isSuccess: isUnbanSuccess, isError: isUnbanError } = useUnbanViewer();
 	const { data: banPermissions, isSuccess: isGetPermissionSuccess } = useGetBanPermissions({ userId: userId, streamId: streamId});
 	const socket = useSelector(selectSocket);
 	const handleBanChat = async () => {
@@ -21,7 +22,7 @@ const ModalBanViewer = ({ open, setOpen, username, userId, streamId }) => {
 		}
 		console.log(socket)
 		socket.emit('bannedChat', userId, streamId);
-		banWatch(data);
+		banViewer(data);
 		setIsChat(false);
 	}
 	const handleBanWatch = async () => {
@@ -32,8 +33,31 @@ const ModalBanViewer = ({ open, setOpen, username, userId, streamId }) => {
 			typeBanned: 'watch'
 		}
 		socket.emit('banned', userId, streamId);
-		banWatch(data);
+		banViewer(data);
 		setIsWatch(false);
+	}
+	const handleUnbanChat = async () => {
+		setOpen(false);
+		const data = {
+			bannedId: userId,
+			streamId: streamId,
+			typeBanned: 'chat'
+		}
+		console.log(socket)
+		socket.emit('unbannedChat', userId, streamId);
+		unbanViewer(data);
+		setIsChat(true);
+	}
+	const handleUnbanWatch = async () => {
+		setOpen(false);
+		const data = {
+			bannedId: userId, 
+			streamId: streamId,
+			typeBanned: 'watch'
+		}
+		socket.emit('unbanned', userId, streamId);
+		unbanViewer(data);
+		setIsWatch(true);
 	}
 	useEffect(() => {
 		if (isGetPermissionSuccess && banPermissions) {
@@ -48,18 +72,20 @@ const ModalBanViewer = ({ open, setOpen, username, userId, streamId }) => {
 			centered
 			open={open}
 			okButtonProps={{ className: 'bg-purple-600 hover:!bg-purple-700' }}
-			okText="Chat"
-			onOk={handleBanChat}
 			closable={false}
 			confirmLoading={confirmLoading}
 			onCancel={() => setOpen(false)}
 			footer={(_, { OkBtn, CancelBtn }) => (
 				<>
-					{isWatch && 
-						<Button className='bg-orange-500 hover:!bg-orange-600 !text-white' onClick={handleBanWatch}>Watch</Button>
+					{isWatch ?
+						<Button className='bg-orange-500 hover:!bg-orange-600 !text-white' onClick={handleBanWatch}>Ban Watch</Button>
+						:
+						<Button className='bg-green-600 hover:!bg-green-700 !text-white' onClick={handleUnbanWatch}>Allow Watch</Button>
 					}
-					{isChat &&
-						<OkBtn />
+					{isChat ?
+						<Button className='bg-purple-600 hover:!bg-purple-700 !text-white' onClick={handleBanChat}>Ban Chat</Button>
+						:
+						<Button className='bg-blue-600 hover:!bg-blue-700 !text-white' onClick={handleUnbanChat}>Allow Chat</Button>
 					}
 					<CancelBtn />
 				</>
@@ -67,7 +93,7 @@ const ModalBanViewer = ({ open, setOpen, username, userId, streamId }) => {
 		>
 			<div className='h-full'>
 				<p className="text-lg font-semibold mb-2">Ban Chat/Watch Stream</p>
-				<p className="text-sm">Are you sure you want to ban this user: {username}?</p>
+				<p className="text-sm">Are you sure action with this user: {username}?</p>
 			</div>
 		</Modal>
 	)

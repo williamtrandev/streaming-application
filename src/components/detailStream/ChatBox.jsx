@@ -4,6 +4,7 @@ import Message from './Message';
 import { useSendMessage, useGetMessages } from '../../api/chat';
 import { useAuth } from '../../contexts/AuthContext';
 import { useIsBanned, useIsMod } from '../../api/user';
+import { toast } from 'react-toastify';
 
 const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null, isFinished=false }) => {
 	const [isBanned, setIsBanned] = useState(false);
@@ -38,12 +39,19 @@ const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null, isFinish
 			}
 			const handleBanChat = () => {
 				setIsBanned(true);
+				toast.warning("You have been banned from chatting");
+			}
+			const handleUnbanChat = () => {
+				setIsBanned(false);
+				toast.info("You have been unbanned from chatting");
 			}
 			socket.on('newMessage', handleNewMessage);
-			socket.on('clientBannedChat', handleBanChat)
+			socket.on('clientBannedChat', handleBanChat);
+			socket.on('clientUnbannedChat', handleUnbanChat);
 			return () => {
 				socket.off('newMessage', handleNewMessage);
 				socket.off('clientBannedChat', handleBanChat);
+				socket.off('clientUnbannedChat', handleUnbanChat);
 			};
 		}
 	}, [socket]);

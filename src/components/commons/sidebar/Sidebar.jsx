@@ -35,10 +35,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 	}, [followedData]);
 
 	useEffect(() => {
-		if (showAllFollow) {
-			setFollowedShow(followedChannels);
-		} else {
-			setFollowedShow(followedChannels.slice(0, 5));
+		if(followedChannels) {
+			if (showAllFollow) {
+				setFollowedShow(followedChannels);
+			} else {
+				setFollowedShow(followedChannels.slice(0, 5));
+			}
 		}
 	}, [followedChannels, showAllFollow]);
 
@@ -241,7 +243,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 								}}
 							</SidebarLinkGroup> */}
 						</ul>
-						{(followedChannels.length > 0) && <ul className="mb-6 flex flex-col gap-2">
+						{(followedChannels?.length > 0) && <ul className="mb-6 flex flex-col gap-2">
 							<li>
 								<div
 									className="group relative flex items-center gap-4 rounded-lg px-6 pt-3 font-medium dark:text-bodydark1 ease-in-out"

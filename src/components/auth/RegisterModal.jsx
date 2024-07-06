@@ -71,8 +71,6 @@ const RegisterModal = ({ isVisible, onClose }) => {
             open={isVisible}
             onCancel={onClose}
             closeIcon={<X className="dark:text-slate-200" />}
-            // okButtonProps={{ className: 'bg-purple-600 hover:!bg-purple-700', disabled: changeEmailDisabled }}
-            // cancelButtonProps={{ className: 'border-purple-600 hover:!border-purple-700 hover:!text-purple-700' }}
             className="bg-slate-100 dark:bg-slate-800 rounded-lg dark:text-slate-200 pb-0"
             footer={null}
             centered
@@ -99,7 +97,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                 <input
                                     type="text"
                                     className="w-full pl-10 pr-3 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
-                                        text-black dark:text-white"
+                                        text-black dark:text-white outline-purple-600"
                                     value={fullname}
                                     onChange={e => setFullName(e.target.value)}
                                 />
@@ -122,7 +120,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                 <input
                                     type={showPassword}
                                     className="w-full pl-10 pr-16 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
-                                        text-black dark:text-white"
+                                        text-black dark:text-white outline-purple-600"
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
                                 />
@@ -167,7 +165,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                 <input
                                     type={showConfirmPassword}
                                     className="w-full bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
-                                        pr-16 pl-4 text-black dark:text-white"
+                                        pr-16 pl-4 text-black dark:text-white outline-purple-600"
                                     value={confirmPassword}
                                     onChange={e => setConfirmPassword(e.target.value)}
                                 />
@@ -208,7 +206,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                     maxLength={6}
                                     placeholder="Enter OTP in email"
                                     className="w-full pl-10 pr-3 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
-                                        text-black dark:text-white"
+                                        text-black dark:text-white outline-purple-600"
                                     value={otp}
                                     onChange={e => {
                                         const inputValue = e.target.value;
@@ -224,13 +222,10 @@ const RegisterModal = ({ isVisible, onClose }) => {
                             />
                         </div>
                     </div>
-                    {/* <div className="mb-3 text-sm">
-                        By clicking Sign Up, you are agreeing to our <button className="text-blue-700 dark:text-blue-500 hover:underline">Terms of Service</button> and are acknowledging our <button className="text-blue-700 dark:text-blue-500 hover:underline">Privacy Notice</button> applies.
-                    </div> */}
                     <div className="mb-3">
                         <Button
                             type="primary"
-                            className="w-full bg-purple-600 hover:!bg-purple-700"
+                            className="w-full bg-purple-600 hover:!bg-purple-700 border-none"
                             disabled={signupDisabled}
                             onClick={handleSubmitLogin}
                             loading={isPending}
@@ -244,4 +239,4 @@ const RegisterModal = ({ isVisible, onClose }) => {
     );
 }
 
-export default RegisterModal
+export default RegisterModal;
