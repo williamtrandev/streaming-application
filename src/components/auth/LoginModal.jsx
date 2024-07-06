@@ -63,7 +63,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal, openForgotPasswordM
                                 <input
                                     type="text"
                                     className="w-full pl-10 pr-3 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
-                                        text-black dark:text-white"
+                                        text-black dark:text-white outline-purple-600"
                                     value={username}
                                     onChange={e => setUsername(e.target.value)}
                                 />
@@ -80,7 +80,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal, openForgotPasswordM
                                 <input
                                     type={showPassword}
                                     className="w-full pl-10 pr-16 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
-                                        text-black dark:text-white"
+                                        text-black dark:text-white outline-purple-600"
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
                                 />
@@ -110,7 +110,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal, openForgotPasswordM
                         <Button 
                             type="primary"
                             disabled={loginDisabled}
-                            className="w-full bg-purple-600 hover:!bg-purple-700"
+                            className="w-full bg-purple-600 hover:!bg-purple-700 border-none"
                             // className={`bg-blue-700 dark:bg-blue-500 text-white 
                             //     font-bold w-full py-1 rounded-lg hover:bg-blue-800 dark:hover:bg-blue-700
                             //     ${loginDisabled ? "pointer-events-none opacity-50" : ""}`}
@@ -123,7 +123,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal, openForgotPasswordM
                     <div>
                         <button
                             className="text-purple-700 dark:text-purple-500 w-full py-1 hover:text-black dark:hover:text-white
-                                hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded-lg"
+                                hover:bg-neutral-300 dark:hover:bg-purple-600 rounded-lg"
                             onClick={() => {
                                 onClose();
                                 openRegisterModal();

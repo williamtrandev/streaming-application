@@ -63,3 +63,9 @@
 	background-color: #404e67 !important;
 	color: #a0aec0 !important;
 }
+.ant-btn-primary:disabled {
+	@apply bg-purple-200;
+}
+.dark .ant-btn-primary:disabled {
+	@apply bg-purple-400;
+}
