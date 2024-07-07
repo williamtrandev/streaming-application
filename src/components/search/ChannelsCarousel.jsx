@@ -46,7 +46,7 @@ const ChannelsCarousel = ({ q }) => {
     return (
         <div className="space-y-2 pt-2">
             <div>Channels</div>
-            <div className="relative w-full">
+            <div className="relative w-full overflow-hidden py-2">
                 <div className="flex transition-transform ease-out duration-500" style={{ transform: `translateX(-${currentIndex * (100 / cardsPerSlide)}%)` }}>
                     {streamers.map((streamer, index) => (
                         <div

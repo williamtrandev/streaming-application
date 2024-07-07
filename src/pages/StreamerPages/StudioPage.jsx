@@ -13,6 +13,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { blobToBase64 } from '../../utils';
 import ModalDetailStream from '../../components/studio/ModalDetailStream';
 import ModalDeleteStream from '../../components/studio/ModalDeleteStream';
+import { appName } from '../../constants';
 
 
 const rainbowColors = [
@@ -141,7 +142,12 @@ const StudioPage = () => {
 			toast.error(errorMessage);
 			setConfirmLoading(false);
 		}
-	}, [isErrorStream])
+	}, [isErrorStream]);
+
+	useEffect(() => {
+        document.title = `Studio - ${appName}`;
+    }, []);
+
 	return (
 		<div className="space-y-5">
 			<div className="flex gap-3 flex-wrap">
@@ -254,7 +260,7 @@ const StudioPage = () => {
 							<div className="space-y-3">
 								<h5 className="font-bold text-lg">Preview Image</h5>
 								<div className="aspect-video bg-black overflow-hidden rounded-lg relative">
-									<img src={image} alt="" className="w-full object-cover" />
+									<img src={image} alt="" className="w-full object-cover aspect-video" />
 									<label className="absolute flex space-x-2 bg-purple-600 text-white right-3 bottom-3 px-2 py-1 rounded-md cursor-pointer hover:bg-purple-700 duration-500 ease-in-out">
 										<Pencil width={14} />
 										<span>Change image</span>

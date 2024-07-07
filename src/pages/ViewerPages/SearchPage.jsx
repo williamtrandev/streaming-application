@@ -3,6 +3,8 @@ import ChannelsCarousel from "../../components/search/ChannelsCarousel";
 import { useEffect, useState } from "react";
 import { useSearchStreams } from "../../api/search";
 import StreamCard from "../../components/home/StreamCard";
+import { appName } from "../../constants";
+import { Spin } from "antd";
 
 const SearchPage = () => {
     const location = useLocation();
@@ -13,7 +15,7 @@ const SearchPage = () => {
 
     const [streams, setStreams] = useState([]);
 
-    const { data: streamsData, refetch } = useSearchStreams({ key: q, page });
+    const { data: streamsData, refetch, isPending } = useSearchStreams({ key: q, page });
     useEffect(() => {
         if (streamsData) {
             if (page == 1) {
@@ -41,6 +43,10 @@ const SearchPage = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    useEffect(() => {
+        document.title = `${q} - ${appName}`;
+    }, []);
+
     return (
         <div className="space-y-4 divide-y divide-gray-300 dark:divide-gray-600">
             <div
@@ -58,6 +64,9 @@ const SearchPage = () => {
                     />
                 ))}
             </div>
+            {isPending && <div className="flex justify-center items-center">
+                <Spin size="large" />
+            </div>}
         </div>
     );
 }

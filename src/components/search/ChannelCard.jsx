@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { defaultUser } from "../../assets";
 
 const ChannelCard = ({ streamer }) => {
     return (
@@ -10,7 +11,7 @@ const ChannelCard = ({ streamer }) => {
                     bg-white dark:bg-meta-4 rounded-2xl text-theme shadow-md overflow-hidden'
                 >
 					<span className="w-15 h-15 md:w-30 md:h-30 rounded-full">
-                        <img src={streamer.profilePicture} alt="pp" className="w-15 h-15 md:w-30 md:h-30 rounded-full" />
+                        <img src={streamer.profilePicture || defaultUser} alt="pp" className="w-15 h-15 md:w-30 md:h-30 rounded-full" />
                     </span>
                     <div className="space-y-2 w-full">
                         <div className="font-bold truncate w-full text-sm md:text-md text-center">

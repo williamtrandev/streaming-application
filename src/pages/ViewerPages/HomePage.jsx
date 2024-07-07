@@ -1,4 +1,4 @@
-import { streams } from "../../constants";
+import { appName, streams } from "../../constants";
 import StreamCard from "../../components/home/StreamCard";
 import { useEffect, useState } from "react";
 import { useGetHomePageStreams } from "../../api/stream";
@@ -17,7 +17,12 @@ const HomePage = () => {
 			setRandomStreams(data.randomStreams);
 			setRecommendStreams(data.recommendStreams)
 		}
-	}, [data])
+	}, [data]);
+
+	useEffect(() => {
+        document.title = appName;
+    }, []);
+
 	return (
 		<div className="divide-y divide-gray-300 dark:divide-gray-600">
 			<div className="pb-5">

@@ -3,6 +3,8 @@ import { useGetFollowingStreams } from "../../api/stream";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { Podcast } from "lucide-react";
+import { appName } from "../../constants";
+import { Spin } from "antd";
 const FollowingPage = () => {
     const { auth } = useAuth();
     const userId = auth?.user?._id;
@@ -10,7 +12,7 @@ const FollowingPage = () => {
     const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(true);
 
-    const { data, refetch } = useGetFollowingStreams(userId, page);
+    const { data, refetch, isPending } = useGetFollowingStreams(userId, page);
     useEffect(() => {
         if (data) {
             if (page == 1) {
@@ -29,12 +31,6 @@ const FollowingPage = () => {
     }, [page]);
 
     useEffect(() => {
-        if (auth) {
-            refetch();
-        }
-    }, [auth]);
-
-    useEffect(() => {
         const handleScroll = () => {
             if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
             setPage((prevPage) => prevPage + 1);
@@ -44,9 +40,13 @@ const FollowingPage = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    useEffect(() => {
+        document.title = `Following - ${appName}`;
+    }, []);
+
 	return (
         <div>
-            {(followingStreams.length == 0 && auth) && <div className="h-full flex flex-col items-center justify-center gap-4">
+            {(followingStreams.length == 0 && auth && !isPending) && <div className="h-full flex flex-col items-center justify-center gap-4">
                 <Podcast size={64} />
                 <span className="text-lg">You haven't followed any channels yet.</span>
             </div>}
@@ -62,6 +62,9 @@ const FollowingPage = () => {
                         stream={stream}
                     />
                 ))}
+            </div>}
+            {isPending && auth && <div className="flex justify-center items-center">
+                <Spin size="large" />
             </div>}
         </div>
 	)

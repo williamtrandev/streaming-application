@@ -3,6 +3,8 @@ import { History, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchHistory } from "../../api/search";
 import { useAuth } from "../../contexts/AuthContext";
+import { appName } from "../../constants";
+import { Spin } from "antd";
 const HistoryPage = () => {
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
@@ -12,7 +14,7 @@ const HistoryPage = () => {
 	const [hasMore, setHasMore] = useState(true);
 	const [q, setQ] = useState("");
 
-	const { data: historyData, refetch } = useSearchHistory({ userId, key: q, page });
+	const { data: historyData, refetch, isPending } = useSearchHistory({ userId, key: q, page });
 	useEffect(() => {
 		if (historyData) {
 			if (page == 1) {
@@ -31,12 +33,6 @@ const HistoryPage = () => {
 	}, [page]);
 
 	useEffect(() => {
-        if (auth) {
-            refetch();
-        }
-    }, [auth]);
-
-	useEffect(() => {
 		const handleScroll = () => {
 			if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
 			setPage((prevPage) => prevPage + 1);
@@ -46,9 +42,13 @@ const HistoryPage = () => {
 		return () => window.removeEventListener('scroll', handleScroll);
 	}, []);
 
+	useEffect(() => {
+        document.title = `History - ${appName}`;
+    }, []);
+
 	return (
 		<div>
-			{(histories.length == 0 && auth) && <div className="h-full flex flex-col items-center justify-center gap-4">
+			{(histories.length == 0 && auth && !isPending) && <div className="h-full flex flex-col items-center justify-center gap-4">
 				<History size={64} />
 				<span className="text-lg">You haven't watched any streams yet.</span>
 			</div>}
@@ -99,6 +99,9 @@ const HistoryPage = () => {
 					))}
 				</div>
 			</div>}
+			{isPending && auth && <div className="flex justify-center items-center">
+                <Spin size="large" />
+            </div>}
 		</div>
 	)
 }

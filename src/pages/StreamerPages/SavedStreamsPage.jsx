@@ -7,6 +7,7 @@ import TagItem from "../../components/studio/TagItem";
 import { useDeleteSavedStreams, useEditStream } from "../../api/studio";
 import { toast } from "react-toastify";
 import { blobToBase64 } from "../../utils";
+import { appName } from "../../constants";
 
 const SavedStreamsPage = () => {
     const [searchKey, setSearchKey] = useState("");
@@ -158,6 +159,10 @@ const SavedStreamsPage = () => {
         setTagArr(tags);
         setShowEditModal(true);
     }
+
+    useEffect(() => {
+        document.title = `Saved Streams - ${appName}`;
+    }, []);
 
     return (
         <div className="space-y-2">

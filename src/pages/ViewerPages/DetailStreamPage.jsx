@@ -8,6 +8,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useGetDetailStream } from '../../api/studio';
 import Spinner from '../../components/commons/spinner/Spinner';
 import RecordStreamVideo from '../../components/detailStream/RecordStreamVideo';
+import { appName } from '../../constants';
 
 const DetailStreamPage = () => {
 	const { streamId } = useParams();
@@ -21,6 +22,11 @@ const DetailStreamPage = () => {
 			socket.emit('joinRoom', streamId, userId);
 		}
 	}, [socket]);
+	useEffect(() => {
+        if (detailStreamData) {
+            document.title = `${detailStreamData.stream.title} - ${appName}`;
+        }
+    }, [detailStreamData]);
 
 	if (isDetailLoading) {
 		return (
@@ -53,7 +59,7 @@ const DetailStreamPage = () => {
 						)}
 					</div>
 					<div className="h-full w-full overflow-auto">
-						<ChatBox streamId={streamId} socket={socket} />
+						<ChatBox streamId={streamId} socket={socket} streamFinished={detailStreamData?.stream?.finished} />
 					</div>
 				</div>
 			</div>

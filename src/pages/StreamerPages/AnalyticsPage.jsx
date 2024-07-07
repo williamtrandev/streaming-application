@@ -1,7 +1,8 @@
 import { Chart as ChartJS, defaults } from "chart.js/auto";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
 import { DatePicker } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { appName } from "../../constants";
 
 const concurrentViewers = [
 	{ "time": "00:00:02", "viewers": 150 },
@@ -51,6 +52,10 @@ const filterBtns = [
 
 const AnalyticsPage = () => {
 	const [activeIndex, setActiveIndex] = useState(null);
+
+	useEffect(() => {
+        document.title = `Analytics - ${appName}`;
+    }, []);
 
     const handleClick = (index) => {
         setActiveIndex(index);

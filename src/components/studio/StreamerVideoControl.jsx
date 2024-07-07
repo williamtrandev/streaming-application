@@ -55,8 +55,9 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 	useEffect(() => {
 		if (isStartStreamSuccess) {
 			console.log(startStreamData)
-			if (startStreamData && startStreamData.egressId) {
+			if (startStreamData) {
 				setEgressId(startStreamData.egressId);
+				socket.emit('startStream', { streamId: streamId, egressId: startStreamData.egressId });
 			} 
 		}	
 		if(isStartStreamError) {
@@ -119,6 +120,7 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 
 		return () => {
 			socket.emit('leaveStream', streamId);
+			socket.emit('endStream');
 		};
 	}, [streamId]);
 	return (

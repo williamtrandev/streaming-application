@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { authEventEmitter } from './authEventEmitter';
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -16,6 +17,16 @@ export const UserProvider = ({ children }) => {
 		setAuthEmail("");
 		setFollowedChannels([]);
 	};
+	useEffect(() => {
+		const handleLogout = () => {
+			logoutUser();
+		};
+		authEventEmitter.on('logout', handleLogout);
+
+		return () => {
+			authEventEmitter.off('logout', handleLogout);
+		};
+	}, []);
 
 	return (
 		<UserContext.Provider 

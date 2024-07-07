@@ -7,7 +7,7 @@ import { Home, Video } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useGetMiniProfile } from '../../../api/user';
 import { useUser } from '../../../contexts/UserContext';
-import { user } from '../../../assets'
+import { defaultUser } from '../../../assets'
 
 const DropdownUser = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -70,7 +70,7 @@ const DropdownUser = () => {
 			if (userData.profilePicture) {
 				setAuthProfilePicture(userData.profilePicture);
 			} else {
-				setAuthProfilePicture(user);
+				setAuthProfilePicture(defaultUser);
 			}
 		}
 	}, [userData]);

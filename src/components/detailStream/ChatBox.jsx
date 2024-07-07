@@ -3,12 +3,14 @@ import MessageInput from './MessageInput';
 import Message from './Message';
 import { useSendMessage, useGetMessages } from '../../api/chat';
 import { useAuth } from '../../contexts/AuthContext';
+import { useUser } from '../../contexts/UserContext';
 
-const ChatBox = ({ streamId, socket, isStreamer=false }) => {
+const ChatBox = ({ streamId, socket, streamFinished, isStreamer=false }) => {
 
 	const [msgs, setMsgs] = useState([]);
 	const messagesEndRef = useRef(null);
 	const { auth } = useAuth();
+	const { authFullname, authProfilePicture } = useUser();
 	const userId = auth?.user?._id;
 	const { mutate: sendMessage, isError, isSuccess, error, data } = useSendMessage();
 
@@ -53,8 +55,8 @@ const ChatBox = ({ streamId, socket, isStreamer=false }) => {
 		const msgSendSocket = {
 			...baseMsg,
 			user: {
-				fullname: auth?.user?.fullname,
-				profilePicture: auth?.user?.profilePicture
+				fullname: authFullname,
+				profilePicture: authProfilePicture
 			},
 		}
 		sendMessage(msgSend);
@@ -69,7 +71,7 @@ const ChatBox = ({ streamId, socket, isStreamer=false }) => {
 	
 	return (
 		<div className="w-full h-full bg-white dark:bg-boxdark rounded-md shadow-md space-y-2">
-			<div className="font-semibold text-center border-b px-3 pt-3">Stream chat</div>
+			<div className="font-semibold text-center border-b px-3 pt-3">Live chat</div>
 			<div className="flex flex-col gap-4 pl-3 overflow-auto h-[calc(100%-6.55rem)]">
 				{msgs.map((message, index) => {
 					return (
@@ -84,7 +86,7 @@ const ChatBox = ({ streamId, socket, isStreamer=false }) => {
 				})}
 				<div ref={messagesEndRef}></div>
 			</div>
-			{userId && 
+			{(userId && !streamFinished) &&
 				<div className="px-3">
 					<MessageInput onMessageSubmit={handleMessageSubmit} />
 				</div>

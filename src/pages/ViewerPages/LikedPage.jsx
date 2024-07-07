@@ -3,6 +3,8 @@ import { useGetLikedStreams } from "../../api/stream";
 import StreamCard from "../../components/home/StreamCard";
 import { useAuth } from "../../contexts/AuthContext";
 import { ThumbsUp } from "lucide-react";
+import { appName } from "../../constants";
+import { Spin } from "antd";
 
 const LikedPage = () => {
     const { auth } = useAuth();
@@ -11,7 +13,7 @@ const LikedPage = () => {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
-    const { data, refetch } = useGetLikedStreams(userId, page);
+    const { data, refetch, isPending } = useGetLikedStreams(userId, page);
     useEffect(() => {
         if (data) {
             if (page == 1) {
@@ -30,10 +32,8 @@ const LikedPage = () => {
     }, [page]);
 
     useEffect(() => {
-        if (auth) {
-            refetch();
-        }
-    }, [auth]);
+        document.title = `Liked - ${appName}`;
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -47,7 +47,7 @@ const LikedPage = () => {
 
     return (
         <div>
-            {(likedHistories.length == 0 && auth) && <div className="h-full flex flex-col items-center justify-center gap-4">
+            {(likedHistories.length == 0 && auth && !isPending) && <div className="h-full flex flex-col items-center justify-center gap-4">
                 <ThumbsUp size={64} />
                 <span className="text-lg">You haven't liked any streams yet.</span>
             </div>}
@@ -63,6 +63,9 @@ const LikedPage = () => {
                         stream={history.stream}
                     />
                 ))}
+            </div>}
+            {isPending && auth && <div className="flex justify-center items-center">
+                <Spin size="large" />
             </div>}
         </div>
     );
