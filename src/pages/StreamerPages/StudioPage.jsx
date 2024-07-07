@@ -7,7 +7,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useSelector } from 'react-redux';
 import { selectSocket } from '../../redux/slices/socketSlice';
 import { Button, DatePicker, Modal, Tooltip } from 'antd';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Skeleton, Checkbox } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { blobToBase64 } from '../../utils';
@@ -33,8 +33,9 @@ const StudioPage = () => {
 	const [description, setDescription] = useState("");
 	const [tagValue, setTagValue] = useState("");
 	const [tagArr, setTagArr] = useState([]);
+	const [incoming, setIncoming] = useState(false);
 	const [image, setImage] = useState('https://wp.technologyreview.com/wp-content/uploads/2023/11/MIT_Universe_fibnal.jpg');
-	const [rerun, setRerun] = useState(false); 
+	const [rerun, setRerun] = useState(true); 
 	const [modalOpen, setModalOpen] = useState(false);
 	const [streamId, setStreamId] = useState(null);
 	const { mutate: saveStream, isSuccess: isSuccessStream, data: streamData, isError: isErrorStream, error: errorStream } = useSaveStream();
@@ -43,7 +44,8 @@ const StudioPage = () => {
 	const userId = auth?.user?._id;
 	const socket = useSelector(selectSocket);
 	const [confirmLoading, setConfirmLoading] = useState(false);
-	const [selectedTime, setSelectedTime] = useState(moment());
+	const [selectedTime, setSelectedTime] = useState(dayjs());
+	console.log("TIUME", selectedTime);
 	const [modalDeleteOpen, setModalDeleteOpen] = useState(false); 
 	const { data: comingStreamsData, refetch: comingStreamsRefetch } = useGetAllComingStreams(userId);
 	const [modalEditOpen, setModalEditOpen] = useState(false);
@@ -118,17 +120,22 @@ const StudioPage = () => {
 			setStreamId(streamData?.stream?._id);
 			setConfirmLoading(false);
 			setModalOpen(false);
-			const data = {
-				stream: streamData?.stream,
-				userId: userId
-			}
-			saveNotification({
-				userId: userId,
-				content: `${auth?.user?.fullname} is streaming: ${title}`
-			});
-			socket.emit('sendNotification', data);
+			if(!incoming) {
+				const data = {
+					stream: streamData?.stream,
+					userId: userId
+				}
+				saveNotification({
+					userId: userId,
+					content: `${auth?.user?.fullname} is streaming: ${title}`
+				});
+				socket.emit('sendNotification', data);
 
-			streamData?.stream?._id && navigate(`/studio/stream/${streamData?.stream?._id}`);
+				streamData?.stream?._id && navigate(`/studio/stream/${streamData?.stream?._id}`);
+			} else {
+				comingStreamsRefetch();
+			}
+			
 		}
 	}, [socket, isSuccessStream]);
 
@@ -155,6 +162,7 @@ const StudioPage = () => {
 					onClick={() => {
 						sessionStorage.setItem("streamWithObs", false);
 						setModalOpen(true);
+						setIncoming(false);
 					}}>
 					Start With Camera
 				</button>
@@ -162,8 +170,16 @@ const StudioPage = () => {
 					onClick={() => {
 						sessionStorage.setItem("streamWithObs", true);
 						setModalOpen(true);
+						setIncoming(false);
 					}}>
 					Start With OBS
+				</button>
+				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white"
+					onClick={() => {
+						setModalOpen(true);
+						setIncoming(true);
+					}}>
+					Schedule
 				</button>
 			</div>
 			<div className="w-full bg-white dark:bg-meta-4 overflow-hidden rounded-lg shadow-md">
@@ -337,7 +353,7 @@ const StudioPage = () => {
 							<div className="space-y-3">
 								<h5 className="font-bold text-lg">Rerun</h5>
 								<div className="flex space-x-5">
-									<Checkbox checked={rerun} onChange={(e) => { setRerun(e.target.checked) }} />
+									<Checkbox checked={rerun} onChange={(e) => { setRerun(e.target.checked) }} disabled={incoming} />
 									<span className="text-base">Let viewers know your stream was previously recorded. Failure to label Reruns leads to viewer confusion which damages trust.</span>
 								</div>
 							</div>

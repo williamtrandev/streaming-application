@@ -8,6 +8,7 @@ import { useAddMod, useGetAllMod } from '../../api/studio';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
 import { appName } from '../../constants';
+import { formatRole } from '../../utils';
 
 const fakeMode = [
 	{ id: 1, username: "William Tran", role: "King", lastModified: "2020-01-01" },
@@ -66,7 +67,7 @@ const CommunityPage = () => {
 					label: (
 						<div className="flex items-center gap-4">
 							<div className="w-8 h-8 rounded-full overflow-hidden">
-								<img src={user?.profilePicture} alt="" className="w-full h-full object-cover" />
+								<img src={user?.profilePictureS3} alt="" className="w-full h-full object-cover" />
 							</div>
 							<div>
 								<strong>{user.fullname}</strong> <br />
@@ -94,9 +95,9 @@ const CommunityPage = () => {
 
 	return (
 		<div className="space-y-5">
-			<div className="hidden sm:block">
+			<div className="block">
 				<div className="w-full flex justify-center items-center">
-					<div className="relative bg-white shadow-md dark:bg-meta-4 rounded-lg p-3">
+					<div className="w-full max-w-[30rem] relative bg-white shadow-md dark:bg-meta-4 rounded-lg p-3">
 						<AutoComplete
 						    className="text-black focus:outline-none xl:w-125 px-3"
 							popupClassName="dark:bg-gray-800"
@@ -126,8 +127,8 @@ const CommunityPage = () => {
 							<tr className="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
 								<th className="px-4 py-3">Account</th>
 								<th className="px-4 py-3">Role</th>
-								<th className="px-4 py-3">Last Modified</th>
-								<th className="px-4 py-3">Edit</th>
+								<th className="px-4 py-3">Start Date</th>
+								<th className="px-4 py-3">Remove</th>
 							</tr>
 						</thead>
 						{!modsData ?
@@ -161,11 +162,11 @@ const CommunityPage = () => {
 											<td className="px-4 py-3">
 												<div className="flex items-center text-sm">
 													<div className="relative hidden w-8 h-8 mr-3 rounded-full md:block">
-														<img className="object-cover w-full h-full rounded-full" src={mod?.user?.profilePicture} alt="" loading="lazy" />
+														<img className="object-cover w-full h-full rounded-full" src={mod?.profilePictureS3} alt="" loading="lazy" />
 														<div className="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
 													</div>
 													<div>
-														<p className="font-semibold">{mod?.user?.username}</p>
+														<p className="font-semibold">{mod?.username}</p>		
 														<p className="text-xs text-gray-600 dark:text-gray-400">
 															Mod
 														</p>
@@ -174,7 +175,7 @@ const CommunityPage = () => {
 											</td>
 											<td className="px-4 py-3 text-xs">
 												<span className="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
-													{mod.role}
+													{formatRole(mod.role)}
 												</span>
 											</td>
 											<td className="px-4 py-3 text-sm">
@@ -182,9 +183,6 @@ const CommunityPage = () => {
 											</td>
 											<td className="px-4 py-3 text-sm">
 												<div className="flex space-x-2">
-													<div className="p-2 w-8 h-8 flex items-center justify-center rounded-full font-semibold text-orange-700 bg-orange-100 dark:text-white dark:bg-purple-600 cursor-pointer" onClick={() => handleClickDetail(mod?.user?._id)}>
-														<Bolt />
-													</div>
 													<div className="p-2 w-8 h-8 flex items-center justify-center text-center rounded-full font-semibold text-purple-700 bg-purple-100 dark:text-white dark:bg-purple-600 cursor-pointer" onClick={() => handleClickDelete(mod?.user?._id, mod?.user?.username)}>
 														<CircleX />
 													</div>

@@ -9,6 +9,9 @@ import { useGetDetailStream } from '../../api/studio';
 import Spinner from '../../components/commons/spinner/Spinner';
 import RecordStreamVideo from '../../components/detailStream/RecordStreamVideo';
 import { appName } from '../../constants';
+import { useIsBanned } from '../../api/user';
+import { banned } from '../../assets';
+import { toast } from 'react-toastify';
 
 const DetailStreamPage = () => {
 	const { streamId } = useParams();
@@ -17,9 +20,16 @@ const DetailStreamPage = () => {
 	const userId = auth?.user?._id;
 	const socket = useSelector(selectSocket);
 	const { data: detailStreamData, isLoading: isDetailLoading } = useGetDetailStream(streamId);
+	const { data: dataBanned } = useIsBanned({ userId: userId, streamId: streamId, typeBanned: 'watch' });
 	useEffect(() => {
 		if (socket) {
 			socket.emit('joinRoom', streamId, userId);
+			socket.on('clientBanned', () => {
+				toast.warning('You have been banned');
+				setTimeout(() => {
+					window.location.reload();
+				}, 2000);
+			});
 		}
 	}, [socket]);
 	useEffect(() => {
@@ -30,8 +40,16 @@ const DetailStreamPage = () => {
 
 	if (isDetailLoading) {
 		return (
-			<div className="flex justify-center items-center h-screen">
+			<div className="flex justify-center items-center h-[calc(100vh-5rem)]">
 				<Spinner />
+			</div>
+		);
+	}
+	if (dataBanned && dataBanned.isBanned) {
+		return (
+			<div className="flex flex-col justify-center items-center h-[calc(100vh-5rem)] gap-5">
+				<img src={banned} alt="" className="!h-[70%]" />
+				<p className="text-2xl font-bold">You have been banned</p>
 			</div>
 		);
 	}
@@ -59,7 +77,12 @@ const DetailStreamPage = () => {
 						)}
 					</div>
 					<div className="h-full w-full overflow-auto">
-						<ChatBox streamId={streamId} socket={socket} streamFinished={detailStreamData?.stream?.finished} />
+						<ChatBox 
+							streamId={streamId} 
+							socket={socket} 
+							streamerId={detailStreamData.stream.user._id}
+							isFinished={detailStreamData.stream.finished}
+						/>
 					</div>
 				</div>
 			</div>

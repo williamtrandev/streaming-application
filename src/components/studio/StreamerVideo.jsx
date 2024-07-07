@@ -49,7 +49,7 @@ const StreamerVideo = ({ streamId, setIsStream }) => {
 	}, [isSuccess]);
 
 	return (
-		<div className="h-[80vh] w-full">
+		<div className="h-full w-full">
 			{streamerToken && <LiveKitRoom
 				token={streamerToken}
 				serverUrl={import.meta.env.VITE_LIVEKIT_SERVER_URL}

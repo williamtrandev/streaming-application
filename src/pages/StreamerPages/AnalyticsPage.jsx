@@ -3,6 +3,10 @@ import { Bar, Doughnut, Line } from "react-chartjs-2";
 import { DatePicker } from 'antd';
 import { useEffect, useState } from 'react';
 import { appName } from "../../constants";
+import { useGetStats } from "../../api/studio";
+import { useAuth } from '../../contexts/AuthContext';
+import { filterBtns } from "../../constants";
+import { formatDataChart } from "../../utils";
 
 const concurrentViewers = [
 	{ "time": "00:00:02", "viewers": 150 },
@@ -44,22 +48,65 @@ defaults.responsive = true;
 defaults.plugins.title.align = "start";
 defaults.plugins.title.font.size = 20;
 
-const filterBtns = [
-	"Time streaming",
-	"Follower",
-	"Viewer"
-]
-
 const AnalyticsPage = () => {
-	const [activeIndex, setActiveIndex] = useState(null);
-
 	useEffect(() => {
         document.title = `Analytics - ${appName}`;
     }, []);
 
-    const handleClick = (index) => {
+	const [activeIndex, setActiveIndex] = useState(0);
+	const [dataBar, setDataBar] = useState([]);
+	const [labelDataBar, setLabelDataBar] = useState([]);
+	const [statsType, setStatsType] = useState('time_streaming');
+	const [fromDate, setFromDate] = useState('');
+	const [toDate, setToDate] = useState('');
+	const options = {
+		plugins: {
+			tooltip: {
+				callbacks: {
+					label: function (context) {
+						let label = context.dataset.label || '';
+						if (label) {
+							label += ': ';
+						}
+						if (context.parsed.y !== null) {
+							label += formatDataChart(context.parsed.y, statsType);
+						}
+						return label;
+					},
+				},
+			},
+		},
+		scales: {
+			y: {
+				ticks: {
+					callback: function (value) {
+						return formatDataChart(value, statsType);
+					}
+				}
+			}
+		}
+	};
+	const { data: statsData, isSuccess: isStatsSuccess } = useGetStats({ statsType: statsType, fromDate: fromDate, toDate: toDate });
+    const handleClick = (index, value) => {
         setActiveIndex(index);
+		setStatsType(value);
     };
+	useEffect(() => {
+		if (isStatsSuccess && statsData && statsData.datasets) {
+			const datasets = statsData.datasets.map((dataset) => {
+				return {
+					label: dataset.label,
+					data: dataset.stats.map((data) => data.data),
+					backgroundColor: dataset.stats.map((_, index) => colors[index % colors.length]),
+					borderRadius: 5,
+				}
+			}) 
+			setDataBar(datasets);
+			const labels = statsData?.datasets[0]?.stats.map(data => new Date(data.dateStream).toLocaleDateString());
+			setLabelDataBar(labels);
+		}
+		console.log(statsData)
+	}, [statsData, isStatsSuccess]);
 	return (
 		<div className="space-y-5">
 			<p className="font-bold text-theme text-2xl">Data from latest stream</p>
@@ -84,25 +131,6 @@ const AnalyticsPage = () => {
 									tension: 0.5,
 								},
 							},
-							// scales: {
-							// 	x: {
-							// 		ticks: {
-							// 			color: textColor,
-							// 		},
-							// 	},
-							// 	y: {
-							// 		ticks: {
-							// 			color: textColor,
-							// 		},
-							// 	},
-							// },
-							// plugins: {
-							// 	legend: {
-							// 		labels: {
-							// 			color: textColor,
-							// 		},
-							// 	},
-							// },
 						}}
 					/>
 				</div>
@@ -145,6 +173,8 @@ const AnalyticsPage = () => {
 					className="dark:bg-meta-4 dark:border-none dark:text-white"
 					onChange={(date, dateString) => {
 						console.log(date, dateString);
+						setFromDate(dateString[0]);
+						setToDate(dateString[1]);
 					}}
 				/>
 				<div className="flex">
@@ -164,9 +194,9 @@ const AnalyticsPage = () => {
 									transition duration-300 ease-in-out
 								`}
 								key={index}
-								onClick={() => handleClick(index)}
+								onClick={() => handleClick(index, filterBtn.value)}
 							>
-								{filterBtn}
+								{filterBtn.label}
 							</div>
 						);
 					})}
@@ -175,22 +205,10 @@ const AnalyticsPage = () => {
 			<div className="w-full bg-white dark:bg-meta-4 rounded-md shadow-md space-y-3 p-5">
 				<Bar className="max-h-[70vh]"
 					data={{
-						labels: newFollowersSubscribers.map((data) => data.streamId),
-						datasets: [
-							{
-								label: "New Followers",
-								data: newFollowersSubscribers.map((data) => data.newFollowers),
-								backgroundColor: newFollowersSubscribers.map((_, index) => colors[index % colors.length]),
-								borderRadius: 5,
-							},
-							{
-								label: "New Subscribers",
-								data: newFollowersSubscribers.map((data) => data.newSubscribers),
-								backgroundColor: newFollowersSubscribers.map((_, index) => colors[index % colors.length]),
-								borderRadius: 5,
-							},
-						],
+						labels: labelDataBar,
+						datasets: dataBar
 					}}
+					options={options}
 				/>
 			</div>
 		</div>

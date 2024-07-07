@@ -3,17 +3,19 @@ import MessageInput from './MessageInput';
 import Message from './Message';
 import { useSendMessage, useGetMessages } from '../../api/chat';
 import { useAuth } from '../../contexts/AuthContext';
-import { useUser } from '../../contexts/UserContext';
+import { useIsBanned, useIsMod } from '../../api/user';
+import { toast } from 'react-toastify';
 
-const ChatBox = ({ streamId, socket, streamFinished, isStreamer=false }) => {
-
+const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null, isFinished=false }) => {
+	const [isBanned, setIsBanned] = useState(false);
 	const [msgs, setMsgs] = useState([]);
 	const messagesEndRef = useRef(null);
 	const { auth } = useAuth();
 	const { authFullname, authProfilePicture } = useUser();
 	const userId = auth?.user?._id;
 	const { mutate: sendMessage, isError, isSuccess, error, data } = useSendMessage();
-
+	const { data: isMod } = useIsMod({ userId: userId, streamerId: streamerId })
+	const { data: dataBanned } = useIsBanned({ userId: userId, streamId: streamId, typeBanned: 'chat' });
 	const { data: messagesData } = useGetMessages(streamId);
 	useEffect(() => {
 		if (messagesData) {
@@ -23,7 +25,8 @@ const ChatBox = ({ streamId, socket, streamFinished, isStreamer=false }) => {
 	}, [messagesData]);
 	useEffect(() => {
 		if (socket) {
-			socket.on('newMessage', (data) => {
+			const handleNewMessage = (data) => {
+				console.log(data);
 				setMsgs((prevMsgs) => {
 					const newMessage = {
 						content: data?.content,
@@ -34,13 +37,30 @@ const ChatBox = ({ streamId, socket, streamFinished, isStreamer=false }) => {
 					return [...prevMsgs, newMessage];
 				});
 				console.log(msgs)
-			});
-
+			}
+			const handleBanChat = () => {
+				setIsBanned(true);
+				toast.warning("You have been banned from chatting");
+			}
+			const handleUnbanChat = () => {
+				setIsBanned(false);
+				toast.info("You have been unbanned from chatting");
+			}
+			socket.on('newMessage', handleNewMessage);
+			socket.on('clientBannedChat', handleBanChat);
+			socket.on('clientUnbannedChat', handleUnbanChat);
 			return () => {
-				socket.off('newMessage');
+				socket.off('newMessage', handleNewMessage);
+				socket.off('clientBannedChat', handleBanChat);
+				socket.off('clientUnbannedChat', handleUnbanChat);
 			};
 		}
 	}, [socket]);
+	useEffect(() => {
+		if(dataBanned && dataBanned.isBanned) {
+			setIsBanned(true);
+		}
+	}, [dataBanned])
 	const handleMessageSubmit = async (msg) => {
 		const baseMsg = {
 			streamId: streamId,
@@ -55,8 +75,9 @@ const ChatBox = ({ streamId, socket, streamFinished, isStreamer=false }) => {
 		const msgSendSocket = {
 			...baseMsg,
 			user: {
-				fullname: authFullname,
-				profilePicture: authProfilePicture
+				_id: userId,
+				fullname: auth?.user?.fullname,
+				profilePictureS3: auth?.user?.profilePictureS3
 			},
 		}
 		sendMessage(msgSend);
@@ -78,7 +99,7 @@ const ChatBox = ({ streamId, socket, streamFinished, isStreamer=false }) => {
 						<div key={index}>
 							<div className="flex items-center justify-start">
 								<div className="break-words p-2 text-sm">
-									<Message msg={message}/>
+									<Message msg={message} isMod={isMod || isStreamer} streamId={streamId} />
 								</div>
 							</div>
 						</div>
@@ -86,9 +107,9 @@ const ChatBox = ({ streamId, socket, streamFinished, isStreamer=false }) => {
 				})}
 				<div ref={messagesEndRef}></div>
 			</div>
-			{(userId && !streamFinished) &&
+			{userId && !isFinished &&
 				<div className="px-3">
-					<MessageInput onMessageSubmit={handleMessageSubmit} />
+					<MessageInput onMessageSubmit={handleMessageSubmit} isBanned={isBanned} />
 				</div>
 			}
 		</div>

@@ -151,3 +151,18 @@ Email: contact@fullstack.edu.vn
 		},
 	]
 }
+
+export const filterBtns = [
+	{
+		label: "Time streaming",
+		value: "time_streaming"
+	},
+	{
+		label: "Follower",
+		value: "followers"
+	},
+	{
+		label: "Likes/Dislikes",
+		value: "numlikes_dislikes"
+	}
+]
