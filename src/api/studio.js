@@ -250,6 +250,18 @@ const useUnbanViewer = () => {
 	})
 }
 
+const getStatsViewer = async () => {
+	const response = await APIClient.get(`/studio/stats-viewer`);
+	return response.data;
+}
+
+const useGetStatsViewer = (userId) => {
+	return useQuery({
+		queryKey: ["statsViewer", userId],
+		queryFn: () => getStatsViewer()
+	})
+}
+
 export {
 	useSaveStream,
 	useSaveNotification,
@@ -271,5 +283,6 @@ export {
 	useGetStreamRecord,
 	useGetStats,
 	useBanViewer,
-	useUnbanViewer
+	useUnbanViewer,
+	useGetStatsViewer
 };
