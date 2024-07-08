@@ -3,7 +3,7 @@ import { useCheckUsernameAvailable } from "../../api/auth";
 import { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-const UsernameInput = ({ value, setUsername, setIsValid }) => {
+const UsernameInput = ({ value, setUsername, setIsValid, handleKeyDown, nextRef }) => {
 
     const [debouncedUsername, setDebouncedUsername] = useState("");
     const debounceTimeoutRef = useRef(null);
@@ -61,6 +61,7 @@ const UsernameInput = ({ value, setUsername, setIsValid }) => {
                                         text-black dark:text-white outline-purple-600"
                         value={value}
                         onChange={handleUsernameChange}
+                        onKeyDown={e => handleKeyDown(e, nextRef)}
                     />
                 </div>
             </div>
