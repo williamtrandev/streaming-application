@@ -25,6 +25,7 @@ const DropdownUser = () => {
 		setAuthUsername,
 		setAuthFullname,
 		setAuthProfilePicture,
+		setAuthProfilePictureS3,
 		logoutUser
 	} = useUser();
 	// close on click outside
@@ -69,6 +70,7 @@ const DropdownUser = () => {
 			setAuthFullname(userData.fullname);
 			if (userData.profilePicture) {
 				setAuthProfilePicture(userData.profilePicture);
+				setAuthProfilePictureS3(userData.profilePictureS3)
 			} else {
 				setAuthProfilePicture(defaultUser);
 			}

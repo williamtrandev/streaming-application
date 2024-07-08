@@ -7,6 +7,7 @@ export const UserProvider = ({ children }) => {
 	const [authUsername, setAuthUsername] = useState("");
 	const [authFullname, setAuthFullname] = useState("");
 	const [authProfilePicture, setAuthProfilePicture] = useState("");
+	const [authProfilePictureS3, setAuthProfilePictureS3] = useState(null);
     const [authEmail, setAuthEmail] = useState("");
 	const [followedChannels, setFollowedChannels] = useState([]);
 
@@ -14,6 +15,7 @@ export const UserProvider = ({ children }) => {
 		setAuthUsername("");
 		setAuthFullname("");
 		setAuthProfilePicture("");
+		setAuthProfilePictureS3(null);
 		setAuthEmail("");
 		setFollowedChannels([]);
 	};
@@ -34,6 +36,7 @@ export const UserProvider = ({ children }) => {
 				authUsername, setAuthUsername,
 				authFullname, setAuthFullname,
 				authProfilePicture, setAuthProfilePicture,
+				authProfilePictureS3, setAuthProfilePictureS3,
                 authEmail, setAuthEmail,
 				followedChannels, setFollowedChannels,
 				logoutUser

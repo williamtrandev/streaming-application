@@ -1,5 +1,5 @@
 import APIClient from "../utils/APIClient";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
 const searchChannels = async (key) => {
 	const response = await APIClient.get(`/search/channel?key=${encodeURIComponent(key)}`);
@@ -15,30 +15,43 @@ const useSearchChannels = (key) => {
 	});
 }
 
-const searchStreams = async ({ key, page }) => {
-	const response = await APIClient.get(`/search/stream?key=${encodeURIComponent(key)}&page=${page}`);
+const searchStreams = async ({ pageParam, queryKey }) => {
+	const key = queryKey[1];
+	const response = await APIClient.get(`/search/stream?key=${encodeURIComponent(key)}&page=${pageParam}`);
 	return response.data;
 }
 
-const useSearchStreams = ({ key, page }) => {
-	return useQuery({
-		queryKey: ["streams", key, page],
-		queryFn: () => searchStreams({ key, page }),
-		enabled: !!key && !!page,
+const useSearchStreams = (key) => {
+	return useInfiniteQuery({
+		queryKey: ["streams", key],
+		queryFn: searchStreams,
+		initialPageParam: 1,
+		getNextPageParam: (lastPage, allPages) => {
+			const nextPage = lastPage.streams.length ? allPages.length + 1 : undefined;
+			return nextPage;
+		},
+		enabled: !!key,
 		refetchOnWindowFocus: false
 	});
 }
 
-const searchHistory = async ({ userId, key, page }) => {
-	const response = await APIClient.get(`/search/history/${userId}?key=${encodeURIComponent(key)}&page=${page}`);
+const searchHistory = async ({ pageParam, queryKey }) => {
+	const userId = queryKey[1];
+	const key = queryKey[2];
+	const response = await APIClient.get(`/search/history/${userId}?key=${encodeURIComponent(key)}&page=${pageParam}`);
 	return response.data;
 }
 
-const useSearchHistory = ({ userId, key, page }) => {
-	return useQuery({
-		queryKey: ["history", userId, key, page],
-		queryFn: () => searchHistory({ userId, key, page }),
-		enabled: !!userId && !!page,
+const useSearchHistory = ({ userId, key}) => {
+	return useInfiniteQuery({
+		queryKey: ["history", userId, key],
+		queryFn: searchHistory,
+		initialPageParam: 1,
+		getNextPageParam: (lastPage, allPages) => {
+			const nextPage = lastPage.histories.length ? allPages.length + 1 : undefined;
+			return nextPage;
+		},
+		enabled: !!userId,
 		refetchOnWindowFocus: false
 	});
 }

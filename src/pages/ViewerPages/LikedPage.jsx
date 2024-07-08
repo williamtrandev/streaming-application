@@ -5,49 +5,34 @@ import { useAuth } from "../../contexts/AuthContext";
 import { ThumbsUp } from "lucide-react";
 import { appName } from "../../constants";
 import { Spin } from "antd";
+import { useInView } from "react-intersection-observer";
 
 const LikedPage = () => {
     const { auth } = useAuth();
     const userId = auth?.user?._id
     const [likedHistories, setLikedHistories] = useState([]);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+    const { ref, inView } = useInView();
 
-    const { data, refetch, isPending } = useGetLikedStreams(userId, page);
+    const { data, hasNextPage, fetchNextPage, isFetching } = useGetLikedStreams(userId);
     useEffect(() => {
         if (data) {
-            if (page == 1) {
-                setLikedHistories(data.histories);
-            } else {
-                setLikedHistories((prevStreams) => [...prevStreams, ...data.histories]);
-            }
-            setHasMore(data.histories.length > 0);
+            setLikedHistories(data.pages.flatMap(page => page.histories));
         }
-    }, [data])
+    }, [data]);
 
     useEffect(() => {
-        if (hasMore && page > 1) {
-            refetch();
+        if (inView && hasNextPage) {
+            fetchNextPage();
         }
-    }, [page]);
+    }, [inView, hasNextPage, fetchNextPage]);
 
     useEffect(() => {
         document.title = `Liked - ${appName}`;
     }, []);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
-            setPage((prevPage) => prevPage + 1);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
     return (
         <div>
-            {(likedHistories.length == 0 && auth && !isPending) && <div className="h-full flex flex-col items-center justify-center gap-4">
+            {(likedHistories.length == 0 && auth && !isFetching) && <div className="h-full flex flex-col items-center justify-center gap-4">
                 <ThumbsUp size={64} />
                 <span className="text-lg">You haven't liked any streams yet.</span>
             </div>}
@@ -64,9 +49,9 @@ const LikedPage = () => {
                     />
                 ))}
             </div>}
-            {isPending && auth && <div className="flex justify-center items-center">
-                <Spin size="large" />
-            </div>}
+            <div ref={ref} className="flex justify-center items-center">
+                {(hasNextPage || isFetching) && <Spin size="large" />}
+            </div>
         </div>
     );
 }

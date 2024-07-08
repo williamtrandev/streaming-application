@@ -467,13 +467,6 @@ const SavedStreamsPage = () => {
                                     disabled
                                 />
                             </div>
-                            <div className="space-y-3">
-                                <h5 className="font-bold text-lg">Rerun</h5>
-                                <div className="flex space-x-5">
-                                    <input type="checkbox" />
-                                    <span className="text-base">Let viewers know your stream was previously recorded. Failure to label Reruns leads to viewer confusion which damages trust.</span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
