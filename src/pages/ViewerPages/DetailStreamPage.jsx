@@ -8,6 +8,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useGetDetailStream } from '../../api/studio';
 import Spinner from '../../components/commons/spinner/Spinner';
 import RecordStreamVideo from '../../components/detailStream/RecordStreamVideo';
+import { appName } from '../../constants';
 import { useIsBanned } from '../../api/user';
 import { banned } from '../../assets';
 import { toast } from 'react-toastify';
@@ -31,6 +32,11 @@ const DetailStreamPage = () => {
 			});
 		}
 	}, [socket]);
+	useEffect(() => {
+        if (detailStreamData) {
+            document.title = `${detailStreamData.stream.title} - ${appName}`;
+        }
+    }, [detailStreamData]);
 
 	if (isDetailLoading) {
 		return (

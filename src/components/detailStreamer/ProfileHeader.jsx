@@ -3,6 +3,8 @@ import { formatNumFollowers } from "../../utils/formatNumber";
 import FollowButton from "./FollowButton";
 import { Dot } from "lucide-react";
 import { useGetStreamerProfile } from "../../api/user";
+import { appName } from "../../constants";
+import { darkmode, defaultUser } from "../../assets";
 
 const ProfileHeader = ({ username }) => {
 
@@ -15,6 +17,12 @@ const ProfileHeader = ({ username }) => {
 		}
 	}, [streamerData]);
 
+    useEffect(() => {
+        if (streamer) {
+            document.title = `${streamer.fullname} - ${appName}`;
+        }
+    }, [streamer]);
+
     return (
         <div className="rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             {!streamer && <div className="text-xl p-4">
@@ -22,7 +30,7 @@ const ProfileHeader = ({ username }) => {
             </div>}
             {streamer && <div className="z-20 h-20 md:h-40 overflow-hidden">
                 <img
-                    src={streamer?.profileBanner}
+                    src={streamer?.profileBanner || darkmode}
                     alt="profile banner"
                     className="rounded-tl-lg rounded-tr-lg object-cover object-center aspect-[5/1]"
                 />
@@ -31,7 +39,7 @@ const ProfileHeader = ({ username }) => {
                 <div className="z-30 md:mt-4 h-20 w-full max-w-20 rounded-full 
                     bg-black/20 dark:bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
                     <div className="drop-shadow-2">
-                        <img src={streamer?.profilePicture} alt="profile" className="rounded-full object-cover" />
+                        <img src={streamer?.profilePicture || defaultUser} alt="profile" className="rounded-full object-cover" />
                     </div>
                 </div>
                 <div className="space-y-2 md:mt-4">

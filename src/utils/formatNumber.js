@@ -1,4 +1,4 @@
-import { formatDistanceToNow, differenceInHours, differenceInDays, differenceInMonths, differenceInYears } from 'date-fns';
+import { differenceInMinutes, differenceInHours, differenceInDays, differenceInMonths, differenceInYears } from 'date-fns';
 
 export const formatNumLikes = (num) => {
 	try {
@@ -55,6 +55,7 @@ export const formatTimeDifference = (date) => {
 	const diffMonths = differenceInMonths(now, new Date(date));
 	const diffDays = differenceInDays(now, new Date(date));
 	const diffHours = differenceInHours(now, new Date(date));
+	const diffMinutes = differenceInMinutes(now, new Date(date));
 
 	if (diffYears > 0) {
 		return `${diffYears} ${diffYears === 1 ? 'year' : 'years'} ago`;
@@ -62,7 +63,9 @@ export const formatTimeDifference = (date) => {
 		return `${diffMonths} ${diffMonths === 1 ? 'month' : 'months'} ago`;
 	} else if (diffDays > 0) {
 		return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
-	} else {
+	} else if (diffHours > 0) {
 		return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
+	} else {
+		return `${diffMinutes} ${diffMinutes === 1 ? 'minute' : 'minutes'} ago`;
 	}
 };

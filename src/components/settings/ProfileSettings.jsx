@@ -1,9 +1,6 @@
-import { Check, Pencil } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useChangeProfileInfo } from "../../api/user";
-import { useAuth } from "../../contexts/AuthContext";
-import { ModalContext } from "../../contexts/ModalContext";
 import { useUser } from "../../contexts/UserContext";
 import UsernameSetting from "./UsernameSetting";
 

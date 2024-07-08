@@ -57,18 +57,20 @@ const ObsVideoControlHeader = ({ streamId, isStreaming }) => {
 
         return () => {
             socket.emit('leaveStream', streamId);
+            socket.emit('endStream');
         };
     }, [streamId]);
 
     useEffect(() => {
-        if (startStreamData && startStreamData.egressId) {
+        if (startStreamData) {
             setEgressId(startStreamData.egressId);
+            socket.emit('startStream', { streamId: streamId, egressId: startStreamData.egressId });
         }
     }, [isStartStreamSuccess]);
 
     useEffect(() => {
         toast.error("Starting streaming failed");
-    }, [isStartStreamError])
+    }, [isStartStreamError]);
 
     useEffect(() => {
 		if (isEndError) {
@@ -78,7 +80,7 @@ const ObsVideoControlHeader = ({ streamId, isStreaming }) => {
 			toast.success("End successfully!");
             navigate(`/studio/manager`);
 		}
-	}, [isEndError, isEndSuccess])
+	}, [isEndError, isEndSuccess]);
 
     return (
         <div className="flex items-center justify-between">

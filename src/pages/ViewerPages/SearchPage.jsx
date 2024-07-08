@@ -3,42 +3,33 @@ import ChannelsCarousel from "../../components/search/ChannelsCarousel";
 import { useEffect, useState } from "react";
 import { useSearchStreams } from "../../api/search";
 import StreamCard from "../../components/home/StreamCard";
+import { appName } from "../../constants";
+import { Spin } from "antd";
+import { useInView } from "react-intersection-observer";
 
 const SearchPage = () => {
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const q = params.get('q');
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+    const { ref, inView } = useInView();
 
     const [streams, setStreams] = useState([]);
 
-    const { data: streamsData, refetch } = useSearchStreams({ key: q, page });
+    const { data, hasNextPage, fetchNextPage, isFetching } = useSearchStreams(q);
     useEffect(() => {
-        if (streamsData) {
-            if (page == 1) {
-                setStreams(streamsData.streams);
-            } else {
-                setStreams((prevStreams) => [...prevStreams, ...streamsData.streams]);
-            }
-            setHasMore(streamsData.streams.length > 0);
+        if (data) {
+            setStreams(data.pages.flatMap(page => page.streams));
         }
-    }, [streamsData])
+    }, [data]);
 
     useEffect(() => {
-        if (hasMore && page > 1) {
-            refetch();
+        if (inView && hasNextPage) {
+            fetchNextPage();
         }
-    }, [page]);
+    }, [inView, hasNextPage, fetchNextPage]);
 
     useEffect(() => {
-        const handleScroll = () => {
-            if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
-            setPage((prevPage) => prevPage + 1);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        document.title = `${q} - ${appName}`;
     }, []);
 
     return (
@@ -49,14 +40,19 @@ const SearchPage = () => {
                 Search result for "<span className="font-semibold">{q}</span>"
             </div>
             <ChannelsCarousel q={q} />
-            <div className="py-5 w-full mb-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                {streams.map((stream, index) => (
-                    <StreamCard
-                        key={index}
-                        index={index}
-                        stream={stream}
-                    />
-                ))}
+            <div>
+                <div className="py-5 w-full mb-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                    {streams.map((stream, index) => (
+                        <StreamCard
+                            key={index}
+                            index={index}
+                            stream={stream}
+                        />
+                    ))}
+                </div>
+                <div ref={ref} className="flex justify-center items-center">
+                    {(hasNextPage || isFetching) && <Spin size="large" />}
+                </div>
             </div>
         </div>
     );

@@ -12,6 +12,12 @@ import { Button, Modal } from "antd";
 const RegisterModal = ({ isVisible, onClose }) => {
     if (!isVisible) return null;
 
+    const fullnameRef = useRef(null);
+    const passwordRef = useRef(null);
+    const confirmPasswordRef = useRef(null);
+    const emailRef = useRef(null);
+    const otpRef = useRef(null);
+
     const [showPassword, setShowPassword] = useState("password");
     const [showConfirmPassword, setShowConfirmPassword] = useState("password");
 
@@ -44,6 +50,19 @@ const RegisterModal = ({ isVisible, onClose }) => {
     const handleSubmitLogin = () => {
         mutate({ username, fullname, password, email, otp });
     };
+
+    const handleKeyDown = (e, nextRef) => {
+        if (e.key === 'Enter') {
+            nextRef.current.focus();
+        }
+    };
+
+    const handleKeyDownSubmit = (e) => {
+        if (e.key === 'Enter' && !signupDisabled) {
+            handleSubmitLogin();
+        }
+    };
+
     useEffect(() => {
         if (data) {
             toast.success("Register Successfully");
@@ -85,6 +104,8 @@ const RegisterModal = ({ isVisible, onClose }) => {
                             value={username}
                             setUsername={setUsername}
                             setIsValid={setIsValidUsername}
+                            handleKeyDown={handleKeyDown}
+                            nextRef={fullnameRef}
                         />
                     </div>
                     <div className="mb-4">
@@ -100,6 +121,8 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                         text-black dark:text-white outline-purple-600"
                                     value={fullname}
                                     onChange={e => setFullName(e.target.value)}
+                                    onKeyDown={e => handleKeyDown(e, passwordRef)}
+                                    ref={fullnameRef}
                                 />
                             </div>
                         </div>
@@ -123,6 +146,8 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                         text-black dark:text-white outline-purple-600"
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
+                                    onKeyDown={e => handleKeyDown(e, confirmPasswordRef)}
+                                    ref={passwordRef}
                                 />
                                 <button
                                     className="absolute inset-y-0 right-0 px-3 flex items-center rounded-r-lg
@@ -168,6 +193,8 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                         pr-16 pl-4 text-black dark:text-white outline-purple-600"
                                     value={confirmPassword}
                                     onChange={e => setConfirmPassword(e.target.value)}
+                                    onKeyDown={e => handleKeyDown(e, emailRef)}
+                                    ref={confirmPasswordRef}
                                 />
                                 <button
                                     className="absolute inset-y-0 right-0 px-3 flex items-center rounded-r-lg
@@ -190,6 +217,9 @@ const RegisterModal = ({ isVisible, onClose }) => {
                             value={email}
                             setEmail={setEmail}
                             setIsValid={setIsValidEmail}
+                            handleKeyDown={handleKeyDown}
+                            ref={emailRef}
+                            nextRef={otpRef}
                         />
                     </div>
                     <div className="mb-8">
@@ -204,6 +234,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                 <input
                                     type="text"
                                     maxLength={6}
+                                    ref={otpRef}
                                     placeholder="Enter OTP in email"
                                     className="w-full pl-10 pr-3 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
                                         text-black dark:text-white outline-purple-600"
@@ -214,6 +245,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                             setOtp(inputValue);
                                         }
                                     }}
+                                    onKeyDown={handleKeyDownSubmit}
                                 />
                             </div>
                             <SendOtpButton

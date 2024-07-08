@@ -7,6 +7,7 @@ import ModalDeleteMod from '../../components/community/ModalDeleteMod';
 import { useAddMod, useGetAllMod } from '../../api/studio';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
+import { appName } from '../../constants';
 import { formatRole } from '../../utils';
 
 const fakeMode = [
@@ -86,7 +87,12 @@ const CommunityPage = () => {
 		if(isAddError) {
 			toast.error('Oops! Something went wrong');
 		}
-	}, [isAddSuccess, isAddError])
+	}, [isAddSuccess, isAddError]);
+
+	useEffect(() => {
+        document.title = `Community - ${appName}`;
+    }, []);
+
 	return (
 		<div className="space-y-5">
 			<div className="block">

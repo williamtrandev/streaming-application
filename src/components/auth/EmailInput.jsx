@@ -1,12 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { useCheckEmailAvailable } from "../../api/auth";
 import { Mail } from "lucide-react";
 import { toast } from "react-toastify";
 import { emailRegex } from "../../constants";
 
-const EmailInput = ({ value, setEmail, setIsValid }) => {
-
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EmailInput = forwardRef(({ value, setEmail, setIsValid, handleKeyDown, nextRef }, ref) => {
 
     const [debouncedEmail, setDebouncedEmail] = useState("");
     const debounceTimeoutRef = useRef(null);
@@ -64,6 +62,8 @@ const EmailInput = ({ value, setEmail, setIsValid }) => {
                                         text-black dark:text-white outline-purple-600"
                         value={value}
                         onChange={handleEmailChange}
+                        ref={ref}
+                        onKeyDown={e => handleKeyDown(e, nextRef)}
                     />
                 </div>
             </div>
@@ -73,6 +73,6 @@ const EmailInput = ({ value, setEmail, setIsValid }) => {
             </div>
         </div>
     );
-}
+});
 
 export default EmailInput;

@@ -1,14 +1,23 @@
 import { useState, useEffect } from 'react';
 import Header from '../components/commons/header/Header';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import LoginModal from '../components/auth/LoginModal';
 import RegisterModal from '../components/auth/RegisterModal';
 import SidebarStudio from '../components/commons/sidebar/SidebarStudio';
+import { useAuth } from '../contexts/AuthContext';
 
 const StudioLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [showRegisterModal, setShowRegisterModal] = useState(false);
+	const navigate = useNavigate();
+	const { auth } = useAuth();
+
+	useEffect(() => {
+		if (!auth) {
+			navigate("/");
+		}
+	}, [auth]);
 
 	return (
 		<div className="dark:bg-boxdark-2 dark:text-bodydark bg-[#edf2f9]">

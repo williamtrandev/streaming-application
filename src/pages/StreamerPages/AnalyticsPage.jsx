@@ -2,6 +2,7 @@ import { Chart as ChartJS, defaults } from "chart.js/auto";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
 import { DatePicker } from 'antd';
 import { useEffect, useState } from 'react';
+import { appName } from "../../constants";
 import { useGetStats, useGetStatsViewer } from "../../api/studio";
 import { useAuth } from '../../contexts/AuthContext';
 import { filterBtns } from "../../constants";
@@ -32,6 +33,10 @@ defaults.plugins.title.align = "start";
 defaults.plugins.title.font.size = 20;
 
 const AnalyticsPage = () => {
+	useEffect(() => {
+        document.title = `Analytics - ${appName}`;
+    }, []);
+
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [dataBar, setDataBar] = useState([]);
 	const [labelDataBar, setLabelDataBar] = useState([]);
