@@ -5,23 +5,41 @@ import { selectSocket } from '../../../redux/slices/socketSlice';
 import { formatDate } from '../../../utils/formatDate';
 import { useGetNotifications } from '../../../api/studio';
 import { useAuth } from '../../../contexts/AuthContext';
+import { useInView } from 'react-intersection-observer';
+import { Spin } from 'antd';
 
 const DropdownNotification = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [notifying, setNotifying] = useState(false);
+	const [notifications, setNotifications] = useState([]);
 	const socket = useSelector(selectSocket);
 
 	const trigger = useRef(null);
 	const dropdown = useRef(null);
 	const { auth } = useAuth();
-	const userId = auth?.user?.userId;
-	const { data: notificationData } = useGetNotifications(userId);
+	const userId = auth?.user?._id;
+	const { ref, inView } = useInView();
+
+	const { data: notificationData, hasNextPage, fetchNextPage, isFetching } = useGetNotifications(userId);
 	useEffect(() => {
 		if (notificationData) {
-			console.log(notificationData);
-			setNotifications(notificationData.notifications);
+			setNotifications(notificationData.pages.flatMap(page => page.notifications));
 		}
 	}, [notificationData]);
+
+	useEffect(() => {
+		if (inView && hasNextPage) {
+			fetchNextPage();
+		}
+	}, [inView, hasNextPage, fetchNextPage]);
+	// const { data: notificationData } = useGetNotifications(userId);
+	// useEffect(() => {
+	// 	console.log(notificationData);
+	// 	if (notificationData) {
+	// 		console.log(notificationData);
+	// 		setNotifications(notificationData.notifications);
+	// 	}
+	// }, [notificationData]);
 	useEffect(() => {
 		const clickHandler = ({ target }) => {
 			if (!dropdown.current) return;
@@ -46,9 +64,9 @@ const DropdownNotification = () => {
 		document.addEventListener('keydown', keyHandler);
 		return () => document.removeEventListener('keydown', keyHandler);
 	});
-	const [notifications, setNotifications] = useState([]);
+
 	useEffect(() => {
-		if(socket) {
+		if (socket) {
 			socket.on("receiveNotification", (notification) => {
 				console.log("received notification", notification);
 				setNotifications(prevNotifications => [notification, ...prevNotifications]);
@@ -106,15 +124,13 @@ const DropdownNotification = () => {
 							<li key={index}>
 								<Link
 									className="flex items-center gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-									to={`/live/${notification._id}`}
+									to={`/live/${notification?.stream?._id}`}
 								>
-									<img src={notification?.user?.profilePicture} alt="" className="w-8 h-8 rounded-full" />
+									<img src={notification?.streamer?.profilePicture} alt="" className="w-8 h-8 rounded-full" />
 									<div>
 										<p className="text-sm">
 											<span className="text-black dark:text-white">
-												{
-													notification?.content ? notification?.content : 
-													`${notification?.user?.fullname} is streaming: ${notification.title}`}
+												{`${notification?.streamer?.fullname} is streaming: ${notification?.stream?.title}`}
 											</span>
 										</p>
 										<p className="text-xs text-gray-600">
@@ -125,6 +141,9 @@ const DropdownNotification = () => {
 							</li>
 						)
 					})}
+					<div ref={ref} className="flex justify-center items-center">
+						{(hasNextPage || isFetching) && <Spin size="large" />}
+					</div>
 				</ul>
 			</div>
 		</li>

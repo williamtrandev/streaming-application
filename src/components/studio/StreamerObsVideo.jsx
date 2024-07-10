@@ -124,13 +124,13 @@ const StreamerObsVideo = ({ streamId }) => {
 						// const token = await generateViewerToken(streamId, userId);
 						// setViewerToken(token);
 						// sessionStorage.setItem(SESSION_VIEWER_TOKEN_KEY, token);
-						mutate({ streamId });
+						mutate({ streamId, userId });
 						return;
 					}
 				}
 				setViewerToken(sessionToken);
 			} else {
-				mutate({ streamId });
+				mutate({ streamId, userId });
 				// const token = await generateViewerToken(streamId, userId);
 				// setViewerToken(token);
 				// sessionStorage.setItem(SESSION_VIEWER_TOKEN_KEY, token);

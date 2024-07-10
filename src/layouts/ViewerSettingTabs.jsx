@@ -1,6 +1,13 @@
 import { NavLink, Outlet } from "react-router-dom";
+import { appName } from "../constants";
+import { useEffect } from "react";
 
 const ViewerSettingTabs = () => {
+
+    useEffect(() => {
+        document.title = `Account Settings - ${appName}`;
+    }, []);
+
     return (
         <div className="space-y-5">
             <div className="text-2xl font-bold">Account Settings</div>

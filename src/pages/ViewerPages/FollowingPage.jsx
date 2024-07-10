@@ -3,50 +3,35 @@ import { useGetFollowingStreams } from "../../api/stream";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { Podcast } from "lucide-react";
+import { appName } from "../../constants";
+import { Spin } from "antd";
+import { useInView } from "react-intersection-observer";
 const FollowingPage = () => {
     const { auth } = useAuth();
     const userId = auth?.user?._id;
-	const [followingStreams, setFollowingStreams] = useState([]);
-    const [page, setPage] = useState(1);
-	const [hasMore, setHasMore] = useState(true);
+    const [followingStreams, setFollowingStreams] = useState([]);
+    const { ref, inView } = useInView();
 
-    const { data, refetch } = useGetFollowingStreams(userId, page);
+    const { data, hasNextPage, fetchNextPage, isFetching } = useGetFollowingStreams(userId);
     useEffect(() => {
         if (data) {
-            if (page == 1) {
-                setFollowingStreams(data.streams);
-            } else {
-                setFollowingStreams((prevStreams) => [...prevStreams, ...data.streams]);
-            }
-            setHasMore(data.streams.length > 0);
+            setFollowingStreams(data.pages.flatMap(page => page.streams));
         }
-    }, [data])
+    }, [data]);
 
     useEffect(() => {
-        if (hasMore && page > 1) {
-            refetch();
+        if (inView && hasNextPage) {
+            fetchNextPage();
         }
-    }, [page]);
+    }, [inView, hasNextPage, fetchNextPage]);
 
     useEffect(() => {
-        if (auth) {
-            refetch();
-        }
-    }, [auth]);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
-            setPage((prevPage) => prevPage + 1);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        document.title = `Following - ${appName}`;
     }, []);
 
-	return (
+    return (
         <div>
-            {(followingStreams.length == 0 && auth) && <div className="h-full flex flex-col items-center justify-center gap-4">
+            {(followingStreams.length == 0 && auth && !isFetching) && <div className="h-full flex flex-col items-center justify-center gap-4">
                 <Podcast size={64} />
                 <span className="text-lg">You haven't followed any channels yet.</span>
             </div>}
@@ -63,8 +48,11 @@ const FollowingPage = () => {
                     />
                 ))}
             </div>}
+            <div ref={ref} className="flex justify-center items-center">
+                {(hasNextPage || isFetching) && <Spin size="large" />}
+            </div>
         </div>
-	)
+    )
 }
 
 export default FollowingPage;

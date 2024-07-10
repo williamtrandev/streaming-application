@@ -5,12 +5,14 @@ import { useSendMessage, useGetMessages } from '../../api/chat';
 import { useAuth } from '../../contexts/AuthContext';
 import { useIsBanned, useIsMod } from '../../api/user';
 import { toast } from 'react-toastify';
+import { useUser } from '../../contexts/UserContext';
 
 const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null, isFinished=false }) => {
 	const [isBanned, setIsBanned] = useState(false);
 	const [msgs, setMsgs] = useState([]);
 	const messagesEndRef = useRef(null);
 	const { auth } = useAuth();
+	const { authFullname, authProfilePictureS3 } = useUser();
 	const userId = auth?.user?._id;
 	const { mutate: sendMessage, isError, isSuccess, error, data } = useSendMessage();
 	const { data: isMod } = useIsMod({ userId: userId, streamerId: streamerId })
@@ -75,8 +77,8 @@ const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null, isFinish
 			...baseMsg,
 			user: {
 				_id: userId,
-				fullname: auth?.user?.fullname,
-				profilePictureS3: auth?.user?.profilePictureS3
+				fullname: authFullname,
+				profilePictureS3: authProfilePictureS3
 			},
 		}
 		sendMessage(msgSend);
@@ -91,7 +93,7 @@ const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null, isFinish
 	
 	return (
 		<div className="w-full h-full bg-white dark:bg-boxdark rounded-md shadow-md space-y-2">
-			<div className="font-semibold text-center border-b px-3 pt-3">Stream chat</div>
+			<div className="font-semibold text-center border-b px-3 pt-3">Live chat</div>
 			<div className="flex flex-col gap-4 pl-3 overflow-auto h-[calc(100%-6.55rem)]">
 				{msgs.map((message, index) => {
 					return (

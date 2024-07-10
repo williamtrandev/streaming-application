@@ -1,16 +1,22 @@
 import APIClient from "../utils/APIClient";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
-const getSavedStreams = async ({ username, page }) => {
-	const response = await APIClient.get(`/stream/saved/${username}/${page}`);
+const getSavedStreams = async ({ pageParam, queryKey }) => {
+	const username = queryKey[1];
+	const response = await APIClient.get(`/stream/saved/${username}/${pageParam}`);
 	return response.data;
 }
 
-const useGetSavedStreams = ({ username, page }) => {
-	return useQuery({
-		queryKey: ["savedstreams", username, page],
-		queryFn: () => getSavedStreams({ username, page }),
-		enabled: !!username && !!page,
+const useGetSavedStreams = (username) => {
+	return useInfiniteQuery({
+		queryKey: ["savedStreams", username],
+		queryFn: getSavedStreams,
+		initialPageParam: 1,
+		getNextPageParam: (lastPage, allPages) => {
+			const nextPage = lastPage.streams.length ? allPages.length + 1 : undefined;
+			return nextPage;
+		},
+		enabled: !!username,
 		refetchOnWindowFocus: false
 	});
 }
@@ -28,30 +34,43 @@ const useGetHomeStreams = (username) => {
 	});
 }
 
-const getLikedStreams = async (userId, page) => {
-	const response = await APIClient.get(`/stream/liked/${userId}/${page}`);
+const getLikedStreams = async ({ pageParam, queryKey }) => {
+	const userId = queryKey[1];
+	const response = await APIClient.get(`/stream/liked/${userId}/${pageParam}`);
 	return response.data;
 }
 
-const useGetLikedStreams = (userId, page) => {
-	return useQuery({
-		queryKey: ["liked", userId, page],
-		queryFn: () => getLikedStreams(userId, page),
-		enabled: !!userId && !!page,
+const useGetLikedStreams = (userId) => {
+	return useInfiniteQuery({
+		queryKey: ["liked", userId],
+		queryFn: getLikedStreams,
+		initialPageParam: 1,
+		getNextPageParam: (lastPage, allPages) => {
+			const nextPage = lastPage.histories.length ? allPages.length + 1 : undefined;
+			return nextPage;
+		},
+		enabled: !!userId,
 		refetchOnWindowFocus: false
 	});
 }
 
-const getFollowingStreams = async (userId, page) => {
-	const response = await APIClient.get(`/stream/following/${userId}/${page}`);
+const getFollowingStreams = async ({ pageParam, queryKey }) => {
+	console.log("querykey",queryKey);
+	const userId = queryKey[1];
+	const response = await APIClient.get(`/stream/following/${userId}/${pageParam}`);
 	return response.data;
 }
 
-const useGetFollowingStreams = (userId, page) => {
-	return useQuery({
-		queryKey: ["following", userId, page],
-		queryFn: () => getFollowingStreams(userId, page),
-		enabled: !!userId && !!page
+const useGetFollowingStreams = (userId) => {
+	return useInfiniteQuery({
+		queryKey: ["following", userId],
+		queryFn: getFollowingStreams,
+		initialPageParam: 1,
+		getNextPageParam: (lastPage, allPages) => {
+			const nextPage = lastPage.streams.length ? allPages.length + 1 : undefined;
+			return nextPage;
+		},
+		enabled: !!userId
 	});
 }
 

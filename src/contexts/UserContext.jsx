@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { authEventEmitter } from './authEventEmitter';
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -6,6 +7,7 @@ export const UserProvider = ({ children }) => {
 	const [authUsername, setAuthUsername] = useState("");
 	const [authFullname, setAuthFullname] = useState("");
 	const [authProfilePicture, setAuthProfilePicture] = useState("");
+	const [authProfilePictureS3, setAuthProfilePictureS3] = useState(null);
     const [authEmail, setAuthEmail] = useState("");
 	const [followedChannels, setFollowedChannels] = useState([]);
 
@@ -13,9 +15,20 @@ export const UserProvider = ({ children }) => {
 		setAuthUsername("");
 		setAuthFullname("");
 		setAuthProfilePicture("");
+		setAuthProfilePictureS3(null);
 		setAuthEmail("");
 		setFollowedChannels([]);
 	};
+	useEffect(() => {
+		const handleLogout = () => {
+			logoutUser();
+		};
+		authEventEmitter.on('logout', handleLogout);
+
+		return () => {
+			authEventEmitter.off('logout', handleLogout);
+		};
+	}, []);
 
 	return (
 		<UserContext.Provider 
@@ -23,6 +36,7 @@ export const UserProvider = ({ children }) => {
 				authUsername, setAuthUsername,
 				authFullname, setAuthFullname,
 				authProfilePicture, setAuthProfilePicture,
+				authProfilePictureS3, setAuthProfilePictureS3,
                 authEmail, setAuthEmail,
 				followedChannels, setFollowedChannels,
 				logoutUser

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useChangeProfileBanner } from "../../api/user";
-import { useAuth } from "../../contexts/AuthContext";
 import { blobToBase64 } from "../../utils";
 import { Button } from "antd";
 import { darkmode } from "../../assets";

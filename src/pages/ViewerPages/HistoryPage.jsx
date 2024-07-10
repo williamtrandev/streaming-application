@@ -3,52 +3,37 @@ import { History, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchHistory } from "../../api/search";
 import { useAuth } from "../../contexts/AuthContext";
+import { appName } from "../../constants";
+import { Spin } from "antd";
+import { useInView } from "react-intersection-observer";
 const HistoryPage = () => {
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
 	const [historySearch, setHistorySearch] = useState("");
 	const [histories, setHistories] = useState([]);
-	const [page, setPage] = useState(1);
-	const [hasMore, setHasMore] = useState(true);
 	const [q, setQ] = useState("");
+	const { ref, inView } = useInView();
 
-	const { data: historyData, refetch } = useSearchHistory({ userId, key: q, page });
+	const { data, hasNextPage, fetchNextPage, isFetching } = useSearchHistory({ userId, key: q });
 	useEffect(() => {
-		if (historyData) {
-			if (page == 1) {
-				setHistories(historyData.histories);
-			} else {
-				setHistories((prevHistories) => [...prevHistories, ...historyData.histories]);
-			}
-			setHasMore(historyData.histories.length > 0);
-		}
-	}, [historyData])
-
-	useEffect(() => {
-		if (hasMore && page > 1) {
-			refetch();
-		}
-	}, [page]);
-
-	useEffect(() => {
-        if (auth) {
-            refetch();
+        if (data) {
+            setHistories(data.pages.flatMap(page => page.histories));
         }
-    }, [auth]);
+    }, [data]);
+
+    useEffect(() => {
+        if (inView && hasNextPage) {
+            fetchNextPage();
+        }
+    }, [inView, hasNextPage, fetchNextPage]);
 
 	useEffect(() => {
-		const handleScroll = () => {
-			if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
-			setPage((prevPage) => prevPage + 1);
-		};
-
-		window.addEventListener('scroll', handleScroll);
-		return () => window.removeEventListener('scroll', handleScroll);
-	}, []);
+        document.title = `History - ${appName}`;
+    }, []);
 
 	return (
 		<div>
-			{(histories.length == 0 && auth) && <div className="h-full flex flex-col items-center justify-center gap-4">
+			{(histories.length == 0 && auth && !isFetching) && <div className="h-full flex flex-col items-center justify-center gap-4">
 				<History size={64} />
 				<span className="text-lg">You haven't watched any streams yet.</span>
 			</div>}
@@ -99,6 +84,9 @@ const HistoryPage = () => {
 					))}
 				</div>
 			</div>}
+			<div ref={ref} className="flex justify-center items-center">
+                {(hasNextPage || isFetching) && <Spin size="large" />}
+            </div>
 		</div>
 	)
 }

@@ -33,7 +33,7 @@ const Carousel = ({ streams }) => {
     };
 
     return (
-        <div className="relative w-full">
+        <div className="relative w-full overflow-hidden py-2">
             <div className="flex transition-transform ease-out duration-500" style={{ transform: `translateX(-${currentIndex * (100 / cardsPerSlide)}%)` }}>
                 {streams.map((stream, index) => (
                     <div

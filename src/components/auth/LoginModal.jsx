@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { X, User, LockKeyhole, Eye, EyeOff, CircleAlert } from "lucide-react";
 import { appName } from "../../constants";
 import { toast } from "react-toastify";
@@ -8,6 +8,7 @@ import { Button, Modal } from "antd";
 
 const LoginModal = ({ isVisible, onClose, openRegisterModal, openForgotPasswordModal }) => {
     if (!isVisible) return null;
+    const passwordRef = useRef(null);
 
     const [showPassword, setShowPassword] = useState("password");
     const [username, setUsername] = useState("");
@@ -17,9 +18,22 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal, openForgotPasswordM
     const { mutate, isPending, isError, error, isSuccess, data } = useLogin();
     const { login } = useAuth();
 
+    const handleKeyDown = (e, nextRef) => {
+        if (e.key === 'Enter') {
+            nextRef.current.focus();
+        }
+    };
+
     const handleSubmitLogin = () => {
         mutate({ username, password });
     };
+
+    const handleKeyDownSubmit = (e) => {
+        if (e.key === 'Enter' && !loginDisabled) {
+            handleSubmitLogin();
+        }
+    };
+
     useEffect(() => {
         if (data) {
             toast.success("Login Successfully", {
@@ -66,6 +80,7 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal, openForgotPasswordM
                                         text-black dark:text-white outline-purple-600"
                                     value={username}
                                     onChange={e => setUsername(e.target.value)}
+                                    onKeyDown={e => handleKeyDown(e, passwordRef)}
                                 />
                             </div>
                         </div>
@@ -83,6 +98,8 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal, openForgotPasswordM
                                         text-black dark:text-white outline-purple-600"
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
+                                    ref={passwordRef}
+                                    onKeyDown={e => handleKeyDownSubmit(e)}
                                 />
                                 <button
                                     className="absolute inset-y-0 right-0 px-3 flex items-center rounded-r-lg
@@ -107,13 +124,10 @@ const LoginModal = ({ isVisible, onClose, openRegisterModal, openForgotPasswordM
                         >Forgot your password?</button>
                     </div>
                     <div className="mb-3">
-                        <Button 
+                        <Button
                             type="primary"
                             disabled={loginDisabled}
                             className="w-full bg-purple-600 hover:!bg-purple-700 border-none"
-                            // className={`bg-blue-700 dark:bg-blue-500 text-white 
-                            //     font-bold w-full py-1 rounded-lg hover:bg-blue-800 dark:hover:bg-blue-700
-                            //     ${loginDisabled ? "pointer-events-none opacity-50" : ""}`}
                             onClick={handleSubmitLogin}
                             loading={isPending}
                         >

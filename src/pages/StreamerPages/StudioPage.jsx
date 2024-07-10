@@ -4,6 +4,7 @@ import TagItem from '../../components/studio/TagItem';
 import { toast } from 'react-toastify';
 import { useGetAllComingStreams, useSaveNotification, useSaveStream } from '../../api/studio';
 import { useAuth } from '../../contexts/AuthContext';
+import { useUser } from '../../contexts/UserContext'
 import { useSelector } from 'react-redux';
 import { selectSocket } from '../../redux/slices/socketSlice';
 import { Button, DatePicker, Modal, Tooltip } from 'antd';
@@ -17,6 +18,8 @@ import { TourProvider, useTour } from '@reactour/tour';
 import { studioSteps } from '../../guides/steps';
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import useLocalStorage from '../../hooks/useLocalStorage';
+import { appName } from '../../constants';
+
 
 const rainbowColors = [
 	"#FF0000", "#FF6F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#8B00FF",
@@ -46,6 +49,7 @@ const StudioPage = () => {
 	const { mutate: saveNotification, isError: isErrorNotification, isSuccess: isSuccessNotification, data: notificationData } = useSaveNotification();
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
+	const { authFullname } = useUser();
 	const socket = useSelector(selectSocket);
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [selectedTime, setSelectedTime] = useState(dayjs());
@@ -124,14 +128,14 @@ const StudioPage = () => {
 			setStreamId(streamData?.stream?._id);
 			setConfirmLoading(false);
 			setModalOpen(false);
-			if(!incoming) {
+			if(!incoming && streamData) {
 				const data = {
 					stream: streamData?.stream,
 					userId: userId
 				}
 				saveNotification({
 					userId: userId,
-					content: `${auth?.user?.fullname} is streaming: ${title}`
+					streamId: streamData?.stream?._id
 				});
 				socket.emit('sendNotification', data);
 
@@ -154,9 +158,15 @@ const StudioPage = () => {
 			setConfirmLoading(false);
 		}
 	}, [isErrorStream])
+  
 	useEffect(() => {
 		setIsOpen(isFirstStudio);
 	}, [isFirstStudio])
+
+	useEffect(() => {
+        document.title = `Studio - ${appName}`;
+    }, []);
+
 	return (
 		<div className="space-y-5">
 			<div className="flex gap-3 flex-wrap">
@@ -278,7 +288,7 @@ const StudioPage = () => {
 							<div className="space-y-3">
 								<h5 className="font-bold text-lg">Preview Image</h5>
 								<div className="aspect-video bg-black overflow-hidden rounded-lg relative">
-									<img src={image} alt="" className="w-full object-cover" />
+									<img src={image} alt="" className="w-full object-cover aspect-video" />
 									<label className="absolute flex space-x-2 bg-purple-600 text-white right-3 bottom-3 px-2 py-1 rounded-md cursor-pointer hover:bg-purple-700 duration-500 ease-in-out">
 										<Pencil width={14} />
 										<span>Change image</span>

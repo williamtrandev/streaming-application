@@ -24,11 +24,11 @@ const Message = ({msg, isMod=false, streamId}) => {
 			<div className={`space-y-2 ${isStreamer ? 'text-purple-700' : ''}`}>
 				<div className="flex items-center space-x-3">
 					{isMod && !isStreamer ? <img
-						src={user?.profilePictureS3} alt=""
+						src={user?.profilePicture} alt=""
 						className="w-6 h-6 rounded-full cursor-pointer"
 						onClick={() => setOpen(true)}
 					/> : <img
-						src={user?.profilePictureS3} alt=""
+						src={user?.profilePicture} alt=""
 						className="w-6 h-6 rounded-full"
 					/>}
 					

@@ -3,41 +3,27 @@ import SmallStreamCard from "../../components/detailStreamer/SmallStreamCard";
 import { useEffect, useState } from "react";
 import { useGetSavedStreams } from "../../api/stream";
 import { useParams } from "react-router-dom";
+import { useInView } from "react-intersection-observer";
+import { Spin } from "antd";
 
 const StreamerStreamsPage = () => {
     let { username } = useParams();
     username = username.replace("@", "");
     const [savedStreams, setSavedStreams] = useState([]);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+    const { ref, inView } = useInView();
 
-    const { data, refetch } = useGetSavedStreams({ username, page });
+    const { data, hasNextPage, fetchNextPage, isFetching } = useGetSavedStreams(username);
     useEffect(() => {
         if (data) {
-            if (page == 1) {
-                setSavedStreams(data.streams);
-            } else {
-                setSavedStreams((prevStreams) => [...prevStreams, ...data.streams]);
-            }
-            setHasMore(data.streams.length > 0);
-        } 
-    }, [data])
-
-    useEffect(() => {
-        if (hasMore && page > 1) {
-            refetch();
+            setSavedStreams(data.pages.flatMap(page => page.streams));
         }
-    }, [page]);
+    }, [data]);
 
     useEffect(() => {
-        const handleScroll = () => {
-            if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
-            setPage((prevPage) => prevPage + 1);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+        if (inView && hasNextPage) {
+            fetchNextPage();
+        }
+    }, [inView, hasNextPage, fetchNextPage]);
 
     return (
         <div>
@@ -54,6 +40,9 @@ const StreamerStreamsPage = () => {
                         stream={stream}
                     />
                 ))}
+            </div>
+            <div ref={ref} className="flex justify-center items-center">
+                {(hasNextPage || isFetching) && <Spin size="large" />}
             </div>
         </div>
     );

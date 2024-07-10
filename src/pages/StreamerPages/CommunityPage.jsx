@@ -7,6 +7,7 @@ import ModalDeleteMod from '../../components/community/ModalDeleteMod';
 import { useAddMod, useGetAllMod } from '../../api/studio';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
+import { appName } from '../../constants';
 import { formatRole } from '../../utils';
 import { communitySteps } from '../../guides/steps';
 import { TourProvider, useTour } from '@reactour/tour';
@@ -92,10 +93,16 @@ const CommunityPage = () => {
 		if(isAddError) {
 			toast.error('Oops! Something went wrong');
 		}
-	}, [isAddSuccess, isAddError])
+	}, [isAddSuccess, isAddError]);
+
 	useEffect(() => {
 		setIsOpen(isFirstCommunity);
 	}, [isFirstCommunity]);
+
+	useEffect(() => {
+        document.title = `Community - ${appName}`;
+    }, []);
+
 	return (
 		<div className="space-y-5">
 			<div className="block">
