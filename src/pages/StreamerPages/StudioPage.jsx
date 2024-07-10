@@ -13,7 +13,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { blobToBase64 } from '../../utils';
 import ModalDetailStream from '../../components/studio/ModalDetailStream';
 import ModalDeleteStream from '../../components/studio/ModalDeleteStream';
-
+import { TourProvider, useTour } from '@reactour/tour';
+import { studioSteps } from '../../guides/steps';
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const rainbowColors = [
 	"#FF0000", "#FF6F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#8B00FF",
@@ -28,6 +31,8 @@ const getRandomRainbowColor = () => {
 
 
 const StudioPage = () => {
+	const { setIsOpen } = useTour();
+	const [isFirstStudio, setIsFirstStudio] = useLocalStorage('isFirstStudio', true);
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [tagValue, setTagValue] = useState("");
@@ -149,10 +154,13 @@ const StudioPage = () => {
 			setConfirmLoading(false);
 		}
 	}, [isErrorStream])
+	useEffect(() => {
+		setIsOpen(isFirstStudio);
+	}, [isFirstStudio])
 	return (
 		<div className="space-y-5">
 			<div className="flex gap-3 flex-wrap">
-				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white"
+				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white studio-step-1"
 					onClick={() => {
 						sessionStorage.setItem("streamWithObs", false);
 						setModalOpen(true);
@@ -160,7 +168,7 @@ const StudioPage = () => {
 					}}>
 					Start With Camera
 				</button>
-				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white"
+				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white studio-step-2"
 					onClick={() => {
 						sessionStorage.setItem("streamWithObs", true);
 						setModalOpen(true);
@@ -168,7 +176,7 @@ const StudioPage = () => {
 					}}>
 					Start With OBS
 				</button>
-				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white"
+				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white studio-step-3"
 					onClick={() => {
 						setModalOpen(true);
 						setIncoming(true);
@@ -176,7 +184,7 @@ const StudioPage = () => {
 					Schedule
 				</button>
 			</div>
-			<div className="w-full bg-white dark:bg-meta-4 overflow-hidden rounded-lg shadow-md">
+			<div className="w-full bg-white dark:bg-meta-4 overflow-hidden rounded-lg shadow-md studio-step-4">
 				<div className="w-full overflow-x-auto">
 					<table className="w-full whitespace-no-wrap">
 						<thead>
@@ -397,4 +405,18 @@ const StudioPage = () => {
 	);
 };
 
-export default StudioPage;
+const StudioPageWithTour = () => {
+	const disableBody = (target) => disableBodyScroll(target);
+	const enableBody = (target) => enableBodyScroll(target);
+	return (
+		<TourProvider
+			steps={studioSteps}
+			afterOpen={disableBody}
+			beforeClose={enableBody}
+		>
+			<StudioPage />
+		</TourProvider>
+	)
+}
+
+export default StudioPageWithTour;

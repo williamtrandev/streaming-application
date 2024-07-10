@@ -8,6 +8,10 @@ import { useAddMod, useGetAllMod } from '../../api/studio';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
 import { formatRole } from '../../utils';
+import { communitySteps } from '../../guides/steps';
+import { TourProvider, useTour } from '@reactour/tour';
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 const fakeMode = [
 	{ id: 1, username: "William Tran", role: "King", lastModified: "2020-01-01" },
@@ -17,6 +21,8 @@ const fakeMode = [
 	{ id: 5, username: "William Tran 5", role: "King", lastModified: "2020-01-01" },
 ]
 const CommunityPage = () => {
+	const { setIsOpen } = useTour();
+	const [isFirstCommunity, setIsFirstCommunity] = useLocalStorage('isFirstCommunity', true);
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
 	const [options, setOptions] = useState([]);
@@ -87,13 +93,16 @@ const CommunityPage = () => {
 			toast.error('Oops! Something went wrong');
 		}
 	}, [isAddSuccess, isAddError])
+	useEffect(() => {
+		setIsOpen(isFirstCommunity);
+	}, [isFirstCommunity]);
 	return (
 		<div className="space-y-5">
 			<div className="block">
 				<div className="w-full flex justify-center items-center">
 					<div className="w-full max-w-[30rem] relative bg-white shadow-md dark:bg-meta-4 rounded-lg p-3">
 						<AutoComplete
-						    className="text-black focus:outline-none xl:w-125 px-3"
+						    className="text-black focus:outline-none xl:w-125 px-3 community-step-1"
 							popupClassName="dark:bg-gray-800"
 							options={options}
 							value={value}
@@ -105,7 +114,7 @@ const CommunityPage = () => {
 							variant="borderless"
 						/>
 						<button className={`absolute right-5 top-1/2 -translate-y-1/2 ${isAdd ? 'bg-purple-700' : 'bg-purple-300'} text-white 
-                            rounded-full p-1`} 
+                            rounded-full p-1 community-step-2`} 
 							onClick={handleAddMod}
 						>
                             <Check width={14} height={14} />
@@ -116,7 +125,7 @@ const CommunityPage = () => {
 			</div>
 			<div className="w-full bg-white dark:bg-meta-4 overflow-hidden rounded-lg shadow-md">
 				<div className="w-full overflow-x-auto">
-					<table className="w-full whitespace-no-wrap">
+					<table className="w-full whitespace-no-wrap community-step-3">
 						<thead>
 							<tr className="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
 								<th className="px-4 py-3">Account</th>
@@ -197,4 +206,18 @@ const CommunityPage = () => {
 	)
 }
 
-export default CommunityPage;
+const CommunityPageWithTour = () => {
+	const disableBody = (target) => disableBodyScroll(target);
+	const enableBody = (target) => enableBodyScroll(target);
+	return (
+		<TourProvider
+			steps={communitySteps}
+			afterOpen={disableBody}
+			beforeClose={enableBody}
+		>
+			<CommunityPage />
+		</TourProvider>
+	)
+}
+
+export default CommunityPageWithTour;
