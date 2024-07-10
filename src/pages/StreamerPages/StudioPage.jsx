@@ -4,6 +4,7 @@ import TagItem from '../../components/studio/TagItem';
 import { toast } from 'react-toastify';
 import { useGetAllComingStreams, useSaveNotification, useSaveStream } from '../../api/studio';
 import { useAuth } from '../../contexts/AuthContext';
+import { useUser } from '../../contexts/UserContext'
 import { useSelector } from 'react-redux';
 import { selectSocket } from '../../redux/slices/socketSlice';
 import { Button, DatePicker, Modal, Tooltip } from 'antd';
@@ -42,6 +43,7 @@ const StudioPage = () => {
 	const { mutate: saveNotification, isError: isErrorNotification, isSuccess: isSuccessNotification, data: notificationData } = useSaveNotification();
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
+	const { authFullname } = useUser();
 	const socket = useSelector(selectSocket);
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [selectedTime, setSelectedTime] = useState(dayjs());
@@ -120,14 +122,14 @@ const StudioPage = () => {
 			setStreamId(streamData?.stream?._id);
 			setConfirmLoading(false);
 			setModalOpen(false);
-			if(!incoming) {
+			if(!incoming && streamData) {
 				const data = {
 					stream: streamData?.stream,
 					userId: userId
 				}
 				saveNotification({
 					userId: userId,
-					content: `${auth?.user?.fullname} is streaming: ${title}`
+					streamId: streamData?.stream?._id
 				});
 				socket.emit('sendNotification', data);
 
