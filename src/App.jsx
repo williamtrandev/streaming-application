@@ -31,7 +31,6 @@ import SearchPage from './pages/ViewerPages/SearchPage';
 import SavedStreamsPage from './pages/StreamerPages/SavedStreamsPage';
 import NotFoundPage from './pages/CommonPages/NotFoundPage';
 
-
 function App() {
   const { auth } = useAuth();
   const isLogged = auth !== null;

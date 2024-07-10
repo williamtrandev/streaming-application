@@ -7,15 +7,11 @@ import { useGetStats, useGetStatsViewer } from "../../api/studio";
 import { useAuth } from '../../contexts/AuthContext';
 import { filterBtns } from "../../constants";
 import { formatDataChart } from "../../utils";
+import { TourProvider, useTour } from '@reactour/tour';
+import { analyticsSteps } from '../../guides/steps';
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
-const concurrentViewers = [
-	{ "time": "00:00:02", "viewers": 150 },
-	{ "time": "00:00:03", "viewers": 200 },
-	{ "time": "00:01:02", "viewers": 250 },
-	{ "time": "00:01:22", "viewers": 300 },
-	{ "time": "00:02:02", "viewers": 350 },
-	{ "time": "00:03:02", "viewers": 320 }
-];
 const colors = [
 	"rgba(43, 63, 229, 0.8)",
 	"rgba(250, 192, 19, 0.8)",
@@ -33,6 +29,8 @@ defaults.plugins.title.align = "start";
 defaults.plugins.title.font.size = 20;
 
 const AnalyticsPage = () => {
+	const { setIsOpen } = useTour();
+	const [isFirstAnalytics, setIsFirstAnalytics] = useLocalStorage('isFirstAnalytics', true);
 	useEffect(() => {
         document.title = `Analytics - ${appName}`;
     }, []);
@@ -111,11 +109,14 @@ const AnalyticsPage = () => {
 			setLabelDataLine(labels);
 		}
 	}, [statsViewerData, isStatsViewerSuccess]);
+	useEffect(() => {
+		setIsOpen(isFirstAnalytics);
+	}, [isFirstAnalytics]);
 	return (
 		<div className="space-y-5">
 			<p className="font-bold text-theme text-2xl">Viewers from latest stream</p>
 			<div className="w-full gap-5">
-				<div className="w-full flex flex-col items-center justify-center bg-white dark:bg-meta-4 rounded-md shadow-md space-y-3 p-5">
+				<div className="w-full flex flex-col items-center justify-center bg-white dark:bg-meta-4 rounded-md shadow-md space-y-3 p-5 analytics-step-1">
 					<Line 
 						className="max-h-[70vh]" 
 						data={{
@@ -155,14 +156,14 @@ const AnalyticsPage = () => {
 			<div className="flex flex-col items-center justify-center w-full gap-5">
 				<DatePicker.RangePicker
 					size="large"
-					className="dark:bg-meta-4 dark:border-none dark:text-white"
+					className="dark:bg-meta-4 dark:border-none dark:text-white analytics-step-4"
 					onChange={(date, dateString) => {
 						console.log(date, dateString);
 						setFromDate(dateString[0]);
 						setToDate(dateString[1]);
 					}}
 				/>
-				<div className="flex">
+				<div className="flex analytics-step-3">
 					{filterBtns.map((filterBtn, index) => {
 						const isFirst = index === 0;
 						const isLast = index === filterBtns.length - 1;
@@ -187,7 +188,7 @@ const AnalyticsPage = () => {
 					})}
 				</div>
 			</div>
-			<div className="w-full bg-white dark:bg-meta-4 rounded-md shadow-md space-y-3 p-5">
+			<div className="w-full bg-white dark:bg-meta-4 rounded-md shadow-md space-y-3 p-5 analytics-step-2">
 				<Bar className="max-h-[70vh]"
 					data={{
 						labels: labelDataBar,
@@ -200,4 +201,18 @@ const AnalyticsPage = () => {
 	)
 }
 
-export default AnalyticsPage;
+const AnalyticsPageWithTour = () => {
+	const disableBody = (target) => disableBodyScroll(target);
+	const enableBody = (target) => enableBodyScroll(target);
+	return (
+		<TourProvider
+			steps={analyticsSteps}
+			afterOpen={disableBody}
+			beforeClose={enableBody}
+		>
+			<AnalyticsPage />
+		</TourProvider>
+	)
+}
+
+export default AnalyticsPageWithTour;
