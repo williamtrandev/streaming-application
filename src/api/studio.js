@@ -1,5 +1,5 @@
 import APIClient from "../utils/APIClient";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
 const saveStream = async (data) => {
 	const response = await APIClient.post("/studio/stream", data);
@@ -23,15 +23,20 @@ const useSaveNotification = () => {
 	})
 }
 
-const getNotifications = async () => {
-	const response = await APIClient.get("/studio/notification");
+const getNotifications = async ({ pageParam }) => {
+	const response = await APIClient.get(`/studio/notification/${pageParam}`);
 	return response.data;
 }
 
 const useGetNotifications = (userId) => {
-	return useQuery({
+	return useInfiniteQuery({
 		queryKey: ["Notifications", userId],
-		queryFn: () => getNotifications(),
+		queryFn: getNotifications,
+		initialPageParam: 1,
+		getNextPageParam: (lastPage, allPages) => {
+			const nextPage = lastPage.notifications.length ? allPages.length + 1 : undefined;
+			return nextPage;
+		},
 		enabled: !!userId
 	});
 }
