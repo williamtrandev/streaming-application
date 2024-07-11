@@ -26,6 +26,7 @@ const SavedStreamsPage = () => {
     const { data: streamsData, refetch } = useSearchSavedStreams(searchKey, page, date, numViews, numViewsLive);
     useEffect(() => {
         if (streamsData) {
+            console.log(streamsData);
             setStreams(streamsData.streams);
             setNumPages(streamsData.numPages);
         }
@@ -165,18 +166,16 @@ const SavedStreamsPage = () => {
     }, []);
 
     return (
-        <div className="space-y-2">
-            <div className="text-lg font-bold">Saved Streams Manager</div>
+        <div className="space-y-5">
             <div className="sticky top-18 z-99">
-                <div className="relative">
-                    <button className="absolute left-0 h-full px-2">
+                <div className="w-full relative bg-white shadow-md dark:bg-meta-4 rounded-lg p-3 flex items-center">
+                    <button className="absolute left-2 h-full px-2">
                         <Search />
                     </button>
                     <input type="text"
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
-                        className="w-full px-10 py-2 focus:outline-none border-y border-gray-300 dark:border-gray-600
-							bg-[#edf2f9] dark:bg-boxdark-2 dark:text-white"
+                        className="w-full pl-10 focus:outline-none dark:text-white bg-transparent"
                         placeholder="Search stream by title or tag"
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {
@@ -185,7 +184,7 @@ const SavedStreamsPage = () => {
                         }}
                     />
                     {(searchInput != "") && <button
-                        className="absolute right-0 h-full px-2"
+                        className="absolute right-2 h-full px-2"
                         onClick={() => {
                             setSearchInput("");
                             setSearchKey("");
@@ -217,119 +216,113 @@ const SavedStreamsPage = () => {
             </div>
 
             <div className="w-full bg-white dark:bg-meta-4 overflow-hidden rounded-lg shadow-md">
-                {streams.length > 0 && (
-                    <div className="w-full overflow-x-auto">
-                        <table className="w-full whitespace-no-wrap table-auto">
-                            <thead>
-                                <tr className="text-xs font-semibold tracking-wide text-left text-gray-500 border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-                                    <th className="px-4 py-3">
-                                        <Checkbox
-                                            indeterminate={indeterminate}
-                                            onChange={onSelectAllChange}
-                                            checked={allChecked}
-                                        />
-                                    </th>
-                                    <th className="px-4 py-3">Stream</th>
-                                    <th className="px-4 py-3">
-                                        <button
-                                            className="flex gap-1 items-center hover:text-black dark:hover:text-white"
-                                            onClick={() => {
-                                                if (date == -1) {
-                                                    setDate(1);
-                                                } else {
-                                                    setDate(-1);
-                                                }
-                                            }}
-                                        >
-                                            <span>Date</span>
-                                            {date == -1 && <MoveDown size={16} />}
-                                            {date == 1 && <MoveUp size={16} />}
-                                        </button>
-                                    </th>
-                                    <th className="px-4 py-3">
-                                        <button
-                                            className="flex gap-1 items-center hover:text-black dark:hover:text-white"
-                                            onClick={() => {
-                                                if (numViewsLive == -1) {
-                                                    setNumViewsLive(1);
-                                                } else {
-                                                    setNumViewsLive(-1);
-                                                }
-                                            }}
-                                        >
-                                            <span>Live views</span>
-                                            {numViewsLive == -1 && <MoveDown size={16} />}
-                                            {numViewsLive == 1 && <MoveUp size={16} />}
-                                        </button>
-                                    </th>
-                                    <th className="px-4 py-3">
-                                        <button
-                                            className="flex gap-1 items-center hover:text-black dark:hover:text-white"
-                                            onClick={() => {
-                                                if (numViews == -1) {
-                                                    setNumViews(1);
-                                                } else {
-                                                    setNumViews(-1);
-                                                }
-                                            }}
-                                        >
-                                            <span>Views</span>
-                                            {numViews == -1 && <MoveDown size={16} />}
-                                            {numViews == 1 && <MoveUp size={16} />}
-                                        </button>
-                                    </th>
-                                    <th className="px-4 py-3">Like/Dislike</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y dark:divide-gray-700 dark:bg-gray-800">
-                                {streams.map((stream, index) => {
-                                    return (
-                                        <tr
-                                            key={index}
-                                            className="text-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
-                                        >
-                                            <td className="px-4 py-3 text-sm">
-                                                <Checkbox
-                                                    checked={selectedRowKeys.includes(stream._id)}
-                                                    onChange={() => onSelectChange(stream._id)}
+                <div className="w-full overflow-x-auto">
+                    <table className="w-full whitespace-no-wrap table-auto">
+                        <thead>
+                            <tr className="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                                <th className="px-4 py-3">
+                                    <Checkbox
+                                        indeterminate={indeterminate}
+                                        onChange={onSelectAllChange}
+                                        checked={allChecked}
+                                    />
+                                </th>
+                                <th className="px-4 py-3">Stream</th>
+                                <th className="px-4 py-3">
+                                    <button
+                                        className="flex gap-1 items-center hover:text-black dark:hover:text-white uppercase"
+                                        onClick={() => {
+                                            if (date == -1) {
+                                                setDate(1);
+                                            } else {
+                                                setDate(-1);
+                                            }
+                                        }}
+                                    >
+                                        <span>Date</span>
+                                        {date == -1 && <MoveDown size={16} />}
+                                        {date == 1 && <MoveUp size={16} />}
+                                    </button>
+                                </th>
+                                <th className="px-4 py-3">
+                                    <button
+                                        className="flex gap-1 items-center hover:text-black dark:hover:text-white uppercase"
+                                        onClick={() => {
+                                            if (numViewsLive == -1) {
+                                                setNumViewsLive(1);
+                                            } else {
+                                                setNumViewsLive(-1);
+                                            }
+                                        }}
+                                    >
+                                        <span>Live views</span>
+                                        {numViewsLive == -1 && <MoveDown size={16} />}
+                                        {numViewsLive == 1 && <MoveUp size={16} />}
+                                    </button>
+                                </th>
+                                <th className="px-4 py-3">
+                                    <button
+                                        className="flex gap-1 items-center hover:text-black dark:hover:text-white uppercase"
+                                        onClick={() => {
+                                            if (numViews == -1) {
+                                                setNumViews(1);
+                                            } else {
+                                                setNumViews(-1);
+                                            }
+                                        }}
+                                    >
+                                        <span>Views</span>
+                                        {numViews == -1 && <MoveDown size={16} />}
+                                        {numViews == 1 && <MoveUp size={16} />}
+                                    </button>
+                                </th>
+                                <th className="px-4 py-3">Like/Dislike</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y dark:divide-gray-700 dark:bg-gray-800">
+                            {streams && streams.map((stream, index) => {
+                                return (
+                                    <tr
+                                        key={index}
+                                        className="text-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
+                                    >
+                                        <td className="px-4 py-3 text-sm">
+                                            <Checkbox
+                                                checked={selectedRowKeys.includes(stream._id)}
+                                                onChange={() => onSelectChange(stream._id)}
+                                            />
+                                        </td>
+                                        <td className="px-4 py-3 text-sm flex gap-3 items-center" onClick={() => onRowClick(stream)}>
+                                            <span>
+                                                <img
+                                                    src={stream.previewImage}
+                                                    alt="preview"
+                                                    className="aspect-video object-cover w-40 rounded-lg"
                                                 />
-                                            </td>
-                                            <td className="px-4 py-3 text-sm flex gap-2" onClick={() => onRowClick(stream)}>
-                                                <span>
-                                                    <img
-                                                        src={stream.previewImage}
-                                                        alt="preview"
-                                                        className="aspect-video object-cover w-40"
-                                                    />
-                                                </span>
-                                                <span>
-                                                    {stream.title.length > 100 ? stream.title.substring(0, 100) + '...' : stream.title}
-                                                </span>
-                                            </td>
-                                            <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
-                                                {new Date(stream.dateStream).toLocaleString()}
-                                            </td>
-                                            <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
-                                                {stream.numViewsLive}
-                                            </td>
-                                            <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
-                                                {stream.numViews}
-                                            </td>
-                                            <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
-                                                {stream.numLikes}/{stream.numDislikes}
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-                {streams.length == 0 && (
-                    <div className="bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-700 px-4 py-2">
-                        You haven't saved any streams yet
-                    </div>
-                )}
+                                            </span>
+                                            <span>
+                                                {stream.title.length > 100 ? stream.title.substring(0, 100) + '...' : stream.title}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
+                                            {new Date(stream.dateStream).toLocaleString()}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
+                                            {stream.numViewsLive}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
+                                            {stream.numViews}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
+                                            {stream.numLikes}/{stream.numDislikes}
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+                
                 {streams.length > 0 && (
                     <div className="bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-700
                         flex justify-end gap-8 px-4 py-2 items-center"

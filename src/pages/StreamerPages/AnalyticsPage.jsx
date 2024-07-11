@@ -99,8 +99,8 @@ const AnalyticsPage = () => {
 				{
 					label: "Viewer",
 					data: statsViewerData.numViewersPerMin.map(dataset => dataset.count),
-					backgroundColor: "#064FF0",
-					borderColor: "#064FF0",
+					backgroundColor: "#c084fc",
+					borderColor: "#d8b4fe",
 				}
 			];
 			console.log(datasets)
