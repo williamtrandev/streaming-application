@@ -2,6 +2,7 @@ import { lightmode, darkmode } from "../assets";
 
 export const appName = "Duo Streaming"
 export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const otpExpireTime = 300;
 
 export const navLinks = [
 	{

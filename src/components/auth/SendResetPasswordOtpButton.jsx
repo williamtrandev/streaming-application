@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import { useForgotPassword } from "../../api/auth";
 import { useEffect, useState } from "react";
+import { otpExpireTime } from "../../constants";
 
 const SendResetPasswordOtpButton = ({ email, username, isValidEmail }) => {
     const { mutate, isLoading, isError, error, isSuccess, data } = useForgotPassword();
@@ -26,7 +27,7 @@ const SendResetPasswordOtpButton = ({ email, username, isValidEmail }) => {
     useEffect(() => {
         if (data) {
             toast.success(data.message);
-            setSeconds(180);
+            setSeconds(otpExpireTime);
             setIsCounting(true);
         }
     }, [isSuccess]);
