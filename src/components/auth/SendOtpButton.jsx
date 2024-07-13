@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import { useSendOtp } from "../../api/auth";
 import { useEffect, useState } from "react";
+import { otpExpireTime } from "../../constants";
 
 const SendOtpButton = ({ email, isValidEmail }) => {
     const { mutate, isLoading, isError, error, isSuccess, data } = useSendOtp();
@@ -26,7 +27,7 @@ const SendOtpButton = ({ email, isValidEmail }) => {
     useEffect(() => {
         if (data) {
             toast.success(data.message);
-            setSeconds(180);
+            setSeconds(otpExpireTime);
             setIsCounting(true);
         }
     }, [isSuccess]);
