@@ -8,7 +8,6 @@ import AvatarEditor from "react-avatar-editor";
 import { X, ZoomIn, ZoomOut } from "lucide-react";
 
 const ProfilePicture = ({ profilePicture }) => {
-    // const { setShowCropperModal, setSrc } = useContext(ModalContext);
     const { authProfilePicture } = useUser();
     const fileInputRef = useRef(null);
     const [src, setSrc] = useState(null);
