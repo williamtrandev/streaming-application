@@ -9,6 +9,7 @@ import { useUser } from "../../contexts/UserContext";
 const UsernameSetting = ({ canChangeUsername }) => {
     const { authUsername, setAuthUsername } = useUser();
     const [showChangeUsernameModal, setShowChangeUsernameModal] = useState(false);
+    const [savedNewUsername, setSavedNewUsername] = useState(false);
 
     const [showPassword, setShowPassword] = useState("password");
 
@@ -31,6 +32,7 @@ const UsernameSetting = ({ canChangeUsername }) => {
             toast.success("Change username successfully");
             setAuthUsername(data.newUsername);
             setShowChangeUsernameModal(false);
+            setSavedNewUsername(true);
         }
     }, [isSuccess]);
 
@@ -49,7 +51,7 @@ const UsernameSetting = ({ canChangeUsername }) => {
                     >
                         {authUsername}
                     </div>
-                    {canChangeUsername && <button
+                    {canChangeUsername && !savedNewUsername && <button
                         className="absolute right-0 top-0 h-full p-2 rounded-r-lg dark:text-white 
                         hover:bg-gray-500"
                         onClick={() => {
