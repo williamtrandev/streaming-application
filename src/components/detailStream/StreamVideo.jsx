@@ -104,7 +104,7 @@ const StreamDescription = ({ stream, numViewers }) => {
 						<span>
 							{formatNumViewers(
 							stream?.isFinished
-								? stream.numViewers || 0
+								? stream.numViews || 0
 								: (numViewers || 0)
 							)}
 						</span>

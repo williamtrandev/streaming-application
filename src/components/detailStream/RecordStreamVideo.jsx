@@ -95,7 +95,7 @@ const StreamDescription = ({ stream }) => {
 					</div>
 					<div className="flex gap-2">
 						<Users className="w-[1rem]" />
-						<span>{formatNumViewers(stream?.numViewers)}</span>
+						<span>{formatNumViewers(stream?.numViews)}</span>
 					</div>
 				</div>
 				<div className="flex divide-x-2 divide-white dark:divide-boxdark mb-4 text-xs md:text-base">
