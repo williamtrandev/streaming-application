@@ -1,4 +1,4 @@
-import { Calendar, ThumbsDown, ThumbsUp, Timer, Users, Maximize, Minimize, Volume2, VolumeX } from "lucide-react";
+import { Calendar, ThumbsDown, ThumbsUp, Timer, Users, Maximize, Minimize, Volume2, VolumeX, Eye } from "lucide-react";
 import { useEffect, useState, useContext, useRef, useCallback } from "react";
 import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
 import FollowButton from "../detailStreamer/FollowButton";
@@ -94,7 +94,7 @@ const StreamDescription = ({ stream }) => {
 						<span>{stream?.dateStream && new Date(stream?.dateStream).toLocaleString()}</span>
 					</div>
 					<div className="flex gap-2">
-						<Users className="w-[1rem]" />
+						<Eye className="w-[1rem]" />
 						<span>{formatNumViewers(stream?.numViews)}</span>
 					</div>
 				</div>
@@ -139,7 +139,7 @@ const StreamDescription = ({ stream }) => {
 			<div className={isExpanded ? "flex flex-col gap-4" : ""}>
 				{isExpanded ? stream?.description : `${stream?.description?.substring(0, 200)}...`}
 				{
-				stream?.description?.length > 200 && 
+					stream?.description?.length > 200 && 
 					<button
 						className="px-1 rounded-lg bg-neutral-200 dark:bg-neutral-700
 							hover:bg-neutral-300 dark:hover:bg-neutral-600 w-fit text-start"

@@ -200,7 +200,7 @@ const useIsMod = ({ userId, streamerId }) => {
 	return useQuery({
 		queryKey: ["ismod", userId, streamerId],
 		queryFn: () => checkMod(streamerId),
-		enabled: !!streamerId,
+		enabled: !!streamerId && !!userId,
 	});
 }
 
@@ -213,7 +213,7 @@ const useIsBanned = ({ userId, streamId, typeBanned }) => {
 	return useQuery({
 		queryKey: ["isbanned", userId, streamId, typeBanned],
 		queryFn: () => checkBanned({ streamId, typeBanned }),
-		enabled: !!streamId,
+		enabled: !!streamId && !!userId,
 	});
 }
 
