@@ -4,7 +4,7 @@ let socket;
 
 const connectSocket = () => {
 	if (!socket) {
-		socket = io("http://localhost:3000"); 
+		socket = io(import.meta.env.VITE_SOCKET_HOST); 
 		console.log("Socket initialized:", socket); 
 	}
 	return socket;
