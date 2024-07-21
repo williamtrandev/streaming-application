@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Modal, Button } from 'antd';
 import { useBanViewer, useUnbanViewer } from '../../api/studio';
 import { useSelector } from 'react-redux';
@@ -11,7 +11,7 @@ const ModalBanViewer = ({ open, setOpen, username, userId, streamId }) => {
 	const [isWatch, setIsWatch] = useState(true);
 	const { mutate: banViewer, isSuccess: isBanSuccess, isError: isBanError } = useBanViewer();
 	const { mutate: unbanViewer, isSuccess: isUnbanSuccess, isError: isUnbanError } = useUnbanViewer();
-	const { data: banPermissions, isSuccess: isGetPermissionSuccess } = useGetBanPermissions({ userId: userId, streamId: streamId});
+	const { refetch: fetchBanPermissions, data: banPermissions, isSuccess: isGetPermissionSuccess } = useGetBanPermissions({ userId: userId, streamId: streamId});
 	const socket = useSelector(selectSocket);
 	const handleBanChat = async () => {
 		setOpen(false);
@@ -59,13 +59,24 @@ const ModalBanViewer = ({ open, setOpen, username, userId, streamId }) => {
 		unbanViewer(data);
 		setIsWatch(true);
 	}
+	const fetchPermissions = useCallback(() => {
+		fetchBanPermissions();
+	}, [fetchBanPermissions]);
+
 	useEffect(() => {
+		if (open) {
+			console.log("refetch permissions")
+			fetchPermissions();
+		}
+	}, [open, fetchPermissions]);
+	useEffect(() => {
+		console.log("fetch permissions")
 		if (isGetPermissionSuccess && banPermissions) {
 			const permissions = banPermissions.permissions;
 			setIsWatch(permissions.includes('watch'));
 			setIsChat(permissions.includes('chat'));
 		}
-	}, [isGetPermissionSuccess]);
+	}, [isGetPermissionSuccess, banPermissions]);
 	return (
 		<Modal
 			className='bg-slate-100 dark:bg-slate-600 rounded-lg dark:text-slate-200'
