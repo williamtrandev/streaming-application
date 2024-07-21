@@ -101,11 +101,23 @@ const useGetHomePageStreams = (userId) => {
 	});
 }
 
+const riseNumViews = async (data) => {
+	const response = await APIClient.post("/stream/views", data);
+	return response.data;
+}
+
+const useRiseNumViews = () => {
+	return useMutation({
+		mutationFn: (data) => riseNumViews(data)
+	})
+}
+
 export {
     useGetSavedStreams,
 	useGetHomeStreams,
 	useGetLikedStreams,
 	useGetFollowingStreams,
 	useGetNumLikesAndDislikes,
-	useGetHomePageStreams
+	useGetHomePageStreams,
+	useRiseNumViews
 };

@@ -9,13 +9,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { Tooltip } from "antd";
 import { useGetStreamRecord } from "../../api/studio";
 import { useLikeStream, useWriteHistory } from "../../api/history";
-import { useGetNumLikesAndDislikes } from "../../api/stream";
+import { useGetNumLikesAndDislikes, useRiseNumViews } from "../../api/stream";
 import { toast } from "react-toastify";
 const Streamer = ({ user }) => {
 	return (
 		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
 			<div className="w-full md:flex md:justify-between">
-				<Link 
+				<Link
 					to={`/${user?._id}`}
 					className="flex gap-3"
 				>
@@ -40,6 +40,7 @@ const StreamDescription = ({ stream }) => {
 	const [liked, setLiked] = useState(null);
 	const [numLikes, setNumLikes] = useState(0);
 	const [numDislikes, setNumDislikes] = useState(0);
+	const [numViews, setNumViews] = useState(0);
 
 	const { mutate: writeHistory, data: historyData, error: historyError, isError: isHistoryError, isSuccess: isHistorySuccess } = useWriteHistory();
 	const { data: likesAndDislikesData } = useGetNumLikesAndDislikes(stream._id);
@@ -49,6 +50,7 @@ const StreamDescription = ({ stream }) => {
 		if (likesAndDislikesData) {
 			setNumLikes(likesAndDislikesData.numLikes);
 			setNumDislikes(likesAndDislikesData.numDislikes);
+			setNumViews(likesAndDislikesData.numViews);
 		}
 	}, [likesAndDislikesData]);
 
@@ -117,7 +119,7 @@ const StreamDescription = ({ stream }) => {
 						<ThumbsUp size={20} className={`${liked == true ? "text-pink-600" : ""}`} />
 						{formatNumLikes(numLikes)}
 					</button>
-					<button 
+					<button
 						className="px-2 py-1 md:px-4 md:py-2 rounded-r-full flex gap-2 items-center
 							bg-neutral-300 dark:bg-black hover:bg-purple-600 dark:hover:bg-purple-500 hover:text-white"
 						onClick={() => {
@@ -139,7 +141,7 @@ const StreamDescription = ({ stream }) => {
 			<div className={isExpanded ? "flex flex-col gap-4" : ""}>
 				{isExpanded ? stream?.description : `${stream?.description?.substring(0, 200)}...`}
 				{
-					stream?.description?.length > 200 && 
+					stream?.description?.length > 200 &&
 					<button
 						className="px-1 rounded-lg bg-neutral-200 dark:bg-neutral-700
 							hover:bg-neutral-300 dark:hover:bg-neutral-600 w-fit text-start"
@@ -159,21 +161,31 @@ const RecordStreamVideo = ({ streamData }) => {
 	const streamId = streamData?.stream?._id;
 	const { auth } = useAuth();
 	const userId = auth?.user?._id || uuidv4();
-    const { data: recordData } = useGetStreamRecord(streamId);
-    useEffect(() => {
-        if (recordData) {
-            videoEl.current.src = recordData.streamLink;
-        }
-    }, [recordData]);
+	const { data: recordData } = useGetStreamRecord(streamId);
+	const { mutate: riseNumViews } = useRiseNumViews({ streamId: streamId });
+	useEffect(() => {
+		if (recordData) {
+			videoEl.current.src = recordData.streamLink;
+		}
+
+		const timer = setTimeout(() => {
+			if (recordData) {
+				riseNumViews();
+			}
+		}, 3000);
+
+		// Cleanup the timeout if the component unmounts
+		return () => clearTimeout(timer);
+	}, [recordData]);
 	return (
 		<div className="w-full flex flex-col items-center space-y-3">
 			<Streamer user={streamData?.stream?.user} />
 			<div className="flex flex-1 flex-col w-full">
 				<div className="flex h-full flex-1">
 					<div className="flex-1 flex-col container rounded-lg overflow-hidden">
-                        <div className="relative flex aspect-video bg-black">
-                            <video ref={videoEl} width="100%" controls />
-                        </div>
+						<div className="relative flex aspect-video bg-black">
+							<video ref={videoEl} width="100%" controls />
+						</div>
 					</div>
 				</div>
 			</div>
