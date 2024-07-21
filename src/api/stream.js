@@ -102,7 +102,7 @@ const useGetHomePageStreams = (userId) => {
 }
 
 const riseNumViews = async (data) => {
-	const response = await APIClient.post("/stream/views", data);
+	const response = await APIClient.put("/stream/views", data);
 	return response.data;
 }
 

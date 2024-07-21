@@ -162,20 +162,29 @@ const RecordStreamVideo = ({ streamData }) => {
 	const { auth } = useAuth();
 	const userId = auth?.user?._id || uuidv4();
 	const { data: recordData } = useGetStreamRecord(streamId);
-	const { mutate: riseNumViews } = useRiseNumViews({ streamId: streamId });
+	const { mutate: riseNumViews } = useRiseNumViews();
 	useEffect(() => {
 		if (recordData) {
 			videoEl.current.src = recordData.streamLink;
 		}
 
-		const timer = setTimeout(() => {
-			if (recordData) {
-				riseNumViews();
-			}
-		}, 3000);
+		const handleLoadedMetadata = () => {
+			const duration = videoEl.current.duration;
 
-		// Cleanup the timeout if the component unmounts
-		return () => clearTimeout(timer);
+			const timeToCount = Math.min(duration, 30);
+
+			const timer = setTimeout(() => {
+				riseNumViews({ streamId: streamId });
+			}, timeToCount * 1000);
+
+			return () => clearTimeout(timer);
+		};
+
+		videoEl.current.addEventListener('loadedmetadata', handleLoadedMetadata);
+
+		if (videoEl.current) {
+			videoEl.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+		}
 	}, [recordData]);
 	return (
 		<div className="w-full flex flex-col items-center space-y-3">
