@@ -1,7 +1,7 @@
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
-import { MainLayout, StudioLayout } from './layouts';
+import { AdminLayout, MainLayout, StudioLayout } from './layouts';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
@@ -30,6 +30,9 @@ import LikedPage from './pages/ViewerPages/LikedPage';
 import SearchPage from './pages/ViewerPages/SearchPage';
 import SavedStreamsPage from './pages/StreamerPages/SavedStreamsPage';
 import NotFoundPage from './pages/CommonPages/NotFoundPage';
+import StreamAdminPage from './pages/AdminPages/StreamAdminPage';
+import AccountPage from './pages/AdminPages/AccountPage';
+import AnalyticsAdminPage from './pages/AdminPages/AnalyticsAdminPage';
 
 function App() {
   const { auth } = useAuth();
@@ -72,6 +75,11 @@ function App() {
           <Route path='analytics' element={<AnalyticsPage />} />
           <Route path='community' element={<CommunityPage />} />
           <Route path='saved' element={<SavedStreamsPage />} />
+        </Route>
+        <Route path='/admin' element={<AdminLayout />}>
+          <Route path='streams' element={<StreamAdminPage />} />
+          <Route path='account' element={<AccountPage />} />
+          <Route path='analytics' element={<AnalyticsAdminPage />} />
         </Route>
       </Routes>
       <ToastContainer />
