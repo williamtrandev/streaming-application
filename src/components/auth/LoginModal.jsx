@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { X, User, LockKeyhole, Eye, EyeOff, CircleAlert } from "lucide-react";
+import { X, User, LockKeyhole, Eye, EyeOff } from "lucide-react";
 import { appName } from "../../constants";
 import { toast } from "react-toastify";
 import { useLogin } from "../../api/auth";

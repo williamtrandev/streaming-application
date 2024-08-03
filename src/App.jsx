@@ -33,6 +33,8 @@ import NotFoundPage from './pages/CommonPages/NotFoundPage';
 import StreamAdminPage from './pages/AdminPages/StreamAdminPage';
 import AccountPage from './pages/AdminPages/AccountPage';
 import AnalyticsAdminPage from './pages/AdminPages/AnalyticsAdminPage';
+import LoginPage from './pages/AdminPages/LoginPage';
+import SettingsAdminPage from './pages/AdminPages/SettingsAdminPage';
 
 function App() {
   const { auth } = useAuth();
@@ -76,10 +78,12 @@ function App() {
           <Route path='community' element={<CommunityPage />} />
           <Route path='saved' element={<SavedStreamsPage />} />
         </Route>
+        <Route path='/admin-login' element={<LoginPage />} />
         <Route path='/admin' element={<AdminLayout />}>
           <Route path='streams' element={<StreamAdminPage />} />
           <Route path='account' element={<AccountPage />} />
           <Route path='analytics' element={<AnalyticsAdminPage />} />
+          <Route path='settings' element={<SettingsAdminPage />} />
         </Route>
       </Routes>
       <ToastContainer />

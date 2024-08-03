@@ -291,7 +291,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 						</ul>}
 						<ul className="md:hidden">
 							<li className="group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium">
-								<Moon />
+								<Moon className='w-5' />
 								<DarkModeSwitcher />
 							</li>
 						</ul>

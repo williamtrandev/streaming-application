@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
-import { Moon, Settings, Telescope, Tv, LineChart, Podcast, FileVideo, User } from 'lucide-react';
+import { Moon, Settings, Telescope, Tv, LineChart, Podcast, FileVideo, User, LogOut } from 'lucide-react';
 import DarkModeSwitcher from '../header/DarkModeSwitcher';
 import { appName } from '../../../constants';
 import { logo } from '../../../assets';
+import { toast } from 'react-toastify';
+import { useAuth } from '../../../contexts/AuthContext';
 
 
 const SidebarStudio = ({ sidebarOpen, setSidebarOpen }) => {
@@ -19,6 +21,15 @@ const SidebarStudio = ({ sidebarOpen, setSidebarOpen }) => {
 	const [sidebarExpanded, setSidebarExpanded] = useState(
 		storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
 	);
+
+	const { logout } = useAuth();
+	const handleLogout = () => {
+		toast.info('You have been logout', {
+			position: "bottom-right"
+		});
+		logout();
+		// logoutUser();
+	}
 
 	useEffect(() => {
 		const clickHandler = ({ target }) => {
@@ -61,7 +72,7 @@ const SidebarStudio = ({ sidebarOpen, setSidebarOpen }) => {
 			<div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
 				<div className="flex items-center space-x-4">
 					<img src={logo} alt="Logo" className='w-15 h-15 rounded-full' />
-					<p className="font-bold">{appName}</p>
+					<p className="font-bold">Duo Administrator</p>
 				</div>
 
 				<button
@@ -128,9 +139,30 @@ const SidebarStudio = ({ sidebarOpen, setSidebarOpen }) => {
 									<p className='text-base'>Analytics</p>
 								</NavLink>
 							</li>
-							<li className="md:hidden group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium">
-								<Moon />
+							<li>
+								<NavLink
+									to="settings"
+									className={`group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white ${(pathname === '/admin/settings' ||
+										pathname.includes('settings')) &&
+										'bg-purple-600 dark:bg-meta-4 text-white'
+										}`}
+								>
+									<Settings className='w-5' />
+									<p className='text-base'>Settings</p>
+								</NavLink>
+							</li>
+							<li className="group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium">
+								<Moon className='w-5' />
 								<DarkModeSwitcher />
+							</li>
+							<li 
+								className="group relative flex items-center gap-4 rounded-lg px-6 py-2 font-medium dark:text-bodydark1 duration-300 ease-in-out hover:bg-purple-600 dark:hover:bg-meta-4 hover:text-white cursor-pointer"
+								onClick={handleLogout}
+							>
+								<LogOut className='w-5' />
+								<div>
+									Log Out
+								</div>
 							</li>
 						</ul>
 					</div>
