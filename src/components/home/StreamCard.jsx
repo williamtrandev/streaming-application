@@ -46,7 +46,7 @@ const StreamCard = ({
 
 						<p className="w-full flex justify-end items-center gap-2">
 							<Users className="w-4" />
-							{formatNumViewers(stream?.numViews)}
+							{stream?.finished ? formatNumViewers(stream?.numViews) : formatNumViewers(stream?.numViewsLive)}
 						</p>
 						<p className="text-end">
 							{stream?.started ? formatTimeDifference(stream?.startAt) : format(stream?.dateStream, "dd/MM/yyyy HH:mm:ss")}
