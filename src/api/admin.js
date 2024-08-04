@@ -103,6 +103,36 @@ const useChangeAdminUsername = () => {
     });
 }
 
+const searchStreams = async (key, page) => {
+	const response = await APIClient.get(
+		`/admin/search-streams?
+		key=${encodeURIComponent(key)}
+		&page=${page}`
+	);
+	return response.data;
+}
+
+const useSearchStreamsAdmin = (key, page) => {
+	return useQuery({
+		queryKey: ["AdminSearchStream", key, page],
+		queryFn: () => searchStreams(key, page),
+		enabled: !!page,
+		refetchOnWindowFocus: false
+	});
+}
+
+const banStream = async (data) => {
+    const { streamId } = data;
+    const response = await APIClient.put(`/admin/ban-stream/${streamId}`);
+    return response.data;
+}
+
+const useBanStream = () => {
+    return useMutation({
+        mutationFn: (data) => banStream(data)
+    });
+}
+
 export {
 	useSearchStreamers,
 	useActionStreamer,
@@ -110,5 +140,7 @@ export {
     useGetAdminSettings,
     useChangeAdminEmail,
     useChangeAdminPassword,
-    useChangeAdminUsername
+    useChangeAdminUsername,
+    useSearchStreamsAdmin,
+	useBanStream
 };
