@@ -22,7 +22,7 @@ const Streamer = ({ user }) => {
 		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
 			<div className="w-full md:flex md:justify-between">
 				<Link
-					to={`/@${user?._id}`}
+					to={`/@${user?.username}`}
 					className="flex gap-3"
 				>
 					<img src={user?.profilePicture} alt="pp" className="rounded-full w-[3rem] h-[3rem] object-cover" />

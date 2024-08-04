@@ -3,7 +3,7 @@ import { useCheckUsernameAvailable } from "../../api/auth";
 import { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-const NewUsernameInput = ({ value, setUsername, setIsValid }) => {
+const NewUsernameInput = ({ value, setUsername, setIsValid, admin = false }) => {
 
     const [debouncedUsername, setDebouncedUsername] = useState("");
     const debounceTimeoutRef = useRef(null);
@@ -68,9 +68,9 @@ const NewUsernameInput = ({ value, setUsername, setIsValid }) => {
                 {!(data?.available) && isValid ? "*This username is unavailable." : ""}
                 {!isValid && value != "" ? "*Username must be from 4 to 25 characters long, not contain spaces or special characters." : ""}
             </div>
-            <div className="mt-1 text-sm">
-                {value == "" ? "Username must be unique. Username can be changed every 30 days." : ""}
-            </div>
+            {!admin && <div className="mt-1 text-sm">
+                {value == "" ? "Username must be unique. Username can be changed every 14 days." : ""}
+            </div>}
         </div>
     );
 }

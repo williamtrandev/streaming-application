@@ -27,7 +27,7 @@ const HorizontalStreamCard = ({ stream }) => {
                         </div>
                         <p className="w-full flex items-center gap-1 text-xs md:text-md">
                             <Users size={16} />
-                            {formatNumViewers(stream?.numViews)}
+                            {stream?.finished ? formatNumViewers(stream?.numViews) : formatNumViewers(stream?.numViewsLive)}
                         </p>
                     </div>
                 </div>
