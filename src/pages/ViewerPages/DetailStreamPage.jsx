@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import StreamVideo from '../../components/detailStream/StreamVideo';
 import ChatBox from '../../components/detailStream/ChatBox';
 import { useSelector } from 'react-redux';
@@ -12,6 +12,8 @@ import { appName } from '../../constants';
 import { useIsBanned } from '../../api/user';
 import { banned } from '../../assets';
 import { toast } from 'react-toastify';
+import { FloatButton } from 'antd';
+import { CommentOutlined } from '@ant-design/icons';
 
 const DetailStreamPage = () => {
 	const { streamId } = useParams();
@@ -19,6 +21,8 @@ const DetailStreamPage = () => {
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
 	const socket = useSelector(selectSocket);
+	const [isChatVisible, setIsChatVisible] = useState(false);
+	const [isChatIconVisible, setIsChatIconVisible] = useState(true);
 	const { data: detailStreamData, isLoading: isDetailLoading } = useGetDetailStream(streamId);
 	const { data: dataBanned } = useIsBanned({ userId: userId, streamId: streamId, typeBanned: 'watch' });
 	useEffect(() => {
@@ -55,7 +59,7 @@ const DetailStreamPage = () => {
 	}
 	return (
 		<div className="space-y-3">
-			<div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)]">
+			<div className="md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)]">
 				<div className="md:grid md:grid-cols-3 md:gap-2 h-full w-full space-y-3 md:space-y-0">
 					<div className="md:col-span-2 w-full h-full md:overflow-auto">
 						{detailStreamData ? (
@@ -76,16 +80,34 @@ const DetailStreamPage = () => {
 							</div>
 						)}
 					</div>
-					<div className="h-full w-full overflow-auto">
+					<div className={`h-full w-full overflow-auto ${isChatVisible ? 
+						'absolute bottom-0 right-0 h-1/2 dark:shadow-white dark:shadow-2xl shadow-black' : 
+						'hidden'
+						}`}
+					>
 						<ChatBox 
 							streamId={streamId} 
 							socket={socket} 
 							streamerId={detailStreamData.stream.user._id}
 							isFinished={detailStreamData.stream.finished}
 						/>
+						<div className="absolute right-5 top-2 cursor-pointer md:hidden w-6 h-6 flex items-center justify-center rounded-full dark:bg-purple-600"
+							onClick={() => {
+								setIsChatVisible(false);
+								setIsChatIconVisible(true);
+							}}
+						>X</div>
 					</div>
 				</div>
 			</div>
+			<FloatButton
+				className={`flex items-center justify-center ${isChatIconVisible ? 'block' : 'hidden'}`}
+				icon={<CommentOutlined />}
+				onClick={() => {
+					setIsChatVisible(true);
+					setIsChatIconVisible(false);
+				}}
+			/>
 		</div>
 	)
 }

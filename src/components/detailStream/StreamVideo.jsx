@@ -20,19 +20,19 @@ import { useGetNumLikesAndDislikes } from "../../api/stream";
 const Streamer = ({ user }) => {
 	return (
 		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
-			<div className="w-full md:flex md:justify-between">
+			<div className="w-full flex justify-between">
 				<Link
 					to={`/@${user?.username}`}
 					className="flex gap-3"
 				>
-					<img src={user?.profilePicture} alt="pp" className="rounded-full w-[3rem] h-[3rem] object-cover" />
+					<img src={user?.profilePicture} alt="pp" className="rounded-full w-10 h-10 md:w-[3rem] md:h-[3rem] object-cover" />
 					<div>
-						<div className="text-lg font-bold">{user?.fullname}</div>
+						<div className="text-sm md:text-lg font-bold">{user?.fullname}</div>
 						<div>{formatNumFollowers(user?.numFollowers)} followers</div>
 					</div>
 				</Link>
 
-				<div className="flex items-center ml-15 mt-1 md:ml-4 md:mt-0">
+				<div className="flex items-center">
 					<FollowButton streamerId={user._id} streamerName={user.fullname} />
 				</div>
 			</div>
@@ -90,10 +90,10 @@ const StreamDescription = ({ stream, numViewers }) => {
 
 	return (
 		<div className="w-full items-center space-y-3 bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
-			<h3 className="font-bold text-2xl w-full">{stream?.title}</h3>
-			<div className="flex justify-between">
+			<h3 className="font-bold text-lg md:text-2xl w-full">{stream?.title}</h3>
+			<div className="flex justify-between items-center">
 				<div className="space-y-1">
-					<div className="flex gap-2">
+					<div className="flex gap-2 text-sm md:text-base items-center">
 						{/* <Timer className="w-[1rem]" />
 						<span>09:02:20</span> */}
 						<Calendar className="w-[1rem]" />
@@ -126,7 +126,7 @@ const StreamDescription = ({ stream, numViewers }) => {
 							likeStream({ streamId: stream._id, liked: true });
 						}}
 					>
-						<ThumbsUp size={20} className={`${liked == true ? "text-pink-600" : ""}`} />
+						<ThumbsUp size={window.innerWidth < 640 ? 12 : 20} className={`${liked == true ? "text-pink-600" : ""}`} />
 						{formatNumLikes(numLikes)}
 					</button>
 					<button 
@@ -143,17 +143,17 @@ const StreamDescription = ({ stream, numViewers }) => {
 							likeStream({ streamId: stream._id, liked: false });
 						}}
 					>
-						<ThumbsDown size={20} className={`${liked == false ? "text-pink-600" : ""}`} />
+						<ThumbsDown size={window.innerWidth < 640 ? 12 : 20} className={`${liked == false ? "text-pink-600" : ""}`} />
 						{formatNumLikes(numDislikes)}
 					</button>
 				</div>
 			</div>
 			<div className="flex gap-3">
 				{stream?.tags.map((tag, index) => (
-					<div className="px-3 py-1 rounded-r-full rounded-l-full bg-neutral-300 dark:bg-neutral-700">{tag}</div>
+					<div className="px-3 py-1 rounded-r-full rounded-l-full bg-neutral-300 dark:bg-neutral-700 text-sm md:text-base">{tag}</div>
 				))}
 			</div>
-			<div className={isExpanded ? "flex flex-col gap-4" : ""}>
+			<div className={`text-sm md:text-base ${isExpanded ? "flex flex-col gap-4" : ""}`}>
 				{isExpanded ? stream?.description : `${stream?.description?.substring(0, 200)}...`}
 				{
 					stream?.description?.length > 200 &&
