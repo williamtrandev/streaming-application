@@ -120,8 +120,7 @@ const LoginPage = () => {
                                         <button
                                             className="text-sm text-purple-700 dark:text-purple-500 hover:underline"
                                             onClick={() => {
-                                                onClose();
-                                                openForgotPasswordModal();
+                                                navigate("/admin-forgot-password")
                                             }}
                                         >Forgot your password?</button>
                                     </div>
