@@ -164,6 +164,48 @@ const useStats = () => {
 	});
 }
 
+const forgotUsername = async (data) => {
+	const { email } = data;
+	const response = await APIClient.post("/admin/forgot-username", {
+		email
+	});
+	return response.data;
+}
+
+const useForgotAdminUsername = () => {
+	return useMutation({
+		mutationFn: (data) => forgotUsername(data)
+	});
+}
+
+const forgotPassword = async (data) => {
+    const { email, username } = data;
+    const response = await APIClient.post("/admin/forgot-password", {
+        email, username
+    });
+    return response.data;
+}
+
+const useForgotAdminPassword = () => {
+    return useMutation({
+        mutationFn: (data) => forgotPassword(data)
+    });
+}
+
+const resetPassword = async (data) => {
+    const { email, password, confirmPassword, otp } = data;
+    const response = await APIClient.post("/admin/reset-password", {
+        email, password, confirmPassword, otp
+    });
+    return response.data;
+}
+
+const useResetAdminPassword = () => {
+    return useMutation({
+        mutationFn: (data) => resetPassword(data)
+    });
+}
+
 export {
 	useSearchStreamers,
 	useActionStreamer,
@@ -175,5 +217,8 @@ export {
     useChangeAdminPassword,
     useChangeAdminUsername,
     useSearchStreamsAdmin,
-	useBanStream
+	useBanStream,
+	useForgotAdminUsername,
+	useForgotAdminPassword,
+	useResetAdminPassword
 };

@@ -35,6 +35,7 @@ import AccountPage from './pages/AdminPages/AccountPage';
 import AnalyticsAdminPage from './pages/AdminPages/AnalyticsAdminPage';
 import LoginPage from './pages/AdminPages/LoginPage';
 import SettingsAdminPage from './pages/AdminPages/SettingsAdminPage';
+import ForgotPasswordPage from './pages/AdminPages/ForgotPasswordPage';
 
 function App() {
   const { auth } = useAuth();
@@ -79,6 +80,7 @@ function App() {
           <Route path='saved' element={<SavedStreamsPage />} />
         </Route>
         <Route path='/admin-login' element={<LoginPage />} />
+        <Route path='/admin-forgot-password' element={<ForgotPasswordPage />} />
         <Route path='/admin' element={<AdminLayout />}>
           <Route path='streams' element={<StreamAdminPage />} />
           <Route path='account' element={<AccountPage />} />
