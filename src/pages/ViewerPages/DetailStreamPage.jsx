@@ -81,7 +81,7 @@ const DetailStreamPage = () => {
 						)}
 					</div>
 					<div className={`h-full w-full overflow-auto ${isChatVisible ?
-						'fixed bottom-0 right-0 h-[400px] dark:shadow-white dark:shadow-2xl shadow-black' :
+						'fixed bottom-0 right-0 !h-[400px] dark:shadow-white dark:shadow-2xl shadow-black' :
 						'hidden'
 						} md:!block md:h-auto md:shadow-none`}
 					>
@@ -101,7 +101,7 @@ const DetailStreamPage = () => {
 				</div>
 			</div>
 			<FloatButton
-				className={`flex items-center justify-center ${isChatIconVisible ? 'block' : 'hidden'}`}
+				className={`flex items-center justify-center ${isChatIconVisible ? 'block' : 'hidden'} md:hidden`}
 				icon={<CommentOutlined />}
 				onClick={() => {
 					setIsChatVisible(true);
