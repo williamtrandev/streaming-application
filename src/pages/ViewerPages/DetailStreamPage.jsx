@@ -37,10 +37,10 @@ const DetailStreamPage = () => {
 		}
 	}, [socket]);
 	useEffect(() => {
-        if (detailStreamData) {
-            document.title = `${detailStreamData.stream.title} - ${appName}`;
-        }
-    }, [detailStreamData]);
+		if (detailStreamData) {
+			document.title = `${detailStreamData.stream.title} - ${appName}`;
+		}
+	}, [detailStreamData]);
 
 	if (isDetailLoading) {
 		return (
@@ -80,14 +80,14 @@ const DetailStreamPage = () => {
 							</div>
 						)}
 					</div>
-					<div className={`h-full w-full overflow-auto ${isChatVisible ? 
-						'absolute bottom-0 right-0 h-1/2 dark:shadow-white dark:shadow-2xl shadow-black' : 
+					<div className={`h-full w-full overflow-auto ${isChatVisible ?
+						'fixed bottom-0 right-0 h-[400px] dark:shadow-white dark:shadow-2xl shadow-black' :
 						'hidden'
-						}`}
+						} md:!block md:h-auto md:shadow-none`}
 					>
-						<ChatBox 
-							streamId={streamId} 
-							socket={socket} 
+						<ChatBox
+							streamId={streamId}
+							socket={socket}
 							streamerId={detailStreamData.stream.user._id}
 							isFinished={detailStreamData.stream.finished}
 						/>
