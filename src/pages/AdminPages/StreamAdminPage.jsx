@@ -107,7 +107,7 @@ const StreamAdminPage = () => {
 														<img
 															src={stream.previewImage}
 															alt="preview"
-															className="aspect-video object-cover w-40 rounded-lg"
+															className="aspect-video object-cover w-40 rounded-lg hidden md:block"
 														/>
 													</span>
 													<span>
