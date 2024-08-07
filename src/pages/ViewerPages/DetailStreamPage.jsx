@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import StreamVideo from '../../components/detailStream/StreamVideo';
 import ChatBox from '../../components/detailStream/ChatBox';
 import { useSelector } from 'react-redux';
@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 
 const DetailStreamPage = () => {
 	const { streamId } = useParams();
+	const [streamBanned, setStreamBanned] = useState(false); 
 	console.log(streamId)
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
@@ -30,6 +31,9 @@ const DetailStreamPage = () => {
 					window.location.reload();
 				}, 2000);
 			});
+			socket.on('streamBanned', () => {
+				setStreamBanned(true);
+			})
 		}
 	}, [socket]);
 	useEffect(() => {
@@ -50,6 +54,14 @@ const DetailStreamPage = () => {
 			<div className="flex flex-col justify-center items-center h-[calc(100vh-5rem)] gap-5">
 				<img src={banned} alt="" className="!h-[70%]" />
 				<p className="text-2xl font-bold">You have been banned</p>
+			</div>
+		);
+	}
+	if (streamBanned) {
+		return (
+			<div className="flex flex-col justify-center items-center h-[calc(100vh-5rem)] gap-5">
+				<img src={banned} alt="" className="!h-[70%]" />
+				<p className="text-2xl font-bold">This stream has been banned</p>
 			</div>
 		);
 	}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import StreamerVideo from '../../components/studio/StreamerVideo';
 import ChatBox from '../../components/detailStream/ChatBox';
 import { useSelector } from 'react-redux';
@@ -7,11 +7,15 @@ import { selectSocket } from '../../redux/slices/socketSlice';
 import { useAuth } from '../../contexts/AuthContext';
 import { useEffect } from 'react';
 import StreamerObsVideo from '../../components/studio/StreamerObsVideo';
+import { useEndStream } from '../../api/studio';
+import { toast } from 'react-toastify';
 
 const StreamPage = () => {
 	const { streamId } = useParams();
+	const navigate = useNavigate();
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
+	const { mutate: endStream, isError: isEndError, isSuccess: isEndSuccess } = useEndStream();
 	
     const streamWithObs = sessionStorage.getItem("streamWithObs");
 	console.log(streamWithObs);
@@ -21,6 +25,13 @@ const StreamPage = () => {
 		if (socket) {
 			socket.emit('joinRoom', streamId, userId);
 		}
+		const handleBannedStream = (streamId, egressId) => {
+			endStream({ streamId: streamId, egressId: egressId });
+			toast.warning("Your stream has been banned");
+			socket.emit('endStream');
+			navigate(`/studio/manager`);
+		}
+		socket.on('clientBannedStream', handleBannedStream);
 	}, [socket]);
 	return (
 		<div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)]">
