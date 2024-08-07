@@ -41,7 +41,7 @@ const MessageInput = ({ onMessageSubmit, isBanned=false }) => {
 							onClick={() => setShowEmojiPicker((previous) => !previous)} />
 						{showEmojiPicker && (
 							<div className="absolute right-0 bottom-10">
-								<EmojiPicker className="z-[1000]" onEmojiClick={onEmojiPickerClick} />
+								<EmojiPicker className="z-9999" onEmojiClick={onEmojiPickerClick} />
 							</div>
 						)}
 						<SendHorizonal className={`w-5 ${inputText !== '' ? 'text-purple-600 cursor-pointer' : 'text-secondary'}`} onClick={submitMessage} />

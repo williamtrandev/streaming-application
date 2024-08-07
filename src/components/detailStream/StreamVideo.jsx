@@ -232,14 +232,14 @@ const StreamVideo = ({ streamData }) => {
 		};
 	}, [streamId]);
 	return (
-		<div className="w-full flex flex-col items-center space-y-3">
+		<div className="w-full h-full flex flex-col items-center space-y-3">
 			<Streamer user={streamData?.stream?.user} />
 			<LiveKitRoom
 				token={viewerToken}
 				serverUrl={import.meta.env.VITE_LIVEKIT_SERVER_URL}
 				className="flex flex-1 flex-col"
 			>
-				<div className="flex h-full flex-1">
+				<div className="flex flex-1 justify-center items-center">
 					<div className="flex-1 flex-col container rounded-lg overflow-hidden">
 						<StreamVideoControl streamId={streamId} setNumViewers={setNumViewers} />
 					</div>

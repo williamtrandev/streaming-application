@@ -94,7 +94,7 @@ const ChatBox = ({ streamId, socket, isStreamer=false, streamerId=null, isFinish
 	return (
 		<div className="w-full h-full bg-white dark:bg-boxdark rounded-md shadow-md space-y-2">
 			<div className="font-semibold text-center border-b px-3 pt-3">Live chat</div>
-			<div className="flex flex-col gap-4 pl-3 overflow-auto md:h-[calc(100%-6.55rem)]">
+			<div className="flex flex-col gap-4 pl-3 overflow-auto md:h-[calc(100%-6.55rem)] h-[300px]">
 				{msgs.map((message, index) => {
 					return (
 						<div key={index}>

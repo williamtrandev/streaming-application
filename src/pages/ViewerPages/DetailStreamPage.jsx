@@ -59,9 +59,9 @@ const DetailStreamPage = () => {
 	}
 	return (
 		<div className="space-y-3">
-			<div className="md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)]">
+			<div className="md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)] relative">
 				<div className="md:grid md:grid-cols-3 md:gap-2 h-full w-full space-y-3 md:space-y-0">
-					<div className="md:col-span-2 w-full h-full md:overflow-auto">
+					<div className="md:col-span-2 w-full h-full md:overflow-auto flex items-center justify-center">
 						{detailStreamData ? (
 							detailStreamData.stream.finished ? (
 								detailStreamData.stream.rerun ? (
@@ -80,8 +80,8 @@ const DetailStreamPage = () => {
 							</div>
 						)}
 					</div>
-					<div className={`h-full w-full overflow-auto ${isChatVisible ?
-						'fixed bottom-0 right-0 !h-[400px] dark:shadow-white dark:shadow-2xl shadow-black' :
+					<div className={`h-full w-full ${isChatVisible ?
+						'absolute bottom-0 right-0 h-[400px] dark:shadow-white dark:shadow-2xl shadow-black' :
 						'hidden'
 						} md:!block md:h-auto md:shadow-none`}
 					>
