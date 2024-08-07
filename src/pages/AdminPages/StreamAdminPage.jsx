@@ -3,8 +3,12 @@ import { useBanStream, useSearchStreamsAdmin } from '../../api/admin';
 import { Button, Modal, Spin, Tooltip } from 'antd';
 import { Ban, ChevronFirst, ChevronLast, ChevronLeft, ChevronRight, CircleAlert, Search, X } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
+import { selectSocket } from '../../redux/slices/socketSlice';
 
 const StreamAdminPage = () => {
+	const socket = useSelector(selectSocket);
+
 	const [searchKey, setSearchKey] = useState("");
 	const [searchInput, setSearchInput] = useState("");
 	const [streams, setStreams] = useState([]);
@@ -32,6 +36,9 @@ const StreamAdminPage = () => {
             toast.success(banData.message);
             refetch();
             setShowBanModal(false);
+			if (socket) {
+				socket.emit("bannedStream", banData.streamerId, banData.streamId);
+			}
         }
     }, [isBanSuccess]);
 

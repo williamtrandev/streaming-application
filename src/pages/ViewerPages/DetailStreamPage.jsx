@@ -17,6 +17,7 @@ import { CommentOutlined } from '@ant-design/icons';
 
 const DetailStreamPage = () => {
 	const { streamId } = useParams();
+	const [streamBanned, setStreamBanned] = useState(false); 
 	console.log(streamId)
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
@@ -34,6 +35,9 @@ const DetailStreamPage = () => {
 					window.location.reload();
 				}, 2000);
 			});
+			socket.on('streamBanned', () => {
+				setStreamBanned(true);
+			})
 		}
 	}, [socket]);
 	useEffect(() => {
@@ -54,6 +58,14 @@ const DetailStreamPage = () => {
 			<div className="flex flex-col justify-center items-center h-[calc(100vh-5rem)] gap-5">
 				<img src={banned} alt="" className="!h-[70%]" />
 				<p className="text-2xl font-bold">You have been banned</p>
+			</div>
+		);
+	}
+	if (streamBanned) {
+		return (
+			<div className="flex flex-col justify-center items-center h-[calc(100vh-5rem)] gap-5">
+				<img src={banned} alt="" className="!h-[70%]" />
+				<p className="text-2xl font-bold">This stream has been banned</p>
 			</div>
 		);
 	}

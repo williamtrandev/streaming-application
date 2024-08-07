@@ -3,6 +3,7 @@ import StreamCard from "../../components/home/StreamCard";
 import { useEffect, useState } from "react";
 import { useGetHomePageStreams } from "../../api/stream";
 import { useAuth } from "../../contexts/AuthContext";
+import { Spin } from "antd";
 
 const HomePage = () => {
 	const [followingStreams, setFollowingStreams] = useState([]);
@@ -10,7 +11,7 @@ const HomePage = () => {
 	const [recommendStreams, setRecommendStreams] = useState([]);
 	const { auth } = useAuth();
 	const userId = auth ? auth.user._id : "";
-	const { data } = useGetHomePageStreams(userId);
+	const { data, isFetching } = useGetHomePageStreams(userId);
 	useEffect(() => {
 		if (data) {
 			setFollowingStreams(data.followingStreams);
@@ -25,6 +26,11 @@ const HomePage = () => {
 
 	return (
 		<div className="divide-y divide-gray-300 dark:divide-gray-600">
+			{isFetching && (
+				<div className="w-full flex justify-center p-6">
+					<Spin size="large" />
+				</div>
+			)}
 			<div className="pb-5">
 				<div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5'>
 					{randomStreams?.map((stream, index) => (

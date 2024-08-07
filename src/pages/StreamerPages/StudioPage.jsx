@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Bolt, ChevronRight, CircleX, Pencil, Podcast, X } from 'lucide-react';
+import { AlertCircle, Bolt, ChevronRight, CircleX, Pencil, Podcast, X } from 'lucide-react';
 import TagItem from '../../components/studio/TagItem';
 import { toast } from 'react-toastify';
 import { useGetAllComingStreams, useSaveNotification, useSaveStream } from '../../api/studio';
@@ -42,7 +42,7 @@ const StudioPage = () => {
 	const [tagArr, setTagArr] = useState([]);
 	const [incoming, setIncoming] = useState(false);
 	const [image, setImage] = useState('https://wp.technologyreview.com/wp-content/uploads/2023/11/MIT_Universe_fibnal.jpg');
-	const [rerun, setRerun] = useState(true); 
+	const [rerun, setRerun] = useState(true);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [streamId, setStreamId] = useState(null);
 	const { mutate: saveStream, isSuccess: isSuccessStream, data: streamData, isError: isErrorStream, error: errorStream } = useSaveStream();
@@ -54,12 +54,13 @@ const StudioPage = () => {
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [selectedTime, setSelectedTime] = useState(dayjs());
 	console.log("TIUME", selectedTime);
-	const [modalDeleteOpen, setModalDeleteOpen] = useState(false); 
+	const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
 	const { data: comingStreamsData, refetch: comingStreamsRefetch } = useGetAllComingStreams(userId);
 	const [modalEditOpen, setModalEditOpen] = useState(false);
 	const [streamIdClicked, setStreamIdClicked] = useState(null);
 	const [streamTitleClicked, setStreamTitleClicked] = useState('');
 	const [modalChooseStreamSourceOpen, setModalChooseStreamSourceOpen] = useState(false);
+	const [isBanned, setIsBanned] = useState(false);
 	const navigate = useNavigate();
 	console.log(userId)
 	const submitTagHandler = () => {
@@ -128,7 +129,7 @@ const StudioPage = () => {
 			setStreamId(streamData?.stream?._id);
 			setConfirmLoading(false);
 			setModalOpen(false);
-			if(!incoming && streamData) {
+			if (!incoming && streamData) {
 				const data = {
 					stream: streamData?.stream,
 					userId: userId
@@ -143,7 +144,7 @@ const StudioPage = () => {
 			} else {
 				comingStreamsRefetch();
 			}
-			
+
 		}
 	}, [socket, isSuccessStream]);
 
@@ -151,49 +152,63 @@ const StudioPage = () => {
 		if (isErrorStream) {
 			let errorMessage = 'Ops! Something went wrong';
 			const statusCode = errorStream?.response?.status;
-			if(statusCode === 400) {
+			if (statusCode === 400) {
 				errorMessage = 'Please provide all information'
-			} 
+			}
 			toast.error(errorMessage);
 			setConfirmLoading(false);
 		}
 	}, [isErrorStream])
-  
+
 	useEffect(() => {
 		setIsOpen(isFirstStudio);
 	}, [isFirstStudio])
 
 	useEffect(() => {
-        document.title = `Studio - ${appName}`;
-    }, []);
+		document.title = `Studio - ${appName}`;
+	}, []);
+
+	useEffect(() => {
+		if (comingStreamsData) {
+			setIsBanned(comingStreamsData.isBanned);
+		}
+	}, [comingStreamsData])
 
 	return (
 		<div className="space-y-5">
-			<div className="flex gap-3 flex-wrap">
-				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white studio-step-1"
-					onClick={() => {
-						sessionStorage.setItem("streamWithObs", false);
-						setModalOpen(true);
-						setIncoming(false);
-					}}>
-					Start With Camera
-				</button>
-				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white studio-step-2"
-					onClick={() => {
-						sessionStorage.setItem("streamWithObs", true);
-						setModalOpen(true);
-						setIncoming(false);
-					}}>
-					Start With OBS
-				</button>
-				<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white studio-step-3"
-					onClick={() => {
-						setModalOpen(true);
-						setIncoming(true);
-					}}>
-					Schedule
-				</button>
-			</div>
+			{isBanned && (
+				<div className="bg-red-500 text-white flex gap-3 p-5 rounded-lg">
+					<AlertCircle />
+					You have been ban from live streaming
+				</div>
+			)}
+			{!isBanned && (
+				<div className="flex gap-3 flex-wrap">
+					<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white studio-step-1"
+						onClick={() => {
+							sessionStorage.setItem("streamWithObs", false);
+							setModalOpen(true);
+							setIncoming(false);
+						}}>
+						Start With Camera
+					</button>
+					<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white studio-step-2"
+						onClick={() => {
+							sessionStorage.setItem("streamWithObs", true);
+							setModalOpen(true);
+							setIncoming(false);
+						}}>
+						Start With OBS
+					</button>
+					<button className="rounded-lg bg-white dark:bg-meta-4 p-3 shadow-md hover:!bg-purple-700 hover:!text-white studio-step-3"
+						onClick={() => {
+							setModalOpen(true);
+							setIncoming(true);
+						}}>
+						Schedule
+					</button>
+				</div>
+			)}
 			<div className="w-full bg-white dark:bg-meta-4 overflow-hidden rounded-lg shadow-md studio-step-4">
 				<div className="w-full overflow-x-auto">
 					<table className="w-full whitespace-no-wrap">
@@ -267,14 +282,14 @@ const StudioPage = () => {
 
 					</table>
 				</div>
-				
+
 			</div>
-			<ModalDeleteStream open={modalDeleteOpen} setOpen={setModalDeleteOpen} title={streamTitleClicked} streamId={streamIdClicked} refetch={comingStreamsRefetch}/>
-			<ModalDetailStream modalOpen={modalEditOpen} setModalOpen={setModalEditOpen} streamId={streamIdClicked} refetch={comingStreamsRefetch}/>
-			<Modal 
+			<ModalDeleteStream open={modalDeleteOpen} setOpen={setModalDeleteOpen} title={streamTitleClicked} streamId={streamIdClicked} refetch={comingStreamsRefetch} />
+			<ModalDetailStream modalOpen={modalEditOpen} setModalOpen={setModalEditOpen} streamId={streamIdClicked} refetch={comingStreamsRefetch} />
+			<Modal
 				className='bg-slate-100 dark:bg-slate-600 rounded-lg dark:text-slate-200'
 				centered
-				open={modalOpen} 
+				open={modalOpen}
 				okButtonProps={{ className: 'bg-purple-600 hover:!bg-purple-700' }}
 				cancelButtonProps={{ className: 'border-purple-600 hover:!border-purple-700 hover:!text-purple-700' }}
 				onOk={handleOk}
@@ -373,7 +388,7 @@ const StudioPage = () => {
 					</div>
 				</div>
 			</Modal>
-			<Modal 
+			<Modal
 				className='bg-slate-100 dark:bg-slate-700 rounded-lg dark:text-slate-200'
 				centered
 				open={modalChooseStreamSourceOpen}
