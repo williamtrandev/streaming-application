@@ -90,8 +90,8 @@ const AnalyticsAdminPage = () => {
 					fill: true,
 				},
 				{
-					label: 'Cumulative Viewers',
-					data: statsData.datasets.viewers,
+					label: 'Cumulative Users',
+					data: statsData.datasets.users,
 					borderColor: 'rgba(153, 102, 255, 1)',
 					backgroundColor: 'rgba(153, 102, 255, 0.2)',
 					fill: true,
