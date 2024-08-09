@@ -206,6 +206,22 @@ const useResetAdminPassword = () => {
     });
 }
 
+const checkAdminRole = async () => {
+	const response = await APIClient.get(
+		`/admin/role`
+	);
+	return response.data;
+}
+
+const useCheckAdminRole = (userId) => {
+	return useQuery({
+		queryKey: ["check-admin", userId],
+		queryFn: () => checkAdminRole(),
+		enabled: !!userId,
+		refetchOnWindowFocus: false
+	});
+}
+
 export {
 	useSearchStreamers,
 	useActionStreamer,
@@ -220,5 +236,6 @@ export {
 	useBanStream,
 	useForgotAdminUsername,
 	useForgotAdminPassword,
-	useResetAdminPassword
+	useResetAdminPassword,
+	useCheckAdminRole
 };
