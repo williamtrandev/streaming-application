@@ -74,7 +74,8 @@ const getAllComingStreams = async () => {
 const useGetAllComingStreams = (userId) => {
 	return useQuery({
 		queryKey: ["ComingStreams", userId],
-		queryFn: () => getAllComingStreams()
+		queryFn: () => getAllComingStreams(),
+		refetchOnWindowFocus: true
 	})
 }
 
