@@ -32,7 +32,7 @@ const ProfileHeader = ({ username }) => {
                 <img
                     src={streamer?.profileBanner || darkmode}
                     alt="profile banner"
-                    className="rounded-tl-lg rounded-tr-lg object-cover object-center aspect-[5/1]"
+                    className="rounded-tl-lg rounded-tr-lg object-cover object-center aspect-[5/1] w-full"
                 />
             </div>}
             {streamer && <div className="px-3 pb-3 md:px-6 md:pb-6 flex gap-4">

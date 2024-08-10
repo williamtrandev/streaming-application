@@ -102,6 +102,11 @@ const AnalyticsAdminPage = () => {
 			setDataLine(datasets);
 		}
 	}, [statsData, isStatsSuccess]);
+
+	useEffect(() => {
+        document.title = "Admin - Login";
+    }, []);
+
 	return (
 		<div className="space-y-5">
 			<p className="font-bold text-theme text-2xl">Overview Dashboard</p>

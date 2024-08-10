@@ -156,7 +156,12 @@ const ModalDetailStream = ({ modalOpen, setModalOpen, streamId, refetch }) => {
                                             focus:border-indigo-500 focus:ring focus:ring-indigo-200 
                                             transition duration-150 ease-in-out bg-white dark:bg-meta-4"
 									value={tagValue}
-									onChange={(e) => setTagValue(e.target.value)}
+									onChange={(e) => {
+										const inputValue = e.target.value;
+                                        if (/^[a-zA-Z0-9]*$/.test(inputValue)) {
+                                            setTagValue(inputValue);
+                                        }
+									}}
 									onKeyDown={handleKeyDown}
 								/>
 								{tagArr?.length > 0 && (

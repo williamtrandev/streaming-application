@@ -47,6 +47,10 @@ const StreamAdminPage = () => {
         toast.error(errorMessage);
     }, [isBanError]);
 
+	useEffect(() => {
+        document.title = "Admin - Streams";
+    }, []);
+
 	return (
 		<div className="space-y-5">
 			<div className="sticky top-0 z-99">

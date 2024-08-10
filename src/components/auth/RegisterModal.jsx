@@ -48,7 +48,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
     const { login } = useAuth();
 
     const handleSubmitLogin = () => {
-        mutate({ username, fullname, password, email, otp });
+        mutate({ username, fullname: fullname.trim(), password, email, otp });
     };
 
     const handleKeyDown = (e, nextRef) => {
@@ -145,7 +145,12 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                     className="w-full pl-10 pr-16 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
                                         text-black dark:text-white outline-purple-600"
                                     value={password}
-                                    onChange={e => setPassword(e.target.value)}
+                                    onChange={e => {
+                                        const inputValue = e.target.value;
+                                        if (/^\S*$/.test(inputValue)) {
+                                            setPassword(inputValue);
+                                        }
+                                    }}
                                     onKeyDown={e => handleKeyDown(e, confirmPasswordRef)}
                                     ref={passwordRef}
                                 />
