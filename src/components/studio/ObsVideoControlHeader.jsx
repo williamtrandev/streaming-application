@@ -47,19 +47,21 @@ const ObsVideoControlHeader = ({ streamId, isStreaming }) => {
     };
 
     useEffect(() => {
-        socket.emit('joinRoom', streamId);
-        socket.on('updateViewers', (data) => {
-            if (data.streamId === streamId) {
-                console.log(data)
-                setNumViewers(data.viewers);
-            }
-        });
+        if (socket) {
+            socket.emit('joinRoom', streamId);
+            socket.on('updateViewers', (data) => {
+                if (data.streamId === streamId) {
+                    console.log(data)
+                    setNumViewers(data.viewers);
+                }
+            });
 
-        return () => {
-            socket.emit('leaveStream', streamId);
-            socket.emit('endStream');
-        };
-    }, [streamId]);
+            return () => {
+                socket.emit('leaveStream', streamId);
+                socket.emit('endStream');
+            };
+        }
+    }, [streamId, socket]);
 
     useEffect(() => {
         if (startStreamData) {
@@ -73,14 +75,14 @@ const ObsVideoControlHeader = ({ streamId, isStreaming }) => {
     }, [isStartStreamError]);
 
     useEffect(() => {
-		if (isEndError) {
-			toast.error("Oops! Something went wrong");
-		}
-		if (isEndSuccess) {
-			toast.success("End successfully!");
+        if (isEndError) {
+            toast.error("Oops! Something went wrong");
+        }
+        if (isEndSuccess) {
+            toast.success("End successfully!");
             navigate(`/studio/manager`);
-		}
-	}, [isEndError, isEndSuccess]);
+        }
+    }, [isEndError, isEndSuccess]);
 
     return (
         <div className="flex items-center justify-between">
