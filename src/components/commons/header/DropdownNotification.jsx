@@ -7,6 +7,7 @@ import { useGetNotifications } from '../../../api/studio';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useInView } from 'react-intersection-observer';
 import { Spin } from 'antd';
+import { toast } from 'react-toastify';
 
 const DropdownNotification = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -71,6 +72,7 @@ const DropdownNotification = () => {
 				console.log("received notification", notification);
 				setNotifications(prevNotifications => [notification, ...prevNotifications]);
 				setNotifying(true);
+				toast.info(`${notification?.streamer?.fullname} has started streaming, check your notification!`);
 			})
 		}
 	}, [socket]);
