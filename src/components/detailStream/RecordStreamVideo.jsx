@@ -1,6 +1,6 @@
 import { Calendar, ThumbsDown, ThumbsUp, Timer, Users, Maximize, Minimize, Volume2, VolumeX, Eye } from "lucide-react";
 import { useEffect, useState, useContext, useRef, useCallback } from "react";
-import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
+import { formatDate, formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
 import FollowButton from "../detailStreamer/FollowButton";
 import { Link } from "react-router-dom";
 import StreamVideoControl from "./StreamVideoControl";
@@ -11,28 +11,7 @@ import { useGetStreamRecord } from "../../api/studio";
 import { useLikeStream, useWriteHistory } from "../../api/history";
 import { useGetNumLikesAndDislikes, useRiseNumViews } from "../../api/stream";
 import { toast } from "react-toastify";
-const Streamer = ({ user }) => {
-	return (
-		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
-			<div className="w-full md:flex md:justify-between">
-				<Link
-					to={`/@${user?.username}`}
-					className="flex gap-3"
-				>
-					<img src={user?.profilePicture} alt="" className="rounded-full w-[3rem] h-[3rem] object-cover" />
-					<div>
-						<div className="text-lg font-bold">{user?.fullname}</div>
-						<div>{formatNumFollowers(user?.numFollowers)} followers</div>
-					</div>
-				</Link>
-
-				<div className="flex items-center ml-15 mt-1 md:ml-4 md:mt-0">
-					<FollowButton streamerId={user._id} streamerName={user.fullname} />
-				</div>
-			</div>
-		</div>
-	);
-}
+import Streamer from "./Streamer";
 
 const StreamDescription = ({ stream }) => {
 	const { auth } = useAuth();
@@ -93,7 +72,7 @@ const StreamDescription = ({ stream }) => {
 						{/* <Timer className="w-[1rem]" />
 						<span>09:02:20</span> */}
 						<Calendar className="w-[1rem]" />
-						<span>{stream?.dateStream && new Date(stream?.dateStream).toLocaleString()}</span>
+						<span>{stream?.dateStream && formatDate(new Date(stream?.dateStream))}</span>
 					</div>
 					<div className="flex gap-2">
 						<Eye className="w-[1rem]" />
@@ -177,14 +156,18 @@ const RecordStreamVideo = ({ streamData }) => {
 				riseNumViews({ streamId: streamId });
 			}, timeToCount * 1000);
 
+			// Clean up timer on unmount or recordData change
 			return () => clearTimeout(timer);
 		};
 
 		videoEl.current.addEventListener('loadedmetadata', handleLoadedMetadata);
 
-		if (videoEl.current) {
-			videoEl.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
-		}
+		// Clean up event listener on unmount or recordData change
+		return () => {
+			if (videoEl.current) {
+				videoEl.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+			}
+		};
 	}, [recordData]);
 	return (
 		<div className="w-full flex flex-col items-center space-y-3">

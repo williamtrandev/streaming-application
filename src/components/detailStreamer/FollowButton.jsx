@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { Button, Modal } from "antd";
 import { useUser } from "../../contexts/UserContext";
 
-const FollowButton = ({ streamerId, streamerName }) => {
+const FollowButton = ({ streamerId, streamerName, setNumFollowers }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [notification, setNotification] = useState(true);
     const [showUnfollowModal, setShowUnfollowModal] = useState(false);
@@ -36,6 +36,7 @@ const FollowButton = ({ streamerId, streamerName }) => {
             setFollowed(true);
             setNotification(followMutation.data.receiveNotification);
             setFollowedChannels([followMutation.data.follow, ...followedChannels]);
+            setNumFollowers(prev => prev + 1);
         }
     }, [followMutation.isSuccess]);
 
@@ -74,6 +75,7 @@ const FollowButton = ({ streamerId, streamerName }) => {
             setFollowed(false);
             setShowUnfollowModal(false);
             setFollowedChannels(followedChannels.filter(channel => channel.streamer._id != streamerId));
+            setNumFollowers(prev => prev - 1);
         }
     }, [unfollowMutation.isSuccess]);
 

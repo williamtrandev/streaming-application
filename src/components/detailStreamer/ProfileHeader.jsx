@@ -9,11 +9,13 @@ import { darkmode, defaultUser } from "../../assets";
 const ProfileHeader = ({ username }) => {
 
     const [streamer, setStreamer] = useState(null);
+    const [numFollowers, setNumFollowers] = useState(0);
 
     const { data: streamerData } = useGetStreamerProfile(username);
     useEffect(() => {
 		if (streamerData) {
             setStreamer(streamerData);
+            setNumFollowers(streamerData.numFollowers)
 		}
 	}, [streamerData]);
 
@@ -52,10 +54,10 @@ const ProfileHeader = ({ username }) => {
                         </div>
                         <Dot className="hidden md:block" />
                         <div className="text-xs md:text-base">
-                            {formatNumFollowers(streamer?.numFollowers)} followers
+                            {formatNumFollowers(numFollowers)} followers
                         </div>
                     </div>
-                    <FollowButton streamerId={streamer?._id} streamerName={streamer?.fullname} />
+                    <FollowButton streamerId={streamer?._id} streamerName={streamer?.fullname} setNumFollowers={setNumFollowers} />
                 </div>
             </div>}
         </div>
