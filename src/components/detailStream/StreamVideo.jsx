@@ -1,6 +1,6 @@
 import { Calendar, ThumbsDown, ThumbsUp, Timer, Users } from "lucide-react";
 import { useEffect, useState, useContext } from "react";
-import { formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
+import { formatDate, formatNumFollowers, formatNumLikes, formatNumViewers } from "../../utils/formatNumber";
 import FollowButton from "../detailStreamer/FollowButton";
 import { Link } from "react-router-dom";
 import { Track } from 'livekit-client';
@@ -16,29 +16,7 @@ import { selectSocket } from "../../redux/slices/socketSlice";
 import { useLikeStream, useWriteHistory } from "../../api/history";
 import { toast } from "react-toastify";
 import { useGetNumLikesAndDislikes } from "../../api/stream";
-
-const Streamer = ({ user }) => {
-	return (
-		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
-			<div className="w-full flex justify-between">
-				<Link
-					to={`/@${user?.username}`}
-					className="flex gap-3"
-				>
-					<img src={user?.profilePicture} alt="pp" className="rounded-full w-10 h-10 md:w-[3rem] md:h-[3rem] object-cover" />
-					<div>
-						<div className="text-sm md:text-lg font-bold">{user?.fullname}</div>
-						<div>{formatNumFollowers(user?.numFollowers)} followers</div>
-					</div>
-				</Link>
-
-				<div className="flex items-center">
-					<FollowButton streamerId={user._id} streamerName={user.fullname} />
-				</div>
-			</div>
-		</div>
-	);
-}
+import Streamer from "./Streamer";
 
 const StreamDescription = ({ stream, numViewers }) => {
 	const { auth } = useAuth();
@@ -97,7 +75,7 @@ const StreamDescription = ({ stream, numViewers }) => {
 						{/* <Timer className="w-[1rem]" />
 						<span>09:02:20</span> */}
 						<Calendar className="w-[1rem]" />
-						<span>{stream?.dateStream && new Date(stream?.dateStream).toLocaleString()}</span>
+						<span>{stream?.dateStream && formatDate(new Date(stream?.dateStream))}</span>
 					</div>
 					<div className="flex gap-2">
 						<Users className="w-[1rem]" />
