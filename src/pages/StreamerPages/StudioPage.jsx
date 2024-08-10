@@ -178,7 +178,9 @@ const StudioPage = () => {
 			setIsBanned(comingStreamsData.isBanned);
 		}
 	}, [comingStreamsData])
-
+	useEffect(() => {
+		comingStreamsRefetch();
+	}, []);
 	return (
 		<div className="space-y-5">
 			{isBanned && (
