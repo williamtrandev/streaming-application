@@ -78,6 +78,7 @@ function App() {
           <Route path='analytics' element={<AnalyticsPage />} />
           <Route path='community' element={<CommunityPage />} />
           <Route path='saved' element={<SavedStreamsPage />} />
+          <Route path='*' element={<NotFoundPage />} />
         </Route>
         <Route path='/admin-login' element={<LoginPage />} />
         <Route path='/admin-forgot-password' element={<ForgotPasswordPage />} />
