@@ -49,7 +49,7 @@ const AccountPage = () => {
 	};
 
 	useEffect(() => {
-		document.title = `Admin - Account`;
+		document.title = `Admin - Accounts`;
 	}, []);
 
 	const handleToggle = (id, username, isBanned) => {

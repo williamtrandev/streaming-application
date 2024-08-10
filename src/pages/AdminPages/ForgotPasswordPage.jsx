@@ -73,6 +73,10 @@ const SendResetPasswordOtpButton = ({ email, username, isValidEmail }) => {
         toast.error(errorMessage);
     }, [isError]);
 
+    useEffect(() => {
+        document.title = "Admin - Forgot password";
+    }, []);
+
     return (
         <button
         className={`px-2 py-1 text-white rounded-md text-xm md:text-md

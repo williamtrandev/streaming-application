@@ -11,16 +11,18 @@ const UsernameInput = ({ value, setUsername, setIsValid, handleKeyDown, nextRef 
     const { mutate, isError, error, isSuccess, data } = useCheckUsernameAvailable();
 
     const isValid = (value.length >= 4 && value.length <= 25) && !(/\s/.test(value)) && !(/[^a-zA-Z0-9]/.test(value));
-    
+
     const handleUsernameChange = (e) => {
         const inputValue = e.target.value;
-        setUsername(inputValue);
-        if (debounceTimeoutRef.current) {
-            clearTimeout(debounceTimeoutRef.current);
+        if (/^\S*$/.test(inputValue)) {
+            setUsername(inputValue);
+            if (debounceTimeoutRef.current) {
+                clearTimeout(debounceTimeoutRef.current);
+            }
+            debounceTimeoutRef.current = setTimeout(() => {
+                setDebouncedUsername(inputValue);
+            }, 1000);
         }
-        debounceTimeoutRef.current = setTimeout(() => {
-            setDebouncedUsername(inputValue);
-        }, 1000);
     };
 
     useEffect(() => {

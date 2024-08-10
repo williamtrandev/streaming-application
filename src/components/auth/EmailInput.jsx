@@ -12,16 +12,18 @@ const EmailInput = forwardRef(({ value, setEmail, setIsValid, handleKeyDown, nex
     const { mutate, isError, error, isSuccess, data } = useCheckEmailAvailable();
 
     const isValidFormat = emailRegex.test(value);
-    
+
     const handleEmailChange = (e) => {
         const inputValue = e.target.value;
-        setEmail(inputValue);
-        if (debounceTimeoutRef.current) {
-            clearTimeout(debounceTimeoutRef.current);
+        if (/^\S*$/.test(inputValue)) {
+            setEmail(inputValue);
+            if (debounceTimeoutRef.current) {
+                clearTimeout(debounceTimeoutRef.current);
+            }
+            debounceTimeoutRef.current = setTimeout(() => {
+                setDebouncedEmail(inputValue);
+            }, 1000);
         }
-        debounceTimeoutRef.current = setTimeout(() => {
-            setDebouncedEmail(inputValue);
-        }, 1000);
     };
 
     useEffect(() => {
