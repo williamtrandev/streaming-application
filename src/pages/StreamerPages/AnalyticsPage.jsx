@@ -11,6 +11,7 @@ import { TourProvider, useTour } from '@reactour/tour';
 import { analyticsSteps } from '../../guides/steps';
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import { statsLatest } from "../../assets";
 
 const colors = [
 	"rgba(43, 63, 229, 0.8)",
@@ -117,86 +118,105 @@ const AnalyticsPage = () => {
 			<p className="font-bold text-theme text-2xl">Viewers from latest stream</p>
 			<div className="w-full gap-5">
 				<div className="w-full flex flex-col items-center justify-center bg-white dark:bg-meta-4 rounded-md shadow-md space-y-3 p-5 analytics-step-1">
-					<Line 
-						className="max-h-[70vh]" 
-						data={{
-							labels: labelDataLine,
-							datasets: dataLine
-						}}
-						options={{
-							maxPointsLimit: 20,
-							scales: {
-								x: {
-									ticks: {
-										autoSkip: true,
-										maxTicksLimit: 10, 
-									}
-								},
-								y: {
-									ticks: {
-										stepSize: 1, 
-										maxTicksLimit: 10,
-										beginAtZero: true, 
-										callback: function (value) {
-											return Math.floor(value); 
+					{dataLine.length > 0 ? 
+						<Line
+							className="max-h-[70vh]"
+							data={{
+								labels: labelDataLine,
+								datasets: dataLine
+							}}
+							options={{
+								maxPointsLimit: 20,
+								scales: {
+									x: {
+										ticks: {
+											autoSkip: true,
+											maxTicksLimit: 10,
 										}
+									},
+									y: {
+										ticks: {
+											stepSize: 1,
+											maxTicksLimit: 10,
+											beginAtZero: true,
+											callback: function (value) {
+												return Math.floor(value);
+											}
+										},
+										min: 0
 									}
-								}
-							},
-							elements: {
-								line: {
-									tension: 0.5,
 								},
-							},
-						}}
-					/>
+								elements: {
+									line: {
+										tension: 0.5,
+									},
+								},
+							}}
+						/> :
+						<div className="flex flex-col justify-center items-center h-[70vh] gap-4">
+							<img src={statsLatest} alt="" className="!h-[80%] rounded-lg" />
+							<p className="text-2xl font-bold">You haven't started streaming yet.</p>
+						</div>
+					}
+					
 				</div>
 			</div>
 			<p className="!mt-10 font-bold text-theme text-2xl">Statistics in your 10 latest stream</p>
-			<div className="flex flex-col items-center justify-center w-full gap-5">
-				<DatePicker.RangePicker
-					size="large"
-					className="dark:bg-meta-4 dark:border-none dark:text-white analytics-step-4"
-					onChange={(date, dateString) => {
-						console.log(date, dateString);
-						setFromDate(dateString[0]);
-						setToDate(dateString[1]);
-					}}
-				/>
-				<div className="flex analytics-step-3">
-					{filterBtns.map((filterBtn, index) => {
-						const isFirst = index === 0;
-						const isLast = index === filterBtns.length - 1;
-						const isActive = index === activeIndex;
-						return (
-							<div
-								className={`
-									p-3 cursor-pointer text-sm border-r
-									${isFirst ? 'rounded-l-lg' : ''}
-									${isLast ? 'rounded-r-lg border-r-0 ' : ''}
-									${isActive ? '!bg-purple-700 text-white' : ''}
-									bg-white text-black dark:bg-meta-4 dark:text-white dark:border-gray-600
-									hover:!bg-purple-700 hover:!text-white
-									transition duration-300 ease-in-out
-								`}
-								key={index}
-								onClick={() => handleClick(index, filterBtn.value)}
-							>
-								{filterBtn.label}
-							</div>
-						);
-					})}
+			{dataBar.length > 0 ? 
+				<>
+					<div className="flex flex-col items-center justify-center w-full gap-5">
+						<DatePicker.RangePicker
+							size="large"
+							className="dark:bg-meta-4 dark:border-none dark:text-white analytics-step-4"
+							onChange={(date, dateString) => {
+								console.log(date, dateString);
+								setFromDate(dateString[0]);
+								setToDate(dateString[1]);
+							}}
+						/>
+						<div className="flex analytics-step-3">
+							{filterBtns.map((filterBtn, index) => {
+								const isFirst = index === 0;
+								const isLast = index === filterBtns.length - 1;
+								const isActive = index === activeIndex;
+								return (
+									<div
+										className={`
+											p-3 cursor-pointer text-sm border-r
+											${isFirst ? 'rounded-l-lg' : ''}
+											${isLast ? 'rounded-r-lg border-r-0 ' : ''}
+											${isActive ? '!bg-purple-700 text-white' : ''}
+											bg-white text-black dark:bg-meta-4 dark:text-white dark:border-gray-600
+											hover:!bg-purple-700 hover:!text-white
+											transition duration-300 ease-in-out
+										`}
+										key={index}
+										onClick={() => handleClick(index, filterBtn.value)}
+									>
+										{filterBtn.label}
+									</div>
+								);
+							})}
+						</div>
+					</div>
+					<div className="w-full bg-white dark:bg-meta-4 rounded-md shadow-md space-y-3 p-5 analytics-step-2">
+						<Bar className="max-h-[70vh]"
+							data={{
+								labels: labelDataBar,
+								datasets: dataBar
+							}}
+							options={options}
+						/>
+					</div>
+				</> :
+				<div className="w-full flex flex-col items-center justify-center bg-white dark:bg-meta-4 rounded-md shadow-md space-y-3 p-5">
+					<div className="flex flex-col justify-center items-center h-[70vh] gap-4">
+						<img src={statsLatest} alt="" className="!h-[80%] rounded-lg" />
+						<p className="text-2xl font-bold">You haven't started streaming yet.</p>
+					</div>
 				</div>
-			</div>
-			<div className="w-full bg-white dark:bg-meta-4 rounded-md shadow-md space-y-3 p-5 analytics-step-2">
-				<Bar className="max-h-[70vh]"
-					data={{
-						labels: labelDataBar,
-						datasets: dataBar
-					}}
-					options={options}
-				/>
-			</div>
+			}
+			
 		</div>
 	)
 }
