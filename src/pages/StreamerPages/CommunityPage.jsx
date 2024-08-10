@@ -29,7 +29,7 @@ const CommunityPage = () => {
 	const [options, setOptions] = useState([]);
 	const [value, setValue] = useState('');
 	const searchText = useDebounce(value, 500);
-	const { data: dataSearch, isLoading, error } = useSearchUsersForMod({ q: searchText, limit: 10, exclude: userId });
+	const { data: dataSearch, isLoading, error } = useSearchUsersForMod({ q: searchText, limit: 4, exclude: userId });
 	const [modAddId, setModAddId] = useState(null);
 	const [mods, setMods] = useState(fakeMode);
 	const [deleteId, setDeleteId] = useState(null); 
@@ -109,7 +109,7 @@ const CommunityPage = () => {
 				<div className="w-full flex justify-center items-center">
 					<div className="w-full max-w-[30rem] relative bg-white shadow-md dark:bg-meta-4 rounded-lg p-3">
 						<AutoComplete
-						    className="text-black focus:outline-none xl:w-125 px-3 community-step-1"
+						    className="text-black focus:outline-none w-full px-3 community-step-1"
 							popupClassName="dark:bg-gray-800"
 							options={options}
 							value={value}
