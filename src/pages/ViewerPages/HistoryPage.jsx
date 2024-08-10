@@ -52,6 +52,7 @@ const HistoryPage = () => {
 						</button>
 						<input type="text"
 							value={historySearch}
+							spellCheck={false}
 							onChange={(e) => setHistorySearch(e.target.value)}
 							className="shadow-md text-lg w-full px-10 py-1 rounded-lg
 							bg-white dark:bg-meta-4 dark:text-white"

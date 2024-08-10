@@ -92,6 +92,7 @@ const Header = (props) => {
 							<input
 								type="search"
 								value={searchKey}
+								spellCheck={false}
 								onChange={e => setSearchKey(e.target.value)}
 								onKeyDown={handleSearchKeyPress}
 								placeholder="Type to search..."
@@ -133,6 +134,7 @@ const Header = (props) => {
 						<input
 							type="search"
 							value={searchKey}
+							spellCheck={false}
 							onChange={e => setSearchKey(e.target.value)}
 							onKeyDown={handleSearchKeyPress}
 							placeholder="Type to search..."

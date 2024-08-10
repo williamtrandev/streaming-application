@@ -62,6 +62,7 @@ const UsernameInput = ({ value, setUsername, setIsValid, handleKeyDown, nextRef 
                         className="w-full pl-10 pr-3 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
                                         text-black dark:text-white outline-purple-600"
                         value={value}
+                        spellCheck={false}
                         onChange={handleUsernameChange}
                         onKeyDown={e => handleKeyDown(e, nextRef)}
                     />
