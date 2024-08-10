@@ -162,7 +162,7 @@ const AnalyticsPage = () => {
 				</div>
 			</div>
 			<p className="!mt-10 font-bold text-theme text-2xl">Statistics in your 10 latest stream</p>
-			{dataBar.length > 0 ? 
+			{statsData?.datasets[0]?.stats?.length > 0 ? 
 				<>
 					<div className="flex flex-col items-center justify-center w-full gap-5">
 						<DatePicker.RangePicker
