@@ -60,6 +60,7 @@ const StreamAdminPage = () => {
 					</button>
 					<input type="text"
 						value={searchInput}
+						spellCheck={false}
 						onChange={(e) => setSearchInput(e.target.value)}
 						className="w-full pl-10 focus:outline-none dark:text-white bg-transparent"
 						placeholder="Search stream by stream's id, title or tag"

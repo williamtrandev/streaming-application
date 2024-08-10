@@ -145,6 +145,7 @@ const RegisterModal = ({ isVisible, onClose }) => {
                                     className="w-full pl-10 pr-16 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
                                         text-black dark:text-white outline-purple-600"
                                     value={password}
+                                    spellCheck={false}
                                     onChange={e => {
                                         const inputValue = e.target.value;
                                         if (/^\S*$/.test(inputValue)) {

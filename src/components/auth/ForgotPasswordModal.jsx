@@ -68,6 +68,7 @@ const ForgotPasswordModal = ({ show, close }) => {
                                 </span>
                                 <input
                                     type="text"
+                                    spellCheck={false}
                                     className="w-full pl-10 pr-3 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
                                         text-black dark:text-white"
                                     value={email}
@@ -89,6 +90,7 @@ const ForgotPasswordModal = ({ show, close }) => {
                                 </span>
                                 <input
                                     type="text"
+                                    spellCheck={false}
                                     className="w-full pl-10 pr-3 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
                                         text-black dark:text-white"
                                     value={username}
@@ -109,6 +111,7 @@ const ForgotPasswordModal = ({ show, close }) => {
                                 </span>
                                 <input
                                     type={showPassword}
+                                    spellCheck={false}
                                     className="w-full pl-10 pr-16 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
                                         text-black dark:text-white"
                                     value={password}
@@ -157,6 +160,7 @@ const ForgotPasswordModal = ({ show, close }) => {
                                 </span>
                                 <input
                                     type={showConfirmPassword}
+                                    spellCheck={false}
                                     className="w-full bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
                                         pr-16 pl-10 text-black dark:text-white"
                                     value={confirmPassword}

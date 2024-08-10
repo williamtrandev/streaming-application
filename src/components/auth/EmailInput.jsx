@@ -64,6 +64,7 @@ const EmailInput = forwardRef(({ value, setEmail, setIsValid, handleKeyDown, nex
                                         text-black dark:text-white outline-purple-600"
                         value={value}
                         onChange={handleEmailChange}
+                        spellCheck={false}
                         ref={ref}
                         onKeyDown={e => handleKeyDown(e, nextRef)}
                     />

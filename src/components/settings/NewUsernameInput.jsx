@@ -60,6 +60,7 @@ const NewUsernameInput = ({ value, setUsername, setIsValid, admin = false }) => 
                         className="w-full px-4 bg-[#edf2f9] shadow-md dark:bg-meta-4 py-2 rounded-lg 
                                         text-black dark:text-white"
                         value={value}
+                        spellCheck={false}
                         onChange={handleUsernameChange}
                     />
                 </div>
