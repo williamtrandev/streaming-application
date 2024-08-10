@@ -9,10 +9,8 @@ import { useEffect } from 'react';
 import StreamerObsVideo from '../../components/studio/StreamerObsVideo';
 import { useEndStream } from '../../api/studio';
 import { toast } from 'react-toastify';
-import { useQueryClient } from 'react-query';
 
 const StreamPage = () => {
-	const queryClient = useQueryClient();
 	const { streamId } = useParams();
 	const navigate = useNavigate();
 	const { auth } = useAuth();
@@ -30,8 +28,7 @@ const StreamPage = () => {
 				endStream({ streamId: streamId, egressId: egressId });
 				toast.warning("Your stream has been banned");
 				socket.emit('endStream');
-				navigate(`/studio/manager`);
-				queryClient.invalidateQueries(["ComingStreams", userId]);
+				window.location.href = `/studio/manager`;
 			}
 			socket.on('clientBannedStream', handleBannedStream);
 		}
