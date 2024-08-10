@@ -148,9 +148,9 @@ const StreamDescription = ({ stream, numViewers }) => {
 					</button>
 				</div>
 			</div>
-			<div className="flex gap-3">
+			<div className="flex gap-3 flex-wrap">
 				{stream?.tags.map((tag, index) => (
-					<div className="px-3 py-1 rounded-r-full rounded-l-full bg-neutral-300 dark:bg-neutral-700 text-sm md:text-base">{tag}</div>
+					<div className="px-3 py-1 rounded-r-full rounded-l-full bg-neutral-300 dark:bg-neutral-700 text-xs md:text-base">{tag}</div>
 				))}
 			</div>
 			<div className={`text-sm md:text-base ${isExpanded ? "flex flex-col gap-4" : ""}`}>

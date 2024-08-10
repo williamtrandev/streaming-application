@@ -27,7 +27,7 @@ const StreamPage = () => {
 				endStream({ streamId: streamId, egressId: egressId });
 				toast.warning("Your stream has been banned");
 				socket.emit('endStream');
-				navigate(`/studio/manager`);
+				navigate(`/studio/manager`, { replace: true });
 			}
 			socket.emit('joinRoom', streamId, userId);
 			socket.on('clientBannedStream', handleBannedStream);

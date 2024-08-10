@@ -187,10 +187,10 @@ const RecordStreamVideo = ({ streamData }) => {
 		}
 	}, [recordData]);
 	return (
-		<div className="w-full flex flex-col items-center space-y-3">
+		<div className="w-full h-full flex flex-col items-center space-y-3">
 			<Streamer user={streamData?.stream?.user} />
 			<div className="flex flex-1 flex-col w-full">
-				<div className="flex h-full flex-1">
+				<div className="flex flex-1">
 					<div className="flex-1 flex-col container rounded-lg overflow-hidden">
 						<div className="relative flex aspect-video bg-black">
 							<video ref={videoEl} width="100%" controls />
