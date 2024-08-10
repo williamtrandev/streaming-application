@@ -35,9 +35,11 @@ const DetailStreamPage = () => {
 					window.location.reload();
 				}, 2000);
 			});
-			socket.on('streamBanned', () => {
-				setStreamBanned(true);
-			})
+			socket.on('streamBanned', (banStreamId) => {
+				if (banStreamId == streamId) {
+					setStreamBanned(true);
+				}
+			});
 		}
 	}, [socket]);
 	useEffect(() => {

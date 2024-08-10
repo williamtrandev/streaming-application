@@ -16,8 +16,8 @@ const StreamPage = () => {
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
 	const { mutate: endStream, isError: isEndError, isSuccess: isEndSuccess } = useEndStream();
-	
-    const streamWithObs = sessionStorage.getItem("streamWithObs");
+
+	const streamWithObs = sessionStorage.getItem("streamWithObs");
 	console.log(streamWithObs);
 
 	const socket = useSelector(selectSocket);
@@ -32,14 +32,13 @@ const StreamPage = () => {
 			socket.emit('joinRoom', streamId, userId);
 			socket.on('clientBannedStream', handleBannedStream);
 		}
-		
 	}, [socket]);
 	return (
 		<div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)]">
 			<div className="md:grid md:grid-cols-3 md:gap-5 h-full w-full space-y-3 md:space-y-0">
 				<div className="md:col-span-2 w-full h-full md:overflow-auto flex flex-col items-center gap-5">
 					{streamWithObs == 'true' && <StreamerObsVideo streamId={streamId} />}
-					{streamWithObs == 'false' && <StreamerVideo streamId={streamId} />} 
+					{streamWithObs == 'false' && <StreamerVideo streamId={streamId} />}
 				</div>
 				<div className="h-full w-full overflow-auto">
 					<ChatBox streamId={streamId} socket={socket} isStreamer={true} />
