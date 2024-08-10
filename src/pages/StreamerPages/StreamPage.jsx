@@ -24,13 +24,11 @@ const StreamPage = () => {
 	useEffect(() => {
 		if (socket) {
 			socket.emit('joinRoom', streamId, userId);
-			const handleBannedStream = (banStreamId, banEgressId) => {
-				if (streamId == banStreamId) {
-					endStream({ streamId: banStreamId, egressId: banEgressId });
-					toast.warning("Your stream has been banned");
-					socket.emit('endStream');
-					navigate(`/studio/manager`);
-				}
+			const handleBannedStream = (streamId, egressId) => {
+				endStream({ streamId: streamId, egressId: egressId });
+				toast.warning("Your stream has been banned");
+				socket.emit('endStream');
+				navigate(`/studio/manager`, { replace: true });
 			}
 			socket.on('clientBannedStream', handleBannedStream);
 		}
