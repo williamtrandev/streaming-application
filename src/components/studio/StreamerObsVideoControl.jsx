@@ -40,7 +40,7 @@ const StreamerObsVideoControl = ({ streamId }) => {
         content = <StreamerRemote participant={participant} />
     }
     return (
-        <div className="flex flex-col justify-center gap-4 px-4 py-2 h-full bg-meta-4 rounded-lg">
+        <div className="flex flex-col justify-center gap-4 px-4 py-2 h-full bg-white shadow-md dark:bg-meta-4 rounded-lg">
             <ObsVideoControlHeader streamId={streamId} isStreaming={participant} />
             {content}
         </div>
