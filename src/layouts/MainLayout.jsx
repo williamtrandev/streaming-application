@@ -17,7 +17,7 @@ const MainLayout = () => {
 	const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
 	
 	return (
-		<div className="dark:bg-boxdark-2 dark:text-bodydark bg-[#edf2f9]">
+		<div className="dark:bg-boxdark-2 dark:text-bodydark bg-[#dbe8f5]">
 			<div className="flex h-screen overflow-hidden">
 				<Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 				<div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">

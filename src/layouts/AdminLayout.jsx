@@ -22,7 +22,7 @@ const AdminLayout = () => {
 
 	if (adminRole && !adminRole.isAdmin) {
 		return (
-			<div className="dark:bg-boxdark-2 dark:text-bodydark bg-[#edf2f9]">
+			<div className="dark:bg-boxdark-2 dark:text-bodydark bg-[#dbe8f5]">
 				<div className="flex flex-col justify-center items-center gap-5 h-screen">
 					<img src={img404} className="!h-[70%]" />
 					<div className="text-2xl">You do not have permission to access this page</div>

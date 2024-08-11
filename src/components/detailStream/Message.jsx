@@ -21,7 +21,7 @@ const Message = ({msg, isMod=false, streamId}) => {
 	const [open, setOpen] = useState(false);
 	return (
 		<>
-			<div className={`space-y-2 ${isStreamer ? 'text-purple-700' : ''}`}>
+			<div className={`space-y-2 ${isStreamer ? 'text-purple-700 dark:text-purple-300' : ''}`}>
 				<div className="flex items-center space-x-3">
 					{isMod && !isStreamer ? <img
 						src={user?.profilePicture} alt=""

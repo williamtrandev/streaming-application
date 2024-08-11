@@ -20,7 +20,7 @@ const StudioLayout = () => {
 	}, [auth]);
 
 	return (
-		<div className="dark:bg-boxdark-2 dark:text-bodydark bg-[#edf2f9]">
+		<div className="dark:bg-boxdark-2 dark:text-bodydark bg-[#dbe8f5] transition ease-linear duration-300">
 			<div className="flex h-screen overflow-hidden">
 				<SidebarStudio sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 				<div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">

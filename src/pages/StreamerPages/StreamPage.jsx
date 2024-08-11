@@ -16,7 +16,6 @@ const StreamPage = () => {
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
 	const { mutate: endStream, isError: isEndError, isSuccess: isEndSuccess } = useEndStream();
-
 	const streamWithObs = sessionStorage.getItem("streamWithObs");
 	console.log(streamWithObs);
 

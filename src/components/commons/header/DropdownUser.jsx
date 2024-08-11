@@ -8,12 +8,15 @@ import { toast } from 'react-toastify';
 import { useGetMiniProfile } from '../../../api/user';
 import { useUser } from '../../../contexts/UserContext';
 import { defaultUser } from '../../../assets'
+import { useEndStream } from '../../../api/studio';
 
 const DropdownUser = () => {
+	const { isLiveStreaming, globalStreamId, globalEgressId } = useUser();
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const navigate = useNavigate();
 	const location = useLocation();
 	const isStudioPath = location.pathname.split("/")[1] === "studio";
+	const { mutateAsync: endStream, isError: isEndError, isSuccess: isEndSuccess } = useEndStream();
 
 	const trigger = useRef(null);
 	const dropdown = useRef(null);
@@ -54,7 +57,19 @@ const DropdownUser = () => {
 		return () => document.removeEventListener('keydown', keyHandler);
 	});
 
-	const handleLogout = () => {
+	const handleLogout = async () => {
+		if (isLiveStreaming) {
+			const confirmation = window.confirm("You are currently live streaming. Are you sure you want to log out?");
+			if (!confirmation) {
+				return;
+			}
+
+			try {
+				await endStream({ streamId: globalStreamId, egressId: globalEgressId }); 
+			} catch (error) {
+				console.error("Failed to end stream:", error);
+			}
+		} 
 		toast.info('You have been logout', {
 			position: "bottom-right"
 		});

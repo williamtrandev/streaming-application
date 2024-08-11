@@ -4,8 +4,25 @@ import { useState, useEffect } from 'react';
 import { LiveKitRoom, ControlBar } from "@livekit/components-react";
 import { jwtDecode } from "jwt-decode";
 import { useGenerateStreamerToken } from '../../api/studio';
+import { useUser } from '../../contexts/UserContext';
 
 const StreamerVideo = ({ streamId, setIsStream }) => {
+	const { isLiveStreaming } = useUser();
+	const useBeforeUnload = () => {
+		useEffect(() => {
+			const handleBeforeUnload = (event) => {
+				event.preventDefault();
+				event.returnValue = ''; 
+			};
+
+			window.addEventListener('beforeunload', handleBeforeUnload);
+
+			return () => {
+				window.removeEventListener('beforeunload', handleBeforeUnload);
+			};
+		}, []);
+	};
+	useBeforeUnload();
 	const [streamerToken, setStreamerToken] = useState("");
 	const { mutate, isSuccess, data } = useGenerateStreamerToken();
 	useEffect(() => {
@@ -21,9 +38,6 @@ const StreamerVideo = ({ streamId, setIsStream }) => {
 					const expiry = new Date(payload.exp * 1000);
 					if (expiry < new Date()) {
 						sessionStorage.removeItem(SESSION_STREAMER_TOKEN_KEY);
-						// const token = await generateStreamerToken(streamId);
-						// setStreamerToken(token);
-						// sessionStorage.setItem(SESSION_STREAMER_TOKEN_KEY, token);
 						mutate({ streamId });
 						return;
 					}
@@ -32,9 +46,6 @@ const StreamerVideo = ({ streamId, setIsStream }) => {
 				setStreamerToken(sessionToken);
 			} else {
 				mutate({ streamId });
-				// const token = await generateStreamerToken(streamId);
-				// setStreamerToken(token);
-				// sessionStorage.setItem(SESSION_STREAMER_TOKEN_KEY, token);
 			}
 		};
 		getOrCreateStreamerToken();

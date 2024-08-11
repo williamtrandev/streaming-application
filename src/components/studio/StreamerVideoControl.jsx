@@ -8,8 +8,10 @@ import { Users } from "lucide-react";
 import { formatNumViewers } from "../../utils/formatNumber";
 import { useSelector } from "react-redux";
 import { selectSocket } from "../../redux/slices/socketSlice";
+import { useUser } from "../../contexts/UserContext";
 
 const StreamerVideoControl = ({ streamId, setIsStream }) => {
+	const { setIsLiveStreaming, setGlobalStreamId, setGlobalEgressId } = useUser(); 
 	const [videoTrack, setVideoTrack] = useState();
 	const [audioTrack, setAudioTrack] = useState();
 	const [isPublishing, setIsPublishing] = useState(false);
@@ -56,6 +58,9 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 		if (isStartStreamSuccess) {
 			console.log(startStreamData)
 			if (startStreamData) {
+				setIsLiveStreaming(true);
+				setGlobalStreamId(streamId);
+				setGlobalEgressId(startStreamData.egressId);
 				setEgressId(startStreamData.egressId);
 				socket.emit('startStream', { streamId: streamId, egressId: startStreamData.egressId });
 			} 

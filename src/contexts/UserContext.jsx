@@ -10,7 +10,9 @@ export const UserProvider = ({ children }) => {
 	const [authProfilePictureS3, setAuthProfilePictureS3] = useState(null);
     const [authEmail, setAuthEmail] = useState("");
 	const [followedChannels, setFollowedChannels] = useState([]);
-
+	const [isLiveStreaming, setIsLiveStreaming] = useState(false);
+	const [globalStreamId, setGlobalStreamId] = useState(null);
+	const [globalEgressId, setGlobalEgressId] = useState(null);
 	const logoutUser = () => {
 		setAuthUsername("");
 		setAuthFullname("");
@@ -18,6 +20,9 @@ export const UserProvider = ({ children }) => {
 		setAuthProfilePictureS3(null);
 		setAuthEmail("");
 		setFollowedChannels([]);
+		setIsLiveStreaming(false);
+		setGlobalStreamId(null);
+		setGlobalEgressId(null);
 	};
 	useEffect(() => {
 		const handleLogout = () => {
@@ -39,6 +44,9 @@ export const UserProvider = ({ children }) => {
 				authProfilePictureS3, setAuthProfilePictureS3,
                 authEmail, setAuthEmail,
 				followedChannels, setFollowedChannels,
+				isLiveStreaming, setIsLiveStreaming,
+				globalStreamId, setGlobalStreamId,
+				globalEgressId, setGlobalEgressId,
 				logoutUser
 			}}
 		>
