@@ -263,6 +263,7 @@ const StudioPage = () => {
 												{stream?.dateStream && new Date(stream?.dateStream).toLocaleString()}
 											</td>
 											<td className="px-4 py-3 text-sm">
+												{!isBanned &&
 												<div className="flex space-x-2">
 													<div className="p-2 w-8 h-8 flex items-center justify-center rounded-full font-semibold text-orange-700 bg-orange-100 dark:text-white dark:bg-orange-600 cursor-pointer" onClick={() => handleClickDetail(stream._id)}>
 														<Tooltip title="Edit" color={'orange'}>
@@ -280,6 +281,7 @@ const StudioPage = () => {
 														</Tooltip>
 													</div>
 												</div>
+												}
 											</td>
 										</tr>
 									)
