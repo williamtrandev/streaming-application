@@ -264,7 +264,7 @@ const StudioPage = () => {
 											</td>
 											<td className="px-4 py-3 text-sm">
 												{isBanned ?
-													<span className='px-3 py-1 bg-red-300 rounded-lg border-red-700 text-red-700 dark:bg-red-600 dark:border-red-600 dark:text-red-200'>Banned</span>
+													<span className='px-3 py-1 bg-red-300 rounded-lg border border-red-700 text-red-700 dark:bg-red-600 dark:border-red-600 dark:text-red-200'>Banned</span>
 													:
 													<div className="flex space-x-2">
 														<div className="p-2 w-8 h-8 flex items-center justify-center rounded-full font-semibold text-orange-700 bg-orange-100 dark:text-white dark:bg-orange-600 cursor-pointer" onClick={() => handleClickDetail(stream._id)}>
