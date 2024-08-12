@@ -75,11 +75,17 @@ const SavedStreamsPage = () => {
         toast.error(errorMessage);
     }, [isDeleteError]);
 
-    const rainbowColors = [
-        "#FF0000", "#FF6F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#8B00FF",
-        "#FF000A", "#FF7600", "#FFFF0A", "#00FF0A", "#0000FA", "#450082", "#8100FF",
-        "#FF0014", "#FF7D00", "#FFFF14", "#00FF14", "#0000F5", "#3E0082"
-    ];
+    
+	const isDarkMode = document.body.classList.contains('dark');
+	const rainbowColors = isDarkMode ? [
+		"#FF0000", "#FF6F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#8B00FF",
+		"#FF000A", "#FF7600", "#FFFF0A", "#00FF0A", "#0000FA", "#450082", "#8100FF",
+		"#FF0014", "#FF7D00", "#FFFF14", "#00FF14", "#0000F5", "#3E0082"
+	] : [
+		"#B33A3A", "#CC7A29", "#4DB34D", "#2673B3", "#732699", "#994D99",
+		"#B34D4D", "#CC8A4D", "#519551", "#3A73B3", "#7A33B3", "#45818E",
+		"#B36666", "#CC8A66", "#351C75", "#4D73B3", "#006070"
+	];
 
     const getRandomRainbowColor = () => {
         const randomIndex = Math.floor(Math.random() * rainbowColors.length);
@@ -306,7 +312,7 @@ const SavedStreamsPage = () => {
                                             </span>
                                         </td>
                                         <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
-                                            {new Date(stream.dateStream).toLocaleString()}
+                                            {new Date(stream?.dateStream).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                                         </td>
                                         <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
                                             {stream.numViewsLive}

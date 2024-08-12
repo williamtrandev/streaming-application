@@ -15,10 +15,9 @@ const ModalDetailStream = ({ modalOpen, setModalOpen, streamId, refetch }) => {
 		"#FF0014", "#FF7D00", "#FFFF14", "#00FF14", "#0000F5", "#3E0082"
 	] : [
 		"#B33A3A", "#CC7A29", "#4DB34D", "#2673B3", "#732699", "#994D99",
-		"#B34D4D", "#CC8A4D", "#66B366", "#3A73B3", "#7A33B3", "#994D99",
-		"#B36666", "#CC8A66", "#80B380", "#4D73B3", "#732699"
+		"#B34D4D", "#CC8A4D", "#519551", "#3A73B3", "#7A33B3", "#45818E",
+		"#B36666", "#CC8A66", "#351C75", "#4D73B3", "#006070"
 	];
-
 
 	const getRandomRainbowColor = () => {
 		const randomIndex = Math.floor(Math.random() * rainbowColors.length);

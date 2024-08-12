@@ -19,6 +19,7 @@ import { studioSteps } from '../../guides/steps';
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { appName } from '../../constants';
+import { defaultStream } from '../../assets';
 
 
 
@@ -30,8 +31,8 @@ const StudioPage = () => {
 		"#FF0014", "#FF7D00", "#FFFF14", "#00FF14", "#0000F5", "#3E0082"
 	] : [
 		"#B33A3A", "#CC7A29", "#4DB34D", "#2673B3", "#732699", "#994D99",
-		"#B34D4D", "#CC8A4D", "#66B366", "#3A73B3", "#7A33B3", "#994D99",
-		"#B36666", "#CC8A66", "#80B380", "#4D73B3", "#732699"
+		"#B34D4D", "#CC8A4D", "#519551", "#3A73B3", "#7A33B3", "#45818E",
+		"#B36666", "#CC8A66", "#351C75", "#4D73B3", "#006070"
 	];
 
 	const getRandomRainbowColor = () => {
@@ -46,7 +47,7 @@ const StudioPage = () => {
 	const [tagValue, setTagValue] = useState("");
 	const [tagArr, setTagArr] = useState([]);
 	const [incoming, setIncoming] = useState(false);
-	const [image, setImage] = useState('https://wp.technologyreview.com/wp-content/uploads/2023/11/MIT_Universe_fibnal.jpg');
+	const [image, setImage] = useState(null);
 	const [rerun, setRerun] = useState(true);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [streamId, setStreamId] = useState(null);
@@ -101,7 +102,7 @@ const StudioPage = () => {
 	const handleOk = async () => {
 		setConfirmLoading(true);
 		const tags = tagArr.map(item => item.tag);
-		const previewImage = await blobToBase64(image);
+		const previewImage = image ? await blobToBase64(image) : null;
 		const data = {
 			userId: userId,
 			title: title,
@@ -260,7 +261,7 @@ const StudioPage = () => {
 												</span>
 											</td>
 											<td className="px-4 py-3 text-sm">
-												{stream?.dateStream && new Date(stream?.dateStream).toLocaleString()}
+												{stream?.dateStream && new Date(stream?.dateStream).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
 											</td>
 											<td className="px-4 py-3 text-sm">
 												{isBanned ?
@@ -314,7 +315,7 @@ const StudioPage = () => {
 							<div className="space-y-3">
 								<h5 className="font-bold text-lg">Preview Image</h5>
 								<div className="aspect-video bg-black overflow-hidden rounded-lg relative">
-									<img src={image} alt="" className="w-full object-cover aspect-video" />
+									<img src={image || defaultStream } alt="" className="w-full object-cover aspect-video" />
 									<label className="absolute flex space-x-2 bg-purple-600 text-white right-3 bottom-3 px-2 py-1 rounded-md cursor-pointer hover:bg-purple-700 duration-500 ease-in-out">
 										<Pencil width={14} />
 										<span>Change image</span>
