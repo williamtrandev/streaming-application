@@ -6,6 +6,11 @@ import moment from 'moment';
 import TagItem from "./TagItem";
 import { toast } from 'react-toastify';
 import { blobToBase64 } from '../../utils';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+
+
 
 const ModalDetailStream = ({ modalOpen, setModalOpen, streamId, refetch }) => {
 	const isDarkMode = document.body.classList.contains('dark');
@@ -35,6 +40,7 @@ const ModalDetailStream = ({ modalOpen, setModalOpen, streamId, refetch }) => {
 	const [rerun, setRerun] = useState(false); 
 	const { data: detailStreamData, isLoading: isDetailLoading } = useGetDetailStream(streamId);
 	const { mutate: editStream, isSuccess: isEditSuccess, isError: isEditError, error: editError } = useEditStream();
+
 	useEffect(() => {
 		if (detailStreamData) {
 			const streamInfo = detailStreamData?.stream;
@@ -48,7 +54,7 @@ const ModalDetailStream = ({ modalOpen, setModalOpen, streamId, refetch }) => {
 			}));
 			setTagArr(formattedTags);
 			setImage(streamInfo?.previewImage);
-			setSelectedTime(moment(streamInfo?.dateStream));
+			setSelectedTime(dayjs(streamInfo?.dateStream));
 			setRerun(streamInfo?.rerun);
 		}
 	}, [detailStreamData]);
@@ -104,7 +110,6 @@ const ModalDetailStream = ({ modalOpen, setModalOpen, streamId, refetch }) => {
 			refetch();
 		}
 	}, [isEditError, isEditSuccess])
-	
 	return (
 		<Modal
 			className='bg-slate-100 dark:bg-slate-600 rounded-lg dark:text-slate-200'
@@ -183,13 +188,30 @@ const ModalDetailStream = ({ modalOpen, setModalOpen, streamId, refetch }) => {
 							<div className="space-y-3">
 								<h5 className="font-bold text-lg">Time Stream</h5>
 								<DatePicker
-									className="dark:bg-meta-4 dark:border-none w-full px-4 py-2"
-									showTime={{ format: 'HH:mm' }}
+									className="dark:bg-meta-4 dark:border-none w-full px-4 py-2 !z-99999"
 									format="YYYY-MM-DD HH:mm"
-									value={selectedTime}
 									onChange={(value) => setSelectedTime(value)}
 									onOk={(value) => setSelectedTime(value)}
+									showTime={{ format: 'HH:mm' }}
+									disabledDate={(current) => current && current < dayjs().startOf('day')}
+									disabledTime={(current) => {
+										const now = dayjs();
+										const disabledHours = now.isSame(current, 'day')
+										  ? Array.from({ length: 24 }, (_, i) => i).filter(hour => hour < now.hour())
+										  : [];
+										const disabledMinutes = now.isSame(current, 'hour')
+										  ? Array.from({ length: 60 }, (_, i) => i).filter(minute => minute < now.minute())
+										  : [];
+										
+										return {
+										  disabledHours: () => disabledHours,
+										  disabledMinutes: () => disabledMinutes,
+										};														
+									  }}			
+									value={selectedTime}
+
 								/>
+								
 							</div>
 							<div className="space-y-3">
 								<h5 className="font-bold text-lg">Rerun</h5>
