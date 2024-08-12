@@ -75,7 +75,30 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 				screenTrack.stop();
 			}
 			setIsScreenSharing(false);
-			createTracks();
+			const tracks = await createLocalTracks({ audio: true, video: true });
+			var videoTrackLocal;
+			var audioTrackLocal;
+			tracks.forEach((track) => {
+				switch (track.kind) {
+					case Track.Kind.Video: {
+						if (previewVideoEl?.current) {
+							track.attach(previewVideoEl.current);
+						}
+						videoTrackLocal = track;
+						break;
+					}
+					case Track.Kind.Audio: {
+						audioTrackLocal = track;
+						break;
+					}
+				}
+			});
+			if (videoTrackLocal) {
+				localParticipant.publishTrack(videoTrackLocal);
+			}
+			if (audioTrackLocal) {
+				localParticipant.publishTrack(audioTrackLocal);
+			}
 		}
 	};
 	useEffect(() => {
