@@ -1,10 +1,10 @@
 import { useLocalParticipant, useParticipants } from "@livekit/components-react";
-import { Track, createLocalTracks } from "livekit-client";
+import { Track, createLocalTracks, createLocalScreenTracks } from "livekit-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useStartStream } from "../../api/studio";
 import { toast } from "react-toastify";
 import ModalEndStream from "./ModalEndStream";
-import { Users } from "lucide-react";
+import { ScreenShare, ScreenShareOff, Users } from "lucide-react";
 import { formatNumViewers } from "../../utils/formatNumber";
 import { useSelector } from "react-redux";
 import { selectSocket } from "../../redux/slices/socketSlice";
@@ -14,6 +14,8 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 	const { setIsLiveStreaming, setGlobalStreamId, setGlobalEgressId } = useUser(); 
 	const [videoTrack, setVideoTrack] = useState();
 	const [audioTrack, setAudioTrack] = useState();
+	const [screenTrack, setScreenTrack] = useState();
+	const [isScreenSharing, setIsScreenSharing] = useState(false);
 	const [isPublishing, setIsPublishing] = useState(false);
 	const [isUnpublishing, setIsUnpublishing] = useState(false);
 	const [egressId, setEgressId] = useState(null);
@@ -41,7 +43,41 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 			}
 		});
 	};
+	const startScreenShare = async () => {
+		if (localParticipant) {
+			try {
+				const screenTracks = await createLocalScreenTracks();
+				const screenTrackLocal = screenTracks[0];
+				if(screenTrackLocal) {
+					localParticipant.publishTrack(screenTrackLocal);
+					setScreenTrack(screenTrackLocal);
+					screenTrackLocal.mediaStreamTrack.onended = () => {
+						console.log('Screen share stopped by the user');
+						stopScreenShare();
+					};
+					if (previewVideoEl?.current) {
+						screenTrackLocal.attach(previewVideoEl.current);
+						localParticipant.unpublishTrack(videoTrack);
+						videoTrack?.stop();
+						setIsScreenSharing(true);
+					}
+				}
+			} catch (error) {
+				console.error("Error starting screen share:", error);
+			}
+		}
+	};
 
+	const stopScreenShare = async () => {
+		if (localParticipant) {
+			if(screenTrack) {
+				localParticipant.unpublishTrack(screenTrack);
+				screenTrack.stop();
+			}
+			setIsScreenSharing(false);
+			createTracks();
+		}
+	};
 	useEffect(() => {
 		createTracks();
 	}, []);
@@ -173,7 +209,15 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 				</div>
 			</div>
 			<div className="aspect-video rounded-lg overflow-hidden">
-				<video ref={previewVideoEl} width="100%" height="100%" />
+				<video ref={previewVideoEl} width="100%" height="100%" className="rounded-lg"/>
+			</div>
+			<div className="flex w-full justify-center items-center">
+				<div className="rounded-full w-10 h-10 bg-purple-500 flex items-center justify-center cursor-pointer">
+					{!isScreenSharing 
+						? <ScreenShare className="w-5 h-5" onClick={startScreenShare} />
+						: <ScreenShareOff className="w-5 h-5" onClick={stopScreenShare} />
+					}
+				</div>
 			</div>
 			<ModalEndStream open={open} setOpen={setOpen} streamId={streamId} egressId={egressId} />
 		</div>
