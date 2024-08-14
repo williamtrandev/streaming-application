@@ -4,14 +4,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useStartStream } from "../../api/studio";
 import { toast } from "react-toastify";
 import ModalEndStream from "./ModalEndStream";
-import { ScreenShare, ScreenShareOff, Users } from "lucide-react";
+import { OctagonAlert, Users, X, ScreenShare, ScreenShareOff } from "lucide-react";
 import { formatNumViewers } from "../../utils/formatNumber";
 import { useSelector } from "react-redux";
 import { selectSocket } from "../../redux/slices/socketSlice";
 import { useUser } from "../../contexts/UserContext";
+import { useBlocker } from "react-router-dom";
+import { Modal } from "antd";
 
 const StreamerVideoControl = ({ streamId, setIsStream }) => {
-	const { setIsLiveStreaming, setGlobalStreamId, setGlobalEgressId } = useUser(); 
+	const { setIsLiveStreaming, setGlobalStreamId, setGlobalEgressId } = useUser();
 	const [videoTrack, setVideoTrack] = useState();
 	const [audioTrack, setAudioTrack] = useState();
 	const [screenTrack, setScreenTrack] = useState();
@@ -25,6 +27,8 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 	const socket = useSelector(selectSocket);
 	const [open, setOpen] = useState(false);
 	const [numViewers, setNumViewers] = useState(0);
+	const [showWarnPopUp, setShowWarnPopUp] = useState(false);
+	const [isStreamEnd, setIsStreamEnd] = useState(false);
 	const createTracks = async () => {
 		const tracks = await createLocalTracks({ audio: true, video: true });
 		tracks.forEach((track) => {
@@ -67,6 +71,18 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 			}
 		}
 	};
+
+	const blocker = useBlocker(
+		({ currentLocation, nextLocation }) =>
+			isPublishing &&
+			currentLocation.pathname !== nextLocation.pathname
+	);
+
+	useEffect(() => {
+		if (blocker) {
+			setShowWarnPopUp(blocker.state === "blocked");
+		}
+	}, [blocker]);
 
 	const stopScreenShare = async () => {
 		if (localParticipant) {
@@ -122,12 +138,12 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 				setGlobalEgressId(startStreamData.egressId);
 				setEgressId(startStreamData.egressId);
 				socket.emit('startStream', { streamId: streamId, egressId: startStreamData.egressId });
-			} 
-		}	
-		if(isStartStreamError) {
+			}
+		}
+		if (isStartStreamError) {
 			toast.error("Starting streaming failed");
 		}
-	}, [isStartStreamSuccess, isStartStreamError]) 
+	}, [isStartStreamSuccess, isStartStreamError])
 
 	const togglePublishing = useCallback(async () => {
 		if (isPublishing && localParticipant) {
@@ -197,7 +213,7 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 								<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
 								<span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
 							</span>
-							<div>LIVE 
+							<div>LIVE
 								<span className="ml-3 italic text-purple-500">
 									{getElapsedTime(startTime, currentTime)}
 								</span>
@@ -225,8 +241,9 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 						<button
 							onClick={togglePublishing}
 							className="animate-pulse p-2 bg-purple-600 rounded-lg"
+							disabled={isStreamEnd}
 						>
-							Start stream
+							{isStreamEnd ? "Stream ended" : "Start stream"}
 						</button>
 					)}
 				</div>
@@ -242,7 +259,24 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 					}
 				</div>
 			</div>
-			<ModalEndStream open={open} setOpen={setOpen} streamId={streamId} egressId={egressId} />
+			<ModalEndStream open={open} setOpen={setOpen} streamId={streamId} egressId={egressId} setIsStreaming={setIsPublishing} setIsStreamEnd={setIsStreamEnd} />
+			<Modal
+				className='bg-slate-100 dark:bg-slate-600 rounded-lg dark:text-slate-200'
+				centered
+				open={showWarnPopUp}
+				okText={"End stream and leave"}
+				onCancel={() => setShowWarnPopUp(false)}
+				closeIcon={<X className="dark:text-slate-200" />}
+				footer={null}
+			>
+				<div className="flex gap-3">
+					<OctagonAlert size={32} className="text-yellow-500" />
+					<div className='h-full'>
+						<p className="text-lg font-semibold mb-2">Your stream still live!</p>
+						<p className="">You must stop streaming before leaving this page.</p>
+					</div>
+				</div>
+			</Modal>
 		</div>
 	)
 }
