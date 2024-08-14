@@ -2,13 +2,14 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DropdownNotification from '../header/DropdownNotification';
 import DarkModeSwitcher from './DarkModeSwitcher';
 import DropdownUser from '../header/DropdownUser';
-import { LogIn, Search } from 'lucide-react';
+import { ChevronLeft, LogIn, Search } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { logo } from '../../../assets';
 const Header = (props) => {
 	const location = useLocation();
 	const isStudioPath = location.pathname.split("/")[1] === "studio";
+	const isStudioStreamPath = location.pathname.split("/")[2] === "stream";
 	const [isSearchVisible, setIsSearchVisible] = useState(false);
 	const searchRef = useRef(null);
 	const { auth } = useAuth();
@@ -168,7 +169,19 @@ const Header = (props) => {
 						</button>
 					</div>
 				</div>}
-				{isStudioPath && <div></div>}
+				{isStudioPath && (
+					<div>
+						{isStudioStreamPath && (
+							<Link
+								to={"/studio/manager"}
+								className="flex gap-2 text-slate-300 bg-purple-600 hover:bg-purple-700 rounded-lg px-3 py-1"
+							>
+								<ChevronLeft />
+								Back to Studio
+							</Link>
+						)}
+					</div>
+				)}
 				<div className="flex items-center gap-3 2xsm:gap-7">
 					<ul className="flex items-center gap-2 2xsm:gap-4">
 						<button className="block sm:hidden"

@@ -4,14 +4,13 @@ import { useEndStream } from '../../api/studio';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-const ModalEndStream = ({ open, setOpen, streamId, egressId }) => {
+const ModalEndStream = ({ open, setOpen, streamId, egressId, setIsStreaming, setIsStreamEnd }) => {
 	const navigate = useNavigate();
 	const { mutate: endStream, isError: isEndError, isSuccess: isEndSuccess } = useEndStream();
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const handleOk = async () => {
 		setConfirmLoading(true);
 		endStream({ streamId, egressId });
-		navigate(`/studio/manager`);
 	}
 	useEffect(() => {
 		if (isEndError) {
@@ -21,6 +20,9 @@ const ModalEndStream = ({ open, setOpen, streamId, egressId }) => {
 			toast.success("End successfully!");
 			setConfirmLoading(false);
 			setOpen(false);
+			setIsStreaming(false);
+			setIsStreamEnd(true);
+			// navigate(`/studio/manager`);
 		}
 	}, [isEndError, isEndSuccess])
 	return (
