@@ -7,6 +7,7 @@ import statsLatest from './stats-latest.png';
 import pattern from './pattern.jpg';
 import img404 from './404.png';
 import defaultStream from './default-stream.png';
+import model from './model.vrm';
 export {
-	lightmode, darkmode, logo, defaultUser, banned, statsLatest, pattern, img404, defaultStream
+	lightmode, darkmode, logo, defaultUser, banned, statsLatest, pattern, img404, defaultStream, model
 }
