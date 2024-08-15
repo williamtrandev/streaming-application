@@ -4,9 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useStartStream } from "../../api/studio";
 import { toast } from "react-toastify";
 import ModalEndStream from "./ModalEndStream";
-import { ReceiptRussianRuble, ScreenShare, ScreenShareOff, Users, 
-        WandSparkles, OctagonAlert, Users, X, ScreenShare, ScreenShareOff 
-} from "lucide-react";
+import { ReceiptRussianRuble, ScreenShare, ScreenShareOff, Users, WandSparkles, OctagonAlert, X } from "lucide-react";
 import { formatNumViewers } from "../../utils/formatNumber";
 import { useSelector } from "react-redux";
 import { selectSocket } from "../../redux/slices/socketSlice";
@@ -19,24 +17,24 @@ import { Modal } from "antd";
 
 const Content = ({ selectedCharacter, onSelectCharacter }) => (
     <div className="flex gap-3 items-center justify-center">
-      <div className="flex flex-col gap-2 items-center justify-center">
-        <img
-          src={william}
-          alt=""
-          className={`w-15 h-15 rounded-lg cursor-pointer object-cover ${selectedCharacter === 'william' ? 'border-4 border-blue-700' : ''}`}
-          onClick={() => onSelectCharacter('william')} 
-        />
-        William
-      </div>
-      <div className="flex flex-col gap-2 items-center justify-center">
-        <img
-          src={hinata}
-          alt=""
-          className={`w-15 h-15 rounded-lg cursor-pointer object-cover ${selectedCharacter === 'hinata' ? 'border-4 border-blue-700' : ''}`}
-          onClick={() => onSelectCharacter('hinata')}
-        />
-			  Hinata
-		  </div>
+		<div className="flex flex-col gap-2 items-center justify-center">
+			<img
+			src={william}
+			alt=""
+			className={`w-15 h-15 rounded-lg cursor-pointer object-cover ${selectedCharacter === 'william' ? 'border-4 border-blue-700' : ''}`}
+			onClick={() => onSelectCharacter('william')} 
+			/>
+			William
+		</div>
+		<div className="flex flex-col gap-2 items-center justify-center">
+			<img
+			src={hinata}
+			alt=""
+			className={`w-15 h-15 rounded-lg cursor-pointer object-cover ${selectedCharacter === 'hinata' ? 'border-4 border-blue-700' : ''}`}
+			onClick={() => onSelectCharacter('hinata')}
+			/>
+				Hinata
+		</div>
     </div>
 );
 const StreamerVideoControl = ({ streamId, setIsStream }) => {
@@ -63,15 +61,15 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 	const [showWarnPopUp, setShowWarnPopUp] = useState(false);
 	const [isStreamEnd, setIsStreamEnd] = useState(false);
 
-  const handleSelectCharacter = useCallback((character) => {
-      if (selectedCharacter === character) {
-          setIsCosplay(false);
-          setSelectedCharacter(null);
-      } else {
-          setSelectedCharacter(character);
-          setIsCosplay(true);
-      }
-  }, [selectedCharacter]);
+	const handleSelectCharacter = useCallback((character) => {
+		if (selectedCharacter === character) {
+			setIsCosplay(false);
+			setSelectedCharacter(null);
+		} else {
+			setSelectedCharacter(character);
+			setIsCosplay(true);
+		}
+	}, [selectedCharacter]);
 	const togglePublishing = useCallback(async () => {
 		if (isPublishing && localParticipant) {
 			console.log(egressId);
