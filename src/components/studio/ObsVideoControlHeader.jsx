@@ -1,11 +1,12 @@
 import { useSelector } from "react-redux";
 import { selectSocket } from "../../redux/slices/socketSlice";
 import { useEffect, useRef, useState } from "react";
-import { Users } from "lucide-react";
+import { OctagonAlert, Users, X } from "lucide-react";
 import { formatNumViewers } from "../../utils/formatNumber";
 import { useEndStream, useStartStream } from "../../api/studio";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useBlocker, useNavigate } from "react-router-dom";
+import { Modal } from "antd";
 
 const ObsVideoControlHeader = ({ streamId, isStreaming }) => {
     const navigate = useNavigate();
@@ -15,8 +16,22 @@ const ObsVideoControlHeader = ({ streamId, isStreaming }) => {
     const [numViewers, setNumViewers] = useState(0);
     const [startTime, setStartTime] = useState(null);
     const [currentTime, setCurrentTime] = useState(Date.now());
+    const [showWarnPopUp, setShowWarnPopUp] = useState(false);
+	const [isStreamEnd, setIsStreamEnd] = useState(false);
     const { mutate: startStream, isSuccess: isStartStreamSuccess, isError: isStartStreamError, data: startStreamData } = useStartStream();
     const { mutate: endStream, isError: isEndError, isSuccess: isEndSuccess } = useEndStream();
+
+    const blocker = useBlocker(
+		({ currentLocation, nextLocation }) =>
+			isStarted && !isStreamEnd &&
+			currentLocation.pathname !== nextLocation.pathname
+	);
+
+	useEffect(() => {
+		if (blocker) {
+			setShowWarnPopUp(blocker.state === "blocked");
+		}
+	}, [blocker]);
 
     useEffect(() => {
         let timer;
@@ -80,7 +95,8 @@ const ObsVideoControlHeader = ({ streamId, isStreaming }) => {
         }
         if (isEndSuccess) {
             toast.success("End successfully!");
-            navigate(`/studio/manager`);
+            setIsStreamEnd(true);
+            // navigate(`/studio/manager`);
         }
     }, [isEndError, isEndSuccess]);
 
@@ -109,6 +125,23 @@ const ObsVideoControlHeader = ({ streamId, isStreaming }) => {
                     <p>{formatNumViewers(numViewers)}</p>
                 </div>
             </div>
+            <Modal
+				className='bg-slate-100 dark:bg-slate-600 rounded-lg dark:text-slate-200'
+				centered
+				open={showWarnPopUp}
+				okText={"End stream and leave"}
+				onCancel={() => setShowWarnPopUp(false)}
+				closeIcon={<X className="dark:text-slate-200" />}
+				footer={null}
+			>
+				<div className="flex gap-3">
+					<OctagonAlert size={32} className="text-yellow-500" />
+					<div className='h-full'>
+						<p className="text-lg font-semibold mb-2">Your stream still live!</p>
+						<p className="">You must stop streaming before leaving this page.</p>
+					</div>
+				</div>
+			</Modal>
         </div>
     );
 }

@@ -13,8 +13,14 @@ import StreamerObsVideoControl from "./StreamerObsVideoControl";
 import { useGenerateViewerToken, useGetServerUrlAndStreamKey } from "../../api/studio";
 import { useUser } from "../../contexts/UserContext";
 import { toast } from "react-toastify";
+import { Spin } from "antd";
 
-const StreamKey = ({ streamId }) => {
+const StreamerObsVideo = ({ streamId }) => {
+	const [viewerToken, setViewerToken] = useState("");
+	const { auth } = useAuth();
+	const userId = auth?.user?._id || uuidv4();
+	const { mutate, isSuccess, data } = useGenerateViewerToken();
+
 	const { authUsername: username } = useUser();
 	const serverUrlRef = useRef(null);
 	const streamKeyref = useRef(null);
@@ -31,83 +37,6 @@ const StreamKey = ({ streamId }) => {
 		}
 	}, [streamKeyData]);
 
-	return (
-		<div className="w-full items-center space-y-3 bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
-			<div className="divide-y divide-gray-300 dark:divide-gray-600 px-4 rounded-lg">
-				<div className="flex flex-col md:flex-row py-4 gap-2">
-					<div className="md:w-[20%]">Server URL</div>
-					<div className="flex gap-4">
-						<div
-							ref={serverUrlRef}
-						>
-							{serverUrl}
-						</div>
-						<button
-							className="p-1 rounded-md bg-purple-600 text-white"
-							onClick={() => {
-								if (serverUrlRef.current) {
-									navigator.clipboard.writeText(serverUrlRef.current.innerText)
-										.then(() => {
-											toast.success("Copied to clipboard!");
-										})
-										.catch((err) => {
-											toast.error("Failed to copy: ", err);
-										});
-								}
-							}}
-						>
-							<Copy size={20} />
-						</button>
-					</div>
-				</div>
-				<div className="flex flex-col md:flex-row py-4 gap-2">
-					<div className="md:w-[20%]">Stream key</div>
-					<div className="flex gap-4">
-						<input
-							className="bg-transparent pointer-events-none"
-							type={showStreamKey ? "text" : "password"}
-							ref={streamKeyref}
-							value={streamKey}
-							readOnly
-						/>
-						<div className="flex gap-2">
-							<button
-								className="p-1 rounded-md bg-purple-600 text-white"
-								onClick={() => {
-									if (streamKeyref.current) {
-										navigator.clipboard.writeText(streamKeyref.current.value)
-											.then(() => {
-												toast.success("Copied to clipboard!");
-											})
-											.catch((err) => {
-												toast.error("Failed to copy: ", err);
-											});
-									}
-								}}
-							>
-								<Copy size={20} />
-							</button>
-							<button
-								className="p-1 rounded-md bg-neutral-300 dark:bg-neutral-600"
-								onClick={() => setShowStreamKey(!showStreamKey)}
-							>
-								{!showStreamKey && <Eye size={20} />}
-								{showStreamKey && <EyeOff size={20} />}
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	)
-}
-
-
-const StreamerObsVideo = ({ streamId }) => {
-	const [viewerToken, setViewerToken] = useState("");
-	const { auth } = useAuth();
-	const userId = auth?.user?._id || uuidv4();
-	const { mutate, isSuccess, data } = useGenerateViewerToken();
 	useEffect(() => {
 		if (!streamId) return;
 		const getOrCreateViewerToken = async () => {
@@ -156,11 +85,84 @@ const StreamerObsVideo = ({ streamId }) => {
 			>
 				<div className="flex h-full flex-1">
 					<div className="flex-1 flex-col container rounded-lg overflow-hidden">
-						<StreamerObsVideoControl streamId={streamId} />
+						{streamKeyData ? (
+							<StreamerObsVideoControl streamId={streamId} />
+						) : (
+							<div className="flex flex-col aspect-video justify-center gap-4 px-4 py-2 h-full bg-white shadow-md dark:bg-meta-4 rounded-lg">
+								<Spin size="large" />
+							</div>
+						)}
 					</div>
 				</div>
 			</LiveKitRoom>
-			<StreamKey streamId={streamId} />
+			{/* <StreamKey streamId={streamId} /> */}
+			<div className="w-full items-center space-y-3 bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
+				<div className="divide-y divide-gray-300 dark:divide-gray-600 px-4 rounded-lg">
+					<div className="flex flex-col md:flex-row py-4 gap-2">
+						<div className="md:w-[20%]">Server URL</div>
+						<div className="flex gap-4">
+							<div
+								ref={serverUrlRef}
+							>
+								{serverUrl}
+							</div>
+							<button
+								className="p-1 rounded-md bg-purple-600 text-white"
+								onClick={() => {
+									if (serverUrlRef.current) {
+										navigator.clipboard.writeText(serverUrlRef.current.innerText)
+											.then(() => {
+												toast.success("Copied to clipboard!");
+											})
+											.catch((err) => {
+												toast.error("Failed to copy: ", err);
+											});
+									}
+								}}
+							>
+								<Copy size={20} />
+							</button>
+						</div>
+					</div>
+					<div className="flex flex-col md:flex-row py-4 gap-2">
+						<div className="md:w-[20%]">Stream key</div>
+						<div className="flex gap-4">
+							<input
+								className="bg-transparent pointer-events-none"
+								type={showStreamKey ? "text" : "password"}
+								ref={streamKeyref}
+								value={streamKey}
+								readOnly
+							/>
+							<div className="flex gap-2">
+								<button
+									className="p-1 rounded-md bg-purple-600 text-white"
+									onClick={() => {
+										if (streamKeyref.current) {
+											navigator.clipboard.writeText(streamKeyref.current.value)
+												.then(() => {
+													toast.success("Copied to clipboard!");
+												})
+												.catch((err) => {
+													toast.error("Failed to copy: ", err);
+												});
+										}
+									}}
+								>
+									<Copy size={20} />
+								</button>
+								<button
+									className="p-1 rounded-md bg-neutral-300 dark:bg-neutral-600"
+									onClick={() => setShowStreamKey(!showStreamKey)}
+								>
+									{!showStreamKey && <Eye size={20} />}
+									{showStreamKey && <EyeOff size={20} />}
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	)
 }
