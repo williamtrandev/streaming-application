@@ -42,9 +42,9 @@ export const animateVRM = (
 		rigRotation(
 			"hips",
 			{
-				x: (riggedPose.Hips.rotation?.x || 0) * -1,
-				y: (riggedPose.Hips.rotation?.y || 0) * -1,
-				z: (riggedPose.Hips.rotation?.z || 0) * -1,
+				x: (riggedPose.Hips.rotation?.x || 0),
+				y: (riggedPose.Hips.rotation?.y || 0),
+				z: (riggedPose.Hips.rotation?.z || 0),
 			},
 			0.7,
 			0.3,
@@ -317,9 +317,9 @@ const rigFace = (riggedFace, vrm) => {
 	rigRotation(
 		"neck",
 		{
-			x: riggedFace.head.x * -1,
-			y: riggedFace.head.y * -1,
-			z: riggedFace.head.z * -1,
+			x: riggedFace.head.x,
+			y: riggedFace.head.y,
+			z: riggedFace.head.z,
 		},
 		1,
 		0.7,
@@ -395,7 +395,7 @@ export const rigRotation = (
 	let euler = new Euler(
 		rotation.x * dampener,
 		rotation.y * dampener,
-		rotation.z * dampener * -1
+		rotation.z * dampener
 	);
 	let quaternion = new Quaternion().setFromEuler(euler);
 	Part.quaternion.slerp(quaternion, lerpAmount); // interpolate

@@ -8,6 +8,12 @@ import pattern from './pattern.jpg';
 import img404 from './404.png';
 import defaultStream from './default-stream.png';
 import model from './model.vrm';
+import williamModel from './william.vrm';
+import hinataModel from './hinata.vrm';
+import william from './william.png';
+import hinata from './hinata.png';
 export {
-	lightmode, darkmode, logo, defaultUser, banned, statsLatest, pattern, img404, defaultStream, model
+	lightmode, darkmode, logo, defaultUser, banned, 
+	statsLatest, pattern, img404, defaultStream, model, 
+	williamModel, hinataModel, william, hinata
 }
