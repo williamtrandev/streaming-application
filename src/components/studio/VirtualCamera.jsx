@@ -140,6 +140,7 @@ const VirtualCamera = ({ selectedCharacter, setCanvasStream }) => {
     });
 	useEffect(setupThreeJS, [setupThreeJS]);
 
+    return (
         <div className="relative aspect-video rounded-lg overflow-hidden" ref={resizeRef}>
             <canvas
                 width={size.width}
