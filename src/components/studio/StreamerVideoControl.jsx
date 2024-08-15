@@ -1,5 +1,5 @@
 import { useLocalParticipant, useParticipants } from "@livekit/components-react";
-import { Track, createLocalTracks, createLocalScreenTracks } from "livekit-client";
+import { Track, createLocalTracks, createLocalScreenTracks, createLocalVideoTrack } from "livekit-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useStartStream } from "../../api/studio";
 import { toast } from "react-toastify";
@@ -39,6 +39,7 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 	const { setIsLiveStreaming, setGlobalStreamId, setGlobalEgressId } = useUser(); 
 	const [videoTrack, setVideoTrack] = useState();
 	const [audioTrack, setAudioTrack] = useState();
+	const [canvasTrack, setCanvasTrack] = useState();
 	const [screenTrack, setScreenTrack] = useState();
 	const [isScreenSharing, setIsScreenSharing] = useState(false);
 	const [isPublishing, setIsPublishing] = useState(false);
@@ -80,6 +81,9 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 			}
 			if (audioTrack) {
 				localParticipant.publishTrack(audioTrack);
+			}
+			if(canvasTrack) {
+				localParticipant.publishTrack(canvasTrack);
 			}
 			startStream(streamId);
 			setIsPublishing(true);
@@ -233,22 +237,51 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 	}, [streamId]);
 	
 	useEffect(() => {
-		if (isCosplay == null) return;
-		if (!localParticipant) return;
-		if (!canvasStream) return;
-		if(isCosplay) {
-			if(videoTrack) {
-				localParticipant.unpublishTrack(videoTrack);
-				videoTrack.stop();
+		const handleTracks = async () => {
+			if (isCosplay == null) return;
+			if (!localParticipant) return;
+			if (!canvasStream) return;
+
+			if (isCosplay) {
+				if (videoTrack) {
+					localParticipant.unpublishTrack(videoTrack);
+					videoTrack.stop();
+				}
+				const track = canvasStream.getTracks()[0];
+				setCanvasTrack(track);
+				localParticipant.publishTrack(track);
+			} else {
+				localParticipant.unpublishTrack(canvasTrack);
+				const tracks = await createLocalTracks({ audio: true, video: true });
+				// Cập nhật logic khi tạo và publish các tracks
+				let videoTrackLocal = null;
+				let audioTrackLocal = null;
+				tracks.forEach((track) => {
+					switch (track.kind) {
+						case Track.Kind.Video: {
+							if (previewVideoEl?.current) {
+								track.attach(previewVideoEl.current);
+							}
+							videoTrackLocal = track;
+							break;
+						}
+						case Track.Kind.Audio: {
+							audioTrackLocal = track;
+							break;
+						}
+					}
+				});
+
+				if (videoTrackLocal) {
+					localParticipant.publishTrack(videoTrackLocal);
+				}
+				if (audioTrackLocal) {
+					localParticipant.publishTrack(audioTrackLocal);
+				}
 			}
-			localParticipant.publishTrack(canvasStream);
-		} else {
-			if(canvasStream) {
-				localParticipant.unpublishTrack(canvasStream);
-				canvasStream.stop();
-			}
-			localParticipant.publishTrack(videoTrack);
-		}
+		};
+
+		handleTracks();
 	}, [isCosplay, localParticipant, canvasStream]);
 	return (
 		<div className="flex flex-col justify-center gap-4 px-4 py-2 h-full bg-meta-4 rounded-lg">
@@ -302,25 +335,29 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 				</div>
 			}
 			<div className="flex w-full justify-center items-center gap-4">
-				<Tooltip title={!isScreenSharing ? "Start Screen Share" : "Stop Screen Share"}>
-					<div className="rounded-full w-10 h-10 bg-purple-500 flex items-center justify-center cursor-pointer">
-						{!isScreenSharing 
-							? <ScreenShare className="w-5 h-5" onClick={startScreenShare} />
-							: <ScreenShareOff className="w-5 h-5" onClick={stopScreenShare} />
-						}
-					</div>
-				</Tooltip>
-				<Tooltip title="Cosplay">
-					<Popover 
-						content={<Content selectedCharacter={selectedCharacter} onSelectCharacter={handleSelectCharacter} />} 
-                        title="Select a character" 
-						trigger="click"
-					>
+				{!selectedCharacter &&
+					<Tooltip title={!isScreenSharing ? "Start Screen Share" : "Stop Screen Share"}>
 						<div className="rounded-full w-10 h-10 bg-purple-500 flex items-center justify-center cursor-pointer">
-							<WandSparkles className="w-5 h-5" />
+							{!isScreenSharing 
+								? <ScreenShare className="w-5 h-5" onClick={startScreenShare} />
+								: <ScreenShareOff className="w-5 h-5" onClick={stopScreenShare} />
+							}
 						</div>
-					</Popover>
-				</Tooltip>
+					</Tooltip>
+				}
+				{!isScreenSharing && 
+					<Tooltip title="Cosplay">
+						<Popover 
+							content={<Content selectedCharacter={selectedCharacter} onSelectCharacter={handleSelectCharacter} />} 
+							title="Select a character" 
+							trigger="click"
+						>
+							<div className="rounded-full w-10 h-10 bg-purple-500 flex items-center justify-center cursor-pointer">
+								<WandSparkles className="w-5 h-5" />
+							</div>
+						</Popover>
+					</Tooltip>
+				}
 			</div>
 			<ModalEndStream open={open} setOpen={setOpen} streamId={streamId} egressId={egressId} />
 		</div>

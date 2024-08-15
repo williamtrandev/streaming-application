@@ -103,7 +103,7 @@ const VirtualCamera = ({ selectedCharacter, setCanvasStream }) => {
 	useEffect(() => {
 		createLocalVideoTrack({
 			facingMode: "environment",
-			resolution: { width: 320, height: 240, frameRate: 10 },
+            resolution: { width: 640, height: 320, frameRate: 30 },
 		}).then((t) => {
 			t.attach(videoRef.current);
 			setupHolistic.current();
@@ -141,11 +141,11 @@ const VirtualCamera = ({ selectedCharacter, setCanvasStream }) => {
 	useEffect(setupThreeJS, [setupThreeJS]);
 
     return (
-        <div className="relative aspect-video rounded-lg overflow-hidden" ref={resizeRef}>
+        <div className="relative aspect-video rounded-lg overflow-hidden w-full" ref={resizeRef}>
             <canvas
                 width={size.width}
                 height={size.height}
-                className="h-full w-full"
+                className="w-full h-full"
                 ref={canvasRef}
             />
             <div className="absolute w-[100px] h-[100px] bottom-2 right-2 overflow-hidden">
