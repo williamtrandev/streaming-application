@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { VRM, VRMLoaderPlugin } from "@pixiv/three-vrm";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { Holistic } from "@mediapipe/holistic";
 import { animateVRM } from "./ringing";
 import useResizeObserver from "use-resize-observer";
 import { lightmode, model, hinata, william, williamModel, hinataModel } from "../../assets";
@@ -20,7 +19,7 @@ const VirtualCamera = ({ selectedCharacter, setCanvasStream }) => {
     const canvasStreamRef = useRef(null);
     const loader = useRef(new GLTFLoader());
     const holistic = useRef(
-        new Holistic({
+        new window.Holistic({
             locateFile: (file) => {
                 return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.5.1675471629/${file}`;
             },
@@ -34,7 +33,7 @@ const VirtualCamera = ({ selectedCharacter, setCanvasStream }) => {
         } catch (e) {
             console.error("Error in holistic:", e);
             // Reset holistic
-            holistic.current = new Holistic({
+            holistic.current = new window.Holistic({
                 locateFile: (file) => {
                     return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.5.1675471629/${file}`;
                 },
