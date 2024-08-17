@@ -77,8 +77,8 @@ const DetailStreamPage = () => {
 				<div className="md:grid md:grid-cols-3 md:gap-2 h-full w-full space-y-3 md:space-y-0">
 					<div className="md:col-span-2 w-full h-full md:overflow-auto flex items-center justify-center">
 						{detailStreamData ? (
-							detailStreamData.stream.finished ? (
-								detailStreamData.stream.rerun ? (
+							detailStreamData.stream?.finished ? (
+								detailStreamData.stream?.rerun ? (
 									<RecordStreamVideo streamData={detailStreamData} />
 								) : (
 									<div className="flex justify-center items-center h-full">
@@ -102,8 +102,8 @@ const DetailStreamPage = () => {
 						<ChatBox
 							streamId={streamId}
 							socket={socket}
-							streamerId={detailStreamData.stream.user._id}
-							isFinished={detailStreamData.stream.finished}
+							streamerId={detailStreamData.stream?.user._id}
+							isFinished={detailStreamData.stream?.finished}
 						/>
 						<div className="absolute right-5 top-2 cursor-pointer md:hidden w-6 h-6 flex items-center justify-center rounded-full dark:bg-purple-600"
 							onClick={() => {
