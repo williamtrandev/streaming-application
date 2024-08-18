@@ -48,6 +48,8 @@ const DetailStreamPage = () => {
 		}
 	}, [detailStreamData]);
 
+	console.log("DETAIL", detailStreamData);
+
 	if (isDetailLoading) {
 		return (
 			<div className="flex justify-center items-center h-[calc(100vh-5rem)]">

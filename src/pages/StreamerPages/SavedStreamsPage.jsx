@@ -255,22 +255,6 @@ const SavedStreamsPage = () => {
                                     <button
                                         className="flex gap-1 items-center hover:text-black dark:hover:text-white uppercase"
                                         onClick={() => {
-                                            if (numViewsLive == -1) {
-                                                setNumViewsLive(1);
-                                            } else {
-                                                setNumViewsLive(-1);
-                                            }
-                                        }}
-                                    >
-                                        <span>Live views</span>
-                                        {numViewsLive == -1 && <MoveDown size={16} />}
-                                        {numViewsLive == 1 && <MoveUp size={16} />}
-                                    </button>
-                                </th>
-                                <th className="px-4 py-3">
-                                    <button
-                                        className="flex gap-1 items-center hover:text-black dark:hover:text-white uppercase"
-                                        onClick={() => {
                                             if (numViews == -1) {
                                                 setNumViews(1);
                                             } else {
@@ -313,9 +297,6 @@ const SavedStreamsPage = () => {
                                         </td>
                                         <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
                                             {new Date(stream?.dateStream).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                                        </td>
-                                        <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
-                                            {stream.numViewsLive}
                                         </td>
                                         <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
                                             {stream.numViews}

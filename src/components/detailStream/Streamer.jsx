@@ -9,7 +9,7 @@ const Streamer = ({ user }) => {
         if (user) {
             setNumFollowers(user.numFollowers)
         }
-    }, user)
+    }, [user]);
 	return (
 		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
 			<div className="w-full md:flex md:justify-between">

@@ -86,7 +86,9 @@ const ObsVideoControlHeader = ({ streamId, isStreaming }) => {
     }, [isStartStreamSuccess]);
 
     useEffect(() => {
-        toast.error("Starting streaming failed");
+        if (isStartStreamError) {
+            toast.error("Starting streaming failed");
+        }
     }, [isStartStreamError]);
 
     useEffect(() => {
