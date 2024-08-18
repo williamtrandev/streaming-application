@@ -25,7 +25,7 @@ const Streamer = ({ user }) => {
 				</Link>
 
 				<div className="flex items-center ml-15 mt-1 md:ml-4 md:mt-0">
-					<FollowButton streamerId={user._id} streamerName={user.fullname} setNumFollowers={setNumFollowers} />
+					<FollowButton streamerId={user?._id} streamerName={user?.fullname} setNumFollowers={setNumFollowers} />
 				</div>
 			</div>
 		</div>
