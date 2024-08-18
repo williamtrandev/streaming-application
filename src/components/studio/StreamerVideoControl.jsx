@@ -92,7 +92,6 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 			setIsPublishing(true);
 		}
 	}, [audioTrack, isPublishing, localParticipant, videoTrack, egressId]);
-
 	const getElapsedTime = (start, end) => {
 		const elapsed = end - start;
 		const seconds = Math.floor((elapsed / 1000) % 60);
@@ -297,6 +296,26 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 
 		handleTracks();
 	}, [isCosplay, localParticipant, canvasStream]);
+	useEffect(() => {
+		if (isStreamEnd && localParticipant) {
+			// Unpublish video and camera tracks
+			if (videoTrack) {
+				localParticipant.unpublishTrack(videoTrack);
+				videoTrack.stop();
+				setVideoTrack(null); // Xóa track video khỏi state
+			}
+			if (canvasTrack) {
+				localParticipant.unpublishTrack(canvasTrack);
+				canvasTrack.stop();
+				setCanvasTrack(null); // Xóa track canvas khỏi state
+			}
+			if (audioTrack) {
+				localParticipant.unpublishTrack(audioTrack);
+				audioTrack.stop();
+				setAudioTrack(null); // Xóa track audio khỏi state
+			}
+		}
+	}, [isStreamEnd, localParticipant, videoTrack, canvasTrack, audioTrack]);
 	return (
 		<div className="flex flex-col justify-center gap-4 px-4 py-2 h-full bg-meta-4 rounded-lg">
 			<div className="flex items-center justify-between">
@@ -374,7 +393,9 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 					</Tooltip>
 				}
 			</div>
-			<ModalEndStream open={open} setOpen={setOpen} streamId={streamId} egressId={egressId} setIsStreaming={setIsPublishing} setIsStreamEnd={setIsStreamEnd} />
+			<ModalEndStream open={open} setOpen={setOpen} streamId={streamId} egressId={egressId} 
+				setIsStreaming={setIsPublishing} setIsStreamEnd={setIsStreamEnd} 
+			/>
 			<Modal
 				className='bg-slate-100 dark:bg-slate-600 rounded-lg dark:text-slate-200'
 				centered

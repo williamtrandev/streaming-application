@@ -24,7 +24,7 @@
 	padding: 0;
 	box-sizing: border-box;
 	/* font-family: "Playfair Display", sans-serif; */
-	font-family: "Platypi";
+	font-family: "Inter", "Roobert", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	scroll-behavior: smooth;
 }
 
