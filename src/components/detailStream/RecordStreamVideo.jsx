@@ -22,7 +22,7 @@ const StreamDescription = ({ stream }) => {
 	const [numViews, setNumViews] = useState(0);
 
 	const { mutate: writeHistory, data: historyData, error: historyError, isError: isHistoryError, isSuccess: isHistorySuccess } = useWriteHistory();
-	const { data: likesAndDislikesData } = useGetNumLikesAndDislikes(stream._id);
+	const { data: likesAndDislikesData } = useGetNumLikesAndDislikes(stream?._id);
 	const { mutate: likeStream, data: likeData, error: likeError, isError: isLikeError, isSuccess: isLikeSuccess } = useLikeStream();
 
 	useEffect(() => {

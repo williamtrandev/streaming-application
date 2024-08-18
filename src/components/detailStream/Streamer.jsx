@@ -9,7 +9,7 @@ const Streamer = ({ user }) => {
         if (user) {
             setNumFollowers(user.numFollowers)
         }
-    }, user)
+    }, [user]);
 	return (
 		<div className="w-full items-center bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
 			<div className="w-full md:flex md:justify-between">
@@ -25,7 +25,7 @@ const Streamer = ({ user }) => {
 				</Link>
 
 				<div className="flex items-center ml-15 mt-1 md:ml-4 md:mt-0">
-					<FollowButton streamerId={user._id} streamerName={user.fullname} setNumFollowers={setNumFollowers} />
+					<FollowButton streamerId={user?._id} streamerName={user?.fullname} setNumFollowers={setNumFollowers} />
 				</div>
 			</div>
 		</div>

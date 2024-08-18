@@ -12,6 +12,7 @@ import { Maximize, Minimize, Volume2, VolumeX } from "lucide-react";
 import { Tooltip } from "antd";
 
 const StreamVideoControl = ({ streamId }) => {
+	if (!streamId) return;
 	const connectionState = useConnectionState();
 	const participant = useRemoteParticipant(streamId);
 	const tracks = useTracks(Object.values(Track.Source)).filter(
