@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { initializeSocket, selectSocket } from './redux/slices/socketSlice';
 import { Fragment, useEffect } from 'react';
 import { useAuth } from './contexts/AuthContext';
-import { SettingProfilePage, SettingSecurityPage } from './pages/CommonPages';
+import { RegPage, SettingProfilePage, SettingSecurityPage } from './pages/CommonPages';
 import StreamerInfoTabs from './layouts/StreamerInfoTabs';
 import ViewerSettingTabs from './layouts/ViewerSettingTabs';
 import LikedPage from './pages/ViewerPages/LikedPage';
@@ -90,6 +90,8 @@ function App() {
             <Route path='analytics' element={<AnalyticsAdminPage />} />
             <Route path='settings' element={<SettingsAdminPage />} />
           </Route>
+          <Route path='/reg' element={<RegPage />} />
+
         </Route>
       </Route>
     )

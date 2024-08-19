@@ -14,6 +14,8 @@ import VirtualCamera from "./VirtualCamera";
 import { hinata, william } from "../../assets";
 import { useBlocker } from "react-router-dom";
 import { Modal } from "antd";
+import CryptoJS from 'crypto-js';
+
 
 const Content = ({ selectedCharacter, onSelectCharacter }) => (
     <div className="flex gap-3 items-center justify-center">
@@ -60,6 +62,8 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 	const [selectedCharacter, setSelectedCharacter] = useState(null);
 	const [showWarnPopUp, setShowWarnPopUp] = useState(false);
 	const [isStreamEnd, setIsStreamEnd] = useState(false);
+	const [recordedChunks, setRecordedChunks] = useState([]);
+	const [isRecording, setIsRecording] = useState(true);
 
 	const handleSelectCharacter = useCallback((character) => {
 		if (selectedCharacter === character) {
@@ -316,6 +320,87 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 			}
 		}
 	}, [isStreamEnd, localParticipant, videoTrack, canvasTrack, audioTrack]);
+	const mediaRecorderRef = useRef(null);
+	const intervalIdRef = useRef(null);
+
+	const defaultOptions = {
+		host: 'identify-ap-southeast-1.acrcloud.com',
+		endpoint: '/v1/identify',
+		signature_version: '1',
+		data_type: 'audio',
+		secure: true,
+		access_key: '3e59aaa51fb94b8fcf436c46501acbc7',
+		access_secret: '8eFLthoPQVTu1hXv7YxdhhrO0TqErySybPM8ok82'
+	};
+
+	const buildStringToSign = (method, uri, accessKey, dataType, signatureVersion, timestamp) => {
+		return [method, uri, accessKey, dataType, signatureVersion, timestamp].join('\n');
+	};
+
+	const sign = (signString, accessSecret) => {
+		return CryptoJS.HmacSHA1(signString, accessSecret).toString(CryptoJS.enc.Base64);
+	};
+
+	const identify = async (data) => {
+		console.log('Sending audio data to server...'); // Debug log
+		const timestamp = Math.floor(Date.now() / 1000);
+		const stringToSign = buildStringToSign('POST', defaultOptions.endpoint, defaultOptions.access_key, defaultOptions.data_type, defaultOptions.signature_version, timestamp);
+		const signature = sign(stringToSign, defaultOptions.access_secret);
+
+		const formData = new FormData();
+		formData.append('sample', data);
+		formData.append('sample_bytes', data.size);
+		formData.append('access_key', defaultOptions.access_key);
+		formData.append('data_type', defaultOptions.data_type);
+		formData.append('signature_version', defaultOptions.signature_version);
+		formData.append('signature', signature);
+		formData.append('timestamp', timestamp);
+
+		try {
+			const response = await fetch(`https://${defaultOptions.host}${defaultOptions.endpoint}`, {
+				method: 'POST',
+				body: formData
+			});
+			const result = await response.json();
+			console.log(result);
+		} catch (error) {
+			setError('Error: ' + error.message);
+		}
+	};
+
+	const startRecording = async () => {
+		try {
+			// const stream = audioTrack.mediaStream;
+			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			const mediaRecorder = new MediaRecorder(stream);
+			mediaRecorderRef.current = mediaRecorder;
+			mediaRecorder.ondataavailable = async (event) => {
+				console.log('ondataavailable event fired'); // Debug log
+				if (event.data.size > 0) {
+					console.log('Data size:', event.data.size); // Debug log
+					const audioBlob = new Blob([event.data], { type: 'audio/wav' });
+					await identify(audioBlob);
+				} else {
+					console.log('No data available'); // Debug log
+				}
+			};
+
+			mediaRecorder.start();
+			setIsRecording(true);
+
+			intervalIdRef.current = setInterval(() => {
+				mediaRecorder.stop();
+				mediaRecorder.start(); // Restart the recording
+			}, 20000); // 20 seconds interval
+		} catch (error) {
+			setError('Error: ' + error.message);
+		}
+	};
+	useEffect(() => {
+		if(audioTrack) {
+			startRecording();
+		}
+	}, [audioTrack])
 	return (
 		<div className="flex flex-col justify-center gap-4 px-4 py-2 h-full bg-meta-4 rounded-lg">
 			<div className="flex items-center justify-between">
