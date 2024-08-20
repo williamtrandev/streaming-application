@@ -44,7 +44,7 @@ const HistoryPage = () => {
 			</div>}
 
 			{(auth && histories.length > 0 ) && <div className="space-y-4">
-				<div className="grid grid-cols-3 py-3 sticky z-99 top-18 bg-[#edf2f9] dark:bg-boxdark-2">
+				<div className="grid grid-cols-3 py-3 sticky z-99 top-18 bg-[#dbe8f5] dark:bg-boxdark-2">
 					<div className="text-2xl font-bold col-span-2">Watch history</div>
 					<div className="relative h-fit w-full">
 						<button className="absolute left-0 h-full px-2">
