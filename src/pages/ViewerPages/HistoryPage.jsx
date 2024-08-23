@@ -6,6 +6,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { appName } from "../../constants";
 import { Spin } from "antd";
 import { useInView } from "react-intersection-observer";
+import { history } from "../../assets";
 const HistoryPage = () => {
 	const { auth } = useAuth();
 	const userId = auth?.user?._id;
@@ -33,15 +34,19 @@ const HistoryPage = () => {
 
 	return (
 		<div>
-			{(histories.length == 0 && auth && !isFetching) && <div className="h-full flex flex-col items-center justify-center gap-4">
-				<History size={64} />
-				<span className="text-lg">You haven't watched any streams yet.</span>
-			</div>}
+			{(histories.length == 0 && auth && !isFetching) &&
+				<div className="flex flex-col justify-center items-center h-[calc(100vh-10rem)] gap-5">
+					<img src={history} alt="" className="!h-[80%] rounded-lg" />
+					<p className="text-2xl font-bold">You haven't watched any streams yet.</p>
+				</div>
+			}
 
-			{!auth && <div className="h-full flex flex-col items-center justify-center gap-4">
-				<History size={64} />
-				<span className="text-lg">You can only view your history when you are logged in.</span>
-			</div>}
+			{!auth && 
+				<div className="flex flex-col justify-center items-center h-[calc(100vh-10rem)] gap-5">
+					<img src={history} alt="" className="!h-[80%] rounded-lg" />
+					<p className="text-2xl font-bold">You can only view your history when you are logged in.</p>
+				</div>
+			}
 
 			{(auth && histories.length > 0 ) && <div className="space-y-4">
 				<div className="grid grid-cols-3 py-3 sticky z-99 top-18 bg-[#dbe8f5] dark:bg-boxdark-2">

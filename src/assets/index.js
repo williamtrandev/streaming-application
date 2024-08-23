@@ -12,8 +12,12 @@ import williamModel from './william.vrm';
 import hinataModel from './hinata.vrm';
 import william from './william.png';
 import hinata from './hinata.png';
+import history from './history.png';
+import following from './following.png';
+import liked from './liked.png';
 export {
 	lightmode, darkmode, logo, defaultUser, banned, 
 	statsLatest, pattern, img404, defaultStream, model, 
-	williamModel, hinataModel, william, hinata
+	williamModel, hinataModel, william, hinata,
+	history, following, liked
 }
