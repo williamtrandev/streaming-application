@@ -96,7 +96,10 @@ const AnalyticsPage = () => {
 				}
 			}) 
 			setDataBar(datasets);
-			const labels = statsData?.datasets[0]?.stats.map(data => new Date(data.dateStream).toLocaleDateString());
+			const labels = statsData?.datasets[0]?.stats.map(data => {
+				const date = new Date(data.dateStream);
+				return date.toLocaleDateString('vi-VN');
+			});
 			setLabelDataBar(labels);
 			setLoading(false);
 		}
@@ -114,7 +117,12 @@ const AnalyticsPage = () => {
 			];
 			console.log(datasets)
 			setDataLine(datasets);
-			const labels = statsViewerData?.numViewersPerMin.map(data => new Date(data.timestamp).toLocaleTimeString());
+			const labels = statsViewerData?.numViewersPerMin.map(data => {
+				const date = new Date(data.timestamp);
+				const formattedDate = date.toLocaleDateString('vi-VN');
+				const time = date.toLocaleTimeString();
+				return `${formattedDate} ${time}`;
+			});
 			setLabelDataLine(labels);
 		}
 	}, [statsViewerData, isStatsViewerSuccess]);

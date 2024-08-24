@@ -4,7 +4,7 @@ import { useEndStream } from '../../api/studio';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-const ModalEndStream = ({ open, setOpen, streamId, egressId, setIsStreaming, setIsStreamEnd, localParticipant }) => {
+const ModalEndStream = ({ open, setOpen, streamId, egressId, setIsStreaming, setIsStreamEnd }) => {
 	const navigate = useNavigate();
 	const { mutate: endStream, isError: isEndError, isSuccess: isEndSuccess } = useEndStream();
 	const [confirmLoading, setConfirmLoading] = useState(false);
