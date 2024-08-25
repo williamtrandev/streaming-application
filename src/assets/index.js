@@ -15,9 +15,10 @@ import hinata from './hinata.png';
 import history from './history.png';
 import following from './following.png';
 import liked from './liked.png';
+import endStream from './end-stream.png';
 export {
 	lightmode, darkmode, logo, defaultUser, banned, 
 	statsLatest, pattern, img404, defaultStream, model, 
 	williamModel, hinataModel, william, hinata,
-	history, following, liked
+	history, following, liked, endStream
 }

@@ -8,21 +8,21 @@ import { useUser } from '../../contexts/UserContext';
 
 const StreamerVideo = ({ streamId, setIsStream }) => {
 	const { isLiveStreaming } = useUser();
-	const useBeforeUnload = () => {
-		useEffect(() => {
-			const handleBeforeUnload = (event) => {
-				event.preventDefault();
-				event.returnValue = ''; 
-			};
+	// const useBeforeUnload = () => {
+	// 	useEffect(() => {
+	// 		const handleBeforeUnload = (event) => {
+	// 			event.preventDefault();
+	// 			event.returnValue = ''; 
+	// 		};
 
-			window.addEventListener('beforeunload', handleBeforeUnload);
+	// 		window.addEventListener('beforeunload', handleBeforeUnload);
 
-			return () => {
-				window.removeEventListener('beforeunload', handleBeforeUnload);
-			};
-		}, []);
-	};
-	useBeforeUnload();
+	// 		return () => {
+	// 			window.removeEventListener('beforeunload', handleBeforeUnload);
+	// 		};
+	// 	}, []);
+	// };
+	// useBeforeUnload();
 	const [streamerToken, setStreamerToken] = useState("");
 	const { mutate, isSuccess, data } = useGenerateStreamerToken();
 	useEffect(() => {

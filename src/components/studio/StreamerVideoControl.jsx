@@ -11,7 +11,7 @@ import { selectSocket } from "../../redux/slices/socketSlice";
 import { useUser } from "../../contexts/UserContext";
 import { Popover, Tooltip } from "antd";
 import VirtualCamera from "./VirtualCamera";
-import { hinata, william } from "../../assets";
+import { endStream, hinata, william } from "../../assets";
 import { useBlocker } from "react-router-dom";
 import { Modal } from "antd";
 
@@ -107,9 +107,6 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 				case Track.Kind.Video: {
 					if (previewVideoEl?.current) {
 						track.attach(previewVideoEl.current);
-						// setupHolistic.current();
-						// inferenceLoop.current();
-						// animate.current();
 					}
 					setVideoTrack(track);
 					break;
@@ -137,6 +134,7 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 						screenTrackLocal.attach(previewVideoEl.current);
 						localParticipant.unpublishTrack(videoTrack);
 						videoTrack?.stop();
+						setVideoTrack(null);
 						setIsScreenSharing(true);
 					}
 				}
@@ -165,30 +163,33 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 				screenTrack.stop();
 			}
 			setIsScreenSharing(false);
-			const tracks = await createLocalTracks({ audio: true, video: true });
-			var videoTrackLocal;
-			var audioTrackLocal;
-			tracks.forEach((track) => {
-				switch (track.kind) {
-					case Track.Kind.Video: {
-						if (previewVideoEl?.current) {
-							track.attach(previewVideoEl.current);
-						}
-						videoTrackLocal = track;
-						break;
-					}
-					case Track.Kind.Audio: {
-						audioTrackLocal = track;
-						break;
+			const trackPublications = localParticipant.getTrackPublications();
+
+			let videoTrackLocal = null;
+			let audioTrackLocal = null;
+
+			// Lọc ra các track video và audio
+			trackPublications.forEach((publication) => {
+				if (publication.track) {
+					if (publication.track.kind === "video") {
+						videoTrackLocal = publication.track;
+					} else if (publication.track.kind === "audio") {
+						audioTrackLocal = publication.track;
 					}
 				}
-			});
+			});	
+			if (!videoTrackLocal) {
+				const videoTrack = await createLocalVideoTrack();
+				videoTrackLocal = videoTrack; 
+			}
 			if (videoTrackLocal) {
 				localParticipant.publishTrack(videoTrackLocal);
+				if (previewVideoEl?.current) {
+					videoTrackLocal.attach(previewVideoEl.current);
+				}
+				setVideoTrack(videoTrackLocal);
 			}
-			if (audioTrackLocal) {
-				localParticipant.publishTrack(audioTrackLocal);
-			}
+
 		}
 	};
 	useEffect(() => {
@@ -314,27 +315,36 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 				audioTrack.stop();
 				setAudioTrack(null); // Xóa track audio khỏi state
 			}
+			if(socket) {
+				socket.emit('streamerEndStream', streamId);
+			}
 		}
 	}, [isStreamEnd, localParticipant, videoTrack, canvasTrack, audioTrack]);
 	return (
 		<div className="flex flex-col justify-center gap-4 px-4 py-2 h-full bg-meta-4 rounded-lg">
 			<div className="flex items-center justify-between">
 				<div className="flex gap-[5px] text-lg font-bold">
-					{isPublishing && !isUnpublishing ? (
-						<div className="flex items-center gap-1">
-							<span className="relative mr-1 flex h-3 w-3">
-								<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-								<span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
-							</span>
-							<div>LIVE
-								<span className="ml-3 italic text-purple-500">
-									{getElapsedTime(startTime, currentTime)}
-								</span>
-							</div>
-						</div>
+					{isStreamEnd ? (
+						"This stream ended"
 					) : (
-						"Ready to stream"
+						isPublishing && !isUnpublishing ? (
+							<div className="flex items-center gap-1">
+								<span className="relative mr-1 flex h-3 w-3">
+									<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+									<span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
+								</span>
+								<div>
+									LIVE
+									<span className="ml-3 italic text-purple-500">
+										{getElapsedTime(startTime, currentTime)}
+									</span>
+								</div>
+							</div>
+						) : (
+							"Ready to stream"
+						)
 					)}
+
 				</div>
 				<div className="flex gap-2 items-center space-x-3">
 					<div className="flex items-center space-x-2">
@@ -365,34 +375,41 @@ const StreamerVideoControl = ({ streamId, setIsStream }) => {
 				<VirtualCamera selectedCharacter={selectedCharacter} setCanvasStream={setCanvasStream} /> 
 				: 
 				<div className="aspect-video rounded-lg overflow-hidden">
-					<video ref={previewVideoEl} width="100%" height="100%" className="rounded-lg"/>
+					{isStreamEnd 
+						? 
+						<img src={endStream} className="w-full h-full object-cover" /> 
+						:
+						<video ref={previewVideoEl} width="100%" height="100%" className="rounded-lg"/>
+					}
 				</div>
 			}
-			<div className="flex w-full justify-center items-center gap-4">
-				{!selectedCharacter &&
-					<Tooltip title={!isScreenSharing ? "Start Screen Share" : "Stop Screen Share"}>
-						<div className="rounded-full w-10 h-10 bg-purple-500 flex items-center justify-center cursor-pointer">
-							{!isScreenSharing 
-								? <ScreenShare className="w-5 h-5" onClick={startScreenShare} />
-								: <ScreenShareOff className="w-5 h-5" onClick={stopScreenShare} />
-							}
-						</div>
-					</Tooltip>
-				}
-				{!isScreenSharing && 
-					<Tooltip title="Cosplay">
-						<Popover 
-							content={<Content selectedCharacter={selectedCharacter} onSelectCharacter={handleSelectCharacter} />} 
-							title="Select a character" 
-							trigger="click"
-						>
+			{!isStreamEnd &&
+				<div className="flex w-full justify-center items-center gap-4">
+					{!selectedCharacter &&
+						<Tooltip title={!isScreenSharing ? "Start Screen Share" : "Stop Screen Share"}>
 							<div className="rounded-full w-10 h-10 bg-purple-500 flex items-center justify-center cursor-pointer">
-								<WandSparkles className="w-5 h-5" />
+								{!isScreenSharing 
+									? <ScreenShare className="w-5 h-5" onClick={startScreenShare} />
+									: <ScreenShareOff className="w-5 h-5" onClick={stopScreenShare} />
+								}
 							</div>
-						</Popover>
-					</Tooltip>
-				}
-			</div>
+						</Tooltip>
+					}
+					{!isScreenSharing && 
+						<Tooltip title="Cosplay">
+							<Popover 
+								content={<Content selectedCharacter={selectedCharacter} onSelectCharacter={handleSelectCharacter} />} 
+								title="Select a character" 
+								trigger="click"
+							>
+								<div className="rounded-full w-10 h-10 bg-purple-500 flex items-center justify-center cursor-pointer">
+									<WandSparkles className="w-5 h-5" />
+								</div>
+							</Popover>
+						</Tooltip>
+					}
+				</div>
+			}
 			<ModalEndStream open={open} setOpen={setOpen} streamId={streamId} egressId={egressId} 
 				setIsStreaming={setIsPublishing} setIsStreamEnd={setIsStreamEnd} 
 			/>

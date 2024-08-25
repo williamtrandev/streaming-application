@@ -10,7 +10,7 @@ import Spinner from '../../components/commons/spinner/Spinner';
 import RecordStreamVideo from '../../components/detailStream/RecordStreamVideo';
 import { appName } from '../../constants';
 import { useIsBanned } from '../../api/user';
-import { banned } from '../../assets';
+import { banned, endStream } from '../../assets';
 import { toast } from 'react-toastify';
 import { FloatButton } from 'antd';
 import { CommentOutlined } from '@ant-design/icons';
@@ -26,6 +26,7 @@ const DetailStreamPage = () => {
 	const [isChatIconVisible, setIsChatIconVisible] = useState(true);
 	const { data: detailStreamData, isLoading: isDetailLoading } = useGetDetailStream(streamId);
 	const { data: dataBanned } = useIsBanned({ userId: userId, streamId: streamId, typeBanned: 'watch' });
+	const [isStreamEnd, setIsStreamEnd] = useState(false);
 	useEffect(() => {
 		if (socket) {
 			socket.emit('joinRoom', streamId, userId);
@@ -40,6 +41,10 @@ const DetailStreamPage = () => {
 					setStreamBanned(true);
 				}
 			});
+			socket.on('notifyEndStream', () => {
+				console.log("END NE")
+				setIsStreamEnd(true);
+			})
 		}
 	}, [socket]);
 	useEffect(() => {
@@ -78,23 +83,30 @@ const DetailStreamPage = () => {
 			<div className="md:h-[calc(100vh-8rem)] 2xl:h-[calc(100vh-10rem)] relative">
 				<div className="md:grid md:grid-cols-3 md:gap-2 h-full w-full space-y-3 md:space-y-0">
 					<div className="md:col-span-2 w-full h-full md:overflow-auto flex items-center justify-center">
-						{detailStreamData ? (
-							detailStreamData.stream?.finished ? (
-								detailStreamData.stream?.rerun ? (
-									<RecordStreamVideo streamData={detailStreamData} />
+						{isStreamEnd ? 
+							<div className="flex flex-col justify-center items-center h-full gap-5">
+								<img src={endStream} className="h-[80%] object-cover rounded-lg" />
+								<p className='text-lg font-bold'>This stream ended</p>
+							</div> :
+							(detailStreamData ? (
+								detailStreamData.stream?.finished ? (
+									detailStreamData.stream?.rerun ? (
+										<RecordStreamVideo streamData={detailStreamData} />
+									) : (
+										<div className="flex flex-col justify-center items-center h-full gap-5">
+											<img src={endStream} className="h-[80%] object-cover rounded-lg" />
+											<p className='text-lg font-bold'>This stream ended</p>
+										</div>
+									)
 								) : (
-									<div className="flex justify-center items-center h-full">
-										<p>This stream has ended.</p>
-									</div>
+									<StreamVideo streamData={detailStreamData} />
 								)
 							) : (
-								<StreamVideo streamData={detailStreamData} />
-							)
-						) : (
-							<div className="flex justify-center items-center h-full">
-								<p>No stream data available.</p>
-							</div>
-						)}
+								<div className="flex justify-center items-center h-full">
+									<p>No stream data available.</p>
+								</div>
+							))
+						}
 					</div>
 					<div className={`h-full w-full ${isChatVisible ?
 						'absolute bottom-0 right-0 h-[400px] dark:shadow-white dark:shadow-2xl shadow-black' :
