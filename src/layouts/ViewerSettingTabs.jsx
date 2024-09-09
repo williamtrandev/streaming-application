@@ -12,7 +12,7 @@ const ViewerSettingTabs = () => {
         <div className="space-y-5">
             <div className="text-2xl font-bold">Account Settings</div>
             <div className="sticky top-18 z-99 flex border-b
-                bg-[#edf2f9] dark:bg-boxdark-2
+                bg-[#dbe8f5] dark:bg-boxdark-2
                 border-gray-300 dark:border-gray-600 gap-5"
             >
                 <NavLink

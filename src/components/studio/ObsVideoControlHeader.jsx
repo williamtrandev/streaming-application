@@ -118,7 +118,7 @@ const ObsVideoControlHeader = ({ streamId, isStreaming }) => {
                         </div>
                     </div>
                 ) : (
-                    "Ready to stream"
+                    !isStreamEnd ? "Ready to stream" : "Stream has ended"
                 )}
             </div>
             <div className="flex gap-2 items-center space-x-3">

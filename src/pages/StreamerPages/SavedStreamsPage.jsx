@@ -1,32 +1,32 @@
-import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight, CircleAlert, MoveDown, MoveUp, Pencil, Search, X } from "lucide-react";
+import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight, CircleAlert, MoveDown, MoveUp, Pencil, Play, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchSavedStreams } from "../../api/search";
-import { Checkbox, DatePicker, Modal, Tooltip } from "antd";
+import { Checkbox, DatePicker, Modal, Skeleton, Tooltip } from "antd";
 import moment from "moment";
 import TagItem from "../../components/studio/TagItem";
 import { useDeleteSavedStreams, useEditStream } from "../../api/studio";
 import { toast } from "react-toastify";
 import { blobToBase64 } from "../../utils";
 import { appName } from "../../constants";
+import { useNavigate } from "react-router-dom";
 
 const SavedStreamsPage = () => {
     const [searchKey, setSearchKey] = useState("");
     const [searchInput, setSearchInput] = useState("");
-    const [streams, setStreams] = useState([]);
+    const [streams, setStreams] = useState(null);
     const [numPages, setNumPages] = useState(0);
     const [page, setPage] = useState(1);
     const [date, setDate] = useState(-1);
     const [numViews, setNumViews] = useState(-1);
-    const [numViewsLive, setNumViewsLive] = useState(-1);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [showEditModal, setShowEditModal] = useState(false);
     const [chosenStreamId, setChosenStreamId] = useState("");
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const navigate = useNavigate();
 
-    const { data: streamsData, refetch } = useSearchSavedStreams(searchKey, page, date, numViews, numViewsLive);
+    const { data: streamsData, refetch } = useSearchSavedStreams(searchKey, page, date, numViews);
     useEffect(() => {
         if (streamsData) {
-            console.log(streamsData);
             setStreams(streamsData.streams);
             setNumPages(streamsData.numPages);
         }
@@ -54,8 +54,8 @@ const SavedStreamsPage = () => {
         }
     };
 
-    const allChecked = selectedRowKeys.length === streams.length;
-    const indeterminate = selectedRowKeys.length > 0 && selectedRowKeys.length < streams.length;
+    const allChecked = streams ? selectedRowKeys.length === streams.length : false;
+    const indeterminate = streams ? selectedRowKeys.length > 0 && selectedRowKeys.length < streams.length : false;
 
     const { mutate: deleteStreams, data: deleteData, isError: isDeleteError, error: deleteError, isPending: deletePending, isSuccess: isDeleteSuccess } = useDeleteSavedStreams();
     const handleDelete = () => {
@@ -75,17 +75,17 @@ const SavedStreamsPage = () => {
         toast.error(errorMessage);
     }, [isDeleteError]);
 
-    
-	const isDarkMode = document.body.classList.contains('dark');
-	const rainbowColors = isDarkMode ? [
-		"#FF0000", "#FF6F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#8B00FF",
-		"#FF000A", "#FF7600", "#FFFF0A", "#00FF0A", "#0000FA", "#450082", "#8100FF",
-		"#FF0014", "#FF7D00", "#FFFF14", "#00FF14", "#0000F5", "#3E0082"
-	] : [
-		"#B33A3A", "#CC7A29", "#4DB34D", "#2673B3", "#732699", "#994D99",
-		"#B34D4D", "#CC8A4D", "#519551", "#3A73B3", "#7A33B3", "#45818E",
-		"#B36666", "#CC8A66", "#351C75", "#4D73B3", "#006070"
-	];
+
+    const isDarkMode = document.body.classList.contains('dark');
+    const rainbowColors = isDarkMode ? [
+        "#FF0000", "#FF6F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#8B00FF",
+        "#FF000A", "#FF7600", "#FFFF0A", "#00FF0A", "#0000FA", "#450082", "#8100FF",
+        "#FF0014", "#FF7D00", "#FFFF14", "#00FF14", "#0000F5", "#3E0082"
+    ] : [
+        "#B33A3A", "#CC7A29", "#4DB34D", "#2673B3", "#732699", "#994D99",
+        "#B34D4D", "#CC8A4D", "#519551", "#3A73B3", "#7A33B3", "#45818E",
+        "#B36666", "#CC8A66", "#351C75", "#4D73B3", "#006070"
+    ];
 
     const getRandomRainbowColor = () => {
         const randomIndex = Math.floor(Math.random() * rainbowColors.length);
@@ -202,8 +202,8 @@ const SavedStreamsPage = () => {
                 </div>
                 {selectedRowKeys.length > 0 && (
                     <div
-                        className="bg-gray-300 dark:bg-slate-700 dark:text-white py-2 px-4
-                            flex gap-4 justify-between items-center"
+                        className="bg-[#dbe8f5] dark:bg-boxdark-2 dark:text-white py-2 px-4
+                            flex gap-4 justify-between items-center border-b-2 border-gray-300 dark:border-gray-600"
                     >
                         <span>{selectedRowKeys.length} selected</span>
                         <button
@@ -268,10 +268,11 @@ const SavedStreamsPage = () => {
                                     </button>
                                 </th>
                                 <th className="px-4 py-3">Like/Dislike</th>
+                                <th className="px-4 py-3">Action</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y dark:divide-gray-700 dark:bg-gray-800">
-                            {streams && streams.map((stream, index) => {
+                            {streams ? (streams.map((stream, index) => {
                                 return (
                                     <tr
                                         key={index}
@@ -283,7 +284,7 @@ const SavedStreamsPage = () => {
                                                 onChange={() => onSelectChange(stream._id)}
                                             />
                                         </td>
-                                        <td className="px-4 py-3 text-sm flex gap-3 items-center" onClick={() => onRowClick(stream)}>
+                                        <td className="px-4 py-3 text-sm flex gap-3 items-center">
                                             <span>
                                                 <img
                                                     src={stream.previewImage}
@@ -295,23 +296,64 @@ const SavedStreamsPage = () => {
                                                 {stream.title.length > 100 ? stream.title.substring(0, 100) + '...' : stream.title}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
+                                        <td className="px-4 py-3 text-sm">
                                             {new Date(stream?.dateStream).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                                         </td>
-                                        <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
+                                        <td className="px-4 py-3 text-sm">
                                             {stream.numViews}
                                         </td>
-                                        <td className="px-4 py-3 text-sm" onClick={() => onRowClick(stream)}>
+                                        <td className="px-4 py-3 text-sm">
                                             {stream.numLikes}/{stream.numDislikes}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm">
+                                            <div className="flex space-x-2">
+                                                <div
+                                                    className="p-2 w-8 h-8 flex items-center justify-center rounded-full font-semibold text-blue-700 bg-blue-100 dark:text-white dark:bg-blue-600 cursor-pointer"
+                                                    onClick={() => {
+                                                        navigate(`/live/${stream._id}`);
+                                                    }}>
+                                                    <Tooltip title="Play" color={'blue'}>
+                                                        <Play />
+                                                    </Tooltip>
+                                                </div>
+                                                <div className="p-2 w-8 h-8 flex items-center justify-center text-center rounded-full font-semibold text-purple-700 bg-purple-100 dark:text-white dark:bg-purple-600 cursor-pointer" onClick={() => onRowClick(stream)}>
+                                                    <Tooltip title="Edit" color={'purple'}>
+                                                        <Pencil />
+                                                    </Tooltip>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 )
-                            })}
+                            })) : (
+                                <tbody className="divide-y dark:divide-gray-700 dark:bg-gray-800">
+                                    {[...Array(5)].map((_, index) => (
+                                        <tr key={index} className="text-gray-700 dark:text-gray-400">
+                                            <td className="px-4 py-3">
+                                                <div className="flex items-center text-sm">
+                                                    <Skeleton.Input active size="small" style={{ width: 100 }} />
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3 text-xs">
+                                                <Skeleton.Input active size="small" style={{ width: 80 }} />
+                                            </td>
+                                            <td className="px-4 py-3 text-sm">
+                                                <Skeleton.Input active size="small" style={{ width: 100 }} />
+                                            </td>
+                                            <td className="px-4 py-3 text-sm">
+                                                <div className="flex space-x-2">
+                                                    <Skeleton.Button active size="small" shape="circle" style={{ width: 32, height: 32 }} />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            )}
                         </tbody>
                     </table>
                 </div>
-                
-                {streams.length > 0 && (
+
+                {streams && streams.length > 0 && (
                     <div className="bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-700
                         flex justify-end gap-8 px-4 py-2 items-center"
                     >
