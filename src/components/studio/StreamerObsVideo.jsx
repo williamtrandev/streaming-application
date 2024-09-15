@@ -78,23 +78,23 @@ const StreamerObsVideo = ({ streamId }) => {
 
 	return (
 		<div className="w-full flex flex-col items-center space-y-3">
-			<LiveKitRoom
-				token={viewerToken}
-				serverUrl={import.meta.env.VITE_LIVEKIT_SERVER_URL}
-				className="flex flex-1 flex-col"
-			>
-				<div className="flex h-full flex-1">
-					<div className="flex-1 flex-col container rounded-lg overflow-hidden">
-						{streamKeyData ? (
+			{streamKeyData ? (
+				<LiveKitRoom
+					token={viewerToken}
+					serverUrl={import.meta.env.VITE_LIVEKIT_SERVER_URL}
+					className="flex flex-1 flex-col"
+				>
+					<div className="flex h-full flex-1">
+						<div className="flex-1 flex-col container rounded-lg overflow-hidden">
 							<StreamerObsVideoControl streamId={streamId} />
-						) : (
-							<div className="flex flex-col aspect-video justify-center gap-4 px-4 py-2 h-full bg-white shadow-md dark:bg-meta-4 rounded-lg">
-								<Spin size="large" />
-							</div>
-						)}
+						</div>
 					</div>
+				</LiveKitRoom>
+			) : (
+				<div className="flex flex-col aspect-video justify-center gap-4 px-4 py-2 h-full bg-white shadow-md dark:bg-meta-4 rounded-lg">
+					<Spin size="large" />
 				</div>
-			</LiveKitRoom>
+			)}
 			{/* <StreamKey streamId={streamId} /> */}
 			<div className="w-full items-center space-y-3 bg-white shadow-md dark:bg-boxdark py-3 px-4 rounded-md">
 				<div className="divide-y divide-gray-300 dark:divide-gray-600 px-4 rounded-lg">

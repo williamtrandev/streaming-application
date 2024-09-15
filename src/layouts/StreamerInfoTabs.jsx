@@ -15,7 +15,7 @@ const StreamerInfoTabs = () => {
 			</div>
 
 			<div className="w-full">
-				<div className="sticky top-18 z-99 bg-[#edf2f9] dark:bg-boxdark-2
+				<div className="sticky top-18 z-99 bg-[#dbe8f5] dark:bg-boxdark-2
                     flex border-b border-gray-300 dark:border-gray-600 gap-8">
 					<NavLink
 						to={`/${username}`}
